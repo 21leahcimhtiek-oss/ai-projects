@@ -1,8 +1,25 @@
-import type { Request, Response } from "express";
+import { Request, Response } from "express";
 import Stripe from "stripe";
-import { db } from "../database/connection";
+import {
+  getUserById,
+  updateUser,
+  getSubscriptionByStripeId,
+  createSubscription,
+  updateSubscription,
+  getPaymentByStripeId,
+  createPayment,
+} from "../database/queries";
+import { PLAN_CONFIG, type PlanType } from "../../../stripe-products";
 
-export default async function stripeWebhook(req: Request, res: Response) {
+function getStripe(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("STRIPE_SECRET_KEY not set");
+  return new Stripe(key, { apiVersion: "2024-12-18.acacia" });
+}
+
+// ── Webhook entry point ───────────────────────────────────────────────────────
+export async function handleStripeWebhook(req: Request, res: Response) {
+  const stripe = getStripe();
   const sig = req.headers["stripe-signature"];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -12,66 +29,206 @@ export default async function stripeWebhook(req: Request, res: Response) {
 
   let event: Stripe.Event;
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2024-12-18.acacia" });
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-  } catch (err: any) {
-    console.error("Webhook signature verification failed:", err.message);
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+  } catch (err) {
+    console.error("[Webhook] Signature verification failed:", err);
+    return res.status(400).json({ error: "Invalid signature" });
+  }
+
+  // Test event passthrough
+  if (event.id.startsWith("evt_test_")) {
+    console.log("[Webhook] Test event received:", event.type);
+    return res.json({ verified: true });
   }
 
   try {
     switch (event.type) {
-      case "checkout.session.completed": {
-        const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.userId;
-        if (userId && session.subscription) {
-          db.prepare(`
-            UPDATE users
-            SET subscription_status = 'active',
-                stripe_subscription_id = ?,
-                updated_at = datetime('now')
-            WHERE id = ?
-          `).run(session.subscription as string, parseInt(userId));
-        }
+      case "checkout.session.completed":
+        await onCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
-      }
-
-      case "customer.subscription.updated": {
-        const sub = event.data.object as Stripe.Subscription;
-        const customer = sub.customer as string;
-        const user = db.prepare("SELECT id FROM users WHERE stripe_customer_id = ?").get(customer) as any;
-        if (user) {
-          const status = sub.status === "active" ? "active" : "inactive";
-          db.prepare(`
-            UPDATE users SET subscription_status = ?, updated_at = datetime('now') WHERE id = ?
-          `).run(status, user.id);
-        }
+      case "customer.subscription.created":
+        await onSubscriptionCreated(event.data.object as Stripe.Subscription);
         break;
-      }
-
-      case "customer.subscription.deleted": {
-        const sub = event.data.object as Stripe.Subscription;
-        const customer = sub.customer as string;
-        const user = db.prepare("SELECT id FROM users WHERE stripe_customer_id = ?").get(customer) as any;
-        if (user) {
-          db.prepare(`
-            UPDATE users
-            SET subscription_status = 'free',
-                stripe_subscription_id = NULL,
-                updated_at = datetime('now')
-            WHERE id = ?
-          `).run(user.id);
-        }
+      case "customer.subscription.updated":
+        await onSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
-      }
-
+      case "customer.subscription.deleted":
+        await onSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        break;
+      case "invoice.paid":
+        await onInvoicePaid(event.data.object as Stripe.Invoice);
+        break;
+      case "invoice.payment_failed":
+        await onInvoicePaymentFailed(event.data.object as Stripe.Invoice);
+        break;
+      case "payment_intent.succeeded":
+        await onPaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+        break;
+      case "payment_intent.payment_failed":
+        await onPaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+        break;
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        console.log(`[Webhook] Unhandled event: ${event.type}`);
     }
+    res.json({ received: true });
   } catch (err) {
-    console.error("Webhook handler error:", err);
-    return res.status(500).json({ error: "Webhook handler failed" });
+    console.error("[Webhook] Handler error:", err);
+    res.status(500).json({ error: String(err) });
   }
+}
 
-  res.json({ received: true });
+// ── Handlers ──────────────────────────────────────────────────────────────────
+
+async function onCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  const userId = session.client_reference_id;
+  const stripeCustomerId = session.customer as string;
+  if (!userId || !stripeCustomerId) return;
+
+  const plan = (session.metadata?.plan ?? "starter") as PlanType;
+  const planConfig = PLAN_CONFIG[plan];
+
+  // Update user stripe customer id
+  await updateUser(userId, {
+    stripeCustomerId,
+    subscriptionStatus: "active",
+  });
+
+  // Upsert subscription row
+  const existing = await getSubscriptionByStripeId(stripeCustomerId);
+  if (!existing) {
+    await createSubscription({
+      userId,
+      stripeCustomerId,
+      plan,
+      status: "active",
+      booksPerMonth: planConfig.booksPerMonth,
+      imagesPerMonth: planConfig.imagesPerMonth,
+      currentMonthBooksCreated: 0,
+      currentMonthImagesGenerated: 0,
+      currentPeriodStart: new Date(),
+      currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      canceledAt: null,
+    });
+  }
+}
+
+async function onSubscriptionCreated(subscription: Stripe.Subscription) {
+  const stripeCustomerId = subscription.customer as string;
+  const plan = (subscription.metadata?.plan ?? "starter") as PlanType;
+  const planConfig = PLAN_CONFIG[plan];
+
+  const existing = await getSubscriptionByStripeId(stripeCustomerId);
+  if (existing) {
+    await updateSubscription(existing.userId, {
+      stripeSubscriptionId: subscription.id,
+      status: subscription.status as any,
+      plan,
+      booksPerMonth: planConfig.booksPerMonth,
+      imagesPerMonth: planConfig.imagesPerMonth,
+      currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
+      currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+    });
+  }
+}
+
+async function onSubscriptionUpdated(subscription: Stripe.Subscription) {
+  const stripeCustomerId = subscription.customer as string;
+  const existing = await getSubscriptionByStripeId(stripeCustomerId);
+  if (!existing) return;
+
+  const plan = (subscription.metadata?.plan ?? existing.plan) as PlanType;
+  const planConfig = PLAN_CONFIG[plan];
+
+  await updateSubscription(existing.userId, {
+    plan,
+    status: subscription.status as any,
+    booksPerMonth: planConfig.booksPerMonth,
+    imagesPerMonth: planConfig.imagesPerMonth,
+    currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
+    currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+  });
+
+  // Sync subscription_status on users table
+  await updateUser(existing.userId, { subscriptionStatus: subscription.status });
+}
+
+async function onSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const stripeCustomerId = subscription.customer as string;
+  const existing = await getSubscriptionByStripeId(stripeCustomerId);
+  if (!existing) return;
+
+  await updateSubscription(existing.userId, {
+    status: "canceled",
+    canceledAt: new Date(),
+  });
+  await updateUser(existing.userId, { subscriptionStatus: "free" });
+}
+
+async function onInvoicePaid(invoice: Stripe.Invoice) {
+  const stripeCustomerId = invoice.customer as string;
+  const existing = await getSubscriptionByStripeId(stripeCustomerId);
+  const paymentIntentId =
+    typeof (invoice as any).payment_intent === "string"
+      ? (invoice as any).payment_intent
+      : (invoice as any).payment_intent?.id;
+
+  if (existing && paymentIntentId) {
+    const payment = await getPaymentByStripeId(paymentIntentId);
+    if (!payment) {
+      await createPayment({
+        userId: existing.userId,
+        stripePaymentIntentId: paymentIntentId,
+        amount: invoice.amount_paid ?? 0,
+        currency: invoice.currency ?? "usd",
+        status: "succeeded",
+        paymentType: "subscription",
+        description: `Invoice ${invoice.number ?? invoice.id}`,
+      });
+    }
+  }
+}
+
+async function onInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  const stripeCustomerId = invoice.customer as string;
+  const existing = await getSubscriptionByStripeId(stripeCustomerId);
+  if (existing) {
+    await updateSubscription(existing.userId, { status: "past_due" });
+    await updateUser(existing.userId, { subscriptionStatus: "past_due" });
+  }
+}
+
+async function onPaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
+  const userId = paymentIntent.metadata?.user_id;
+  if (!userId) return;
+
+  const payment = await getPaymentByStripeId(paymentIntent.id);
+  if (!payment) {
+    await createPayment({
+      userId,
+      stripePaymentIntentId: paymentIntent.id,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      status: "succeeded",
+      paymentType: (paymentIntent.metadata?.payment_type ?? "one_time") as any,
+      description: paymentIntent.description ?? undefined,
+    });
+  }
+}
+
+async function onPaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
+  const userId = paymentIntent.metadata?.user_id;
+  if (!userId) return;
+
+  const payment = await getPaymentByStripeId(paymentIntent.id);
+  if (!payment) {
+    await createPayment({
+      userId,
+      stripePaymentIntentId: paymentIntent.id,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      status: "failed",
+      paymentType: (paymentIntent.metadata?.payment_type ?? "one_time") as any,
+      description: paymentIntent.description ?? undefined,
+    });
+  }
 }

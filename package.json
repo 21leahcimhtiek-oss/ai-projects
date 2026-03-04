@@ -18,7 +18,9 @@
     "db:seed": "tsx src/server/database/seed.ts",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "db:migrate": "psql $DATABASE_URL -f supabase/migrations/001_initial_schema.sql",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -33,7 +35,6 @@
     "@trpc/server": "11.8.0",
     "axios": "^1.13.5",
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^9.2.2",
     "clsx": "^2.1.1",
     "cookie": "^1.1.1",
     "cors": "^2.8.5",
@@ -66,11 +67,12 @@
     "react-native-web": "~0.19.13",
     "stripe": "^17.7.0",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.51"
+    "zod": "^3.25.51",
+    "@supabase/supabase-js": "^2.49.0",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/cookie": "^1.0.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.3",

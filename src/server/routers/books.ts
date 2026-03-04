@@ -2,28 +2,38 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../lib/trpc";
 import { TRPCError } from "@trpc/server";
 import { generateStory } from "../lib/ai";
+import {
+  getBooksByUser,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
+  countBooksThisMonth,
+  getUserById,
+} from "../database/queries";
+
+const FREE_PLAN_MONTHLY_LIMIT = 1;
 
 export const booksRouter = router({
   // List all books for current user
-  list: protectedProcedure.query(({ ctx }) => {
-    const books = ctx.db.prepare(`
-      SELECT id, title, child_name as childName, child_age as childAge,
-             theme, status, created_at as createdAt
-      FROM books WHERE user_id = ? ORDER BY created_at DESC
-    `).all(ctx.user.id);
-    return books;
+  list: protectedProcedure.query(async ({ ctx }) => {
+    const books = await getBooksByUser(ctx.user.id);
+    return books.map((b) => ({
+      id: b.id,
+      title: b.title,
+      childName: b.childName,
+      childAge: b.childAge,
+      theme: b.theme,
+      status: b.status,
+      createdAt: b.createdAt,
+    }));
   }),
 
   // Get single book
   get: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .query(({ ctx, input }) => {
-      const book = ctx.db.prepare(`
-        SELECT id, title, child_name as childName, child_age as childAge,
-               theme, content, status, created_at as createdAt
-        FROM books WHERE id = ? AND user_id = ?
-      `).get(input.id, ctx.user.id) as any;
-
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const book = await getBookById(input.id, ctx.user.id);
       if (!book) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Story not found" });
       }
@@ -32,23 +42,26 @@ export const booksRouter = router({
 
   // Create new book
   create: protectedProcedure
-    .input(z.object({
-      childName: z.string().min(1).max(50),
-      childAge: z.number().min(2).max(12),
-      theme: z.enum(["adventure", "fantasy", "space", "ocean", "dinosaurs", "superheroes", "animals", "magic"]),
-    }))
+    .input(
+      z.object({
+        childName: z.string().min(1).max(50),
+        childAge: z.number().min(2).max(12),
+        theme: z.enum([
+          "adventure", "fantasy", "space", "ocean",
+          "dinosaurs", "superheroes", "animals", "magic",
+        ]),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      // Check subscription limits
-      const user = ctx.db.prepare("SELECT subscription_status FROM users WHERE id = ?").get(ctx.user.id) as any;
-      if (user.subscription_status === "free") {
-        const thisMonth = new Date();
-        thisMonth.setDate(1);
-        const count = ctx.db.prepare(`
-          SELECT COUNT(*) as count FROM books
-          WHERE user_id = ? AND created_at >= ?
-        `).get(ctx.user.id, thisMonth.toISOString()) as any;
+      // Check subscription limits for free users
+      const user = await getUserById(ctx.user.id);
+      if (!user) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "User not found" });
+      }
 
-        if (count.count >= 1) {
+      if (user.subscriptionStatus === "free") {
+        const count = await countBooksThisMonth(ctx.user.id);
+        if (count >= FREE_PLAN_MONTHLY_LIMIT) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Free plan allows 1 story per month. Upgrade to create more!",
@@ -56,42 +69,44 @@ export const booksRouter = router({
         }
       }
 
-      const title = `${input.childName}'s ${input.theme.charAt(0).toUpperCase() + input.theme.slice(1)} Adventure`;
+      const title = `${input.childName}'s ${
+        input.theme.charAt(0).toUpperCase() + input.theme.slice(1)
+      } Adventure`;
 
-      const result = ctx.db.prepare(`
-        INSERT INTO books (user_id, title, child_name, child_age, theme, status)
-        VALUES (?, ?, ?, ?, ?, 'generating')
-      `).run(ctx.user.id, title, input.childName, input.childAge, input.theme);
+      const book = await createBook({
+        userId: ctx.user.id,
+        title,
+        childName: input.childName,
+        childAge: input.childAge,
+        theme: input.theme,
+        status: "generating",
+      });
 
-      const bookId = result.lastInsertRowid as number;
-
-      // Generate story asynchronously
-      generateStory({ childName: input.childName, childAge: input.childAge, theme: input.theme })
-        .then((content) => {
-          ctx.db.prepare(`
-            UPDATE books SET content = ?, status = 'complete', updated_at = datetime('now')
-            WHERE id = ?
-          `).run(content, bookId);
-        })
+      // Generate story asynchronously — don't block the response
+      generateStory({
+        childName: input.childName,
+        childAge: input.childAge,
+        theme: input.theme,
+      })
+        .then((content) =>
+          updateBook(book.id, { content, status: "complete" })
+        )
         .catch((err) => {
           console.error("Story generation failed:", err);
-          ctx.db.prepare(`
-            UPDATE books SET status = 'error', updated_at = datetime('now') WHERE id = ?
-          `).run(bookId);
+          updateBook(book.id, { status: "error" });
         });
 
-      return { id: bookId, title, status: "generating" };
+      return { id: book.id, title, status: "generating" };
     }),
 
   // Delete book
   delete: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      const book = ctx.db.prepare("SELECT id FROM books WHERE id = ? AND user_id = ?").get(input.id, ctx.user.id);
-      if (!book) {
+    .input(z.object({ id: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const deleted = await deleteBook(input.id, ctx.user.id);
+      if (!deleted) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Story not found" });
       }
-      ctx.db.prepare("DELETE FROM books WHERE id = ?").run(input.id);
       return { success: true };
     }),
 });
