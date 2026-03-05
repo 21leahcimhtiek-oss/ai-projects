@@ -1,0 +1,39 @@
+{
+  "name": "@storyforge/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./client": {
+      "import": "./src/client.ts",
+      "types": "./src/client.ts"
+    },
+    "./hooks": {
+      "import": "./src/hooks.ts",
+      "types": "./src/hooks.ts"
+    }
+  },
+  "files": ["src"],
+  "dependencies": {
+    "@storyforge/types": "workspace:*",
+    "@tanstack/react-query": "^5.90.12",
+    "@trpc/client": "11.8.0",
+    "@trpc/react-query": "11.8.0",
+    "@trpc/server": "11.8.0",
+    "zod": "^3.25.51"
+  },
+  "devDependencies": {
+    "@storyforge/tsconfig": "workspace:*",
+    "@types/react": "~18.3.21",
+    "react": "18.3.1",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}

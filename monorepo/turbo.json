@@ -1,0 +1,101 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "CI",
+    "VERCEL_ENV",
+    "VERCEL_URL",
+    "VERCEL_GIT_COMMIT_SHA"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "build/**",
+        "storybook-static/**"
+      ],
+      "env": [
+        "DATABASE_URL",
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "STRIPE_PRICE_ID_MONTHLY",
+        "STRIPE_PRICE_ID_YEARLY",
+        "GEMINI_API_KEY",
+        "JWT_SECRET",
+        "VITE_API_URL",
+        "VITE_STRIPE_PUBLISHABLE_KEY",
+        "EXPO_PUBLIC_API_URL"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "STRIPE_PRICE_ID_MONTHLY",
+        "STRIPE_PRICE_ID_YEARLY",
+        "GEMINI_API_KEY",
+        "JWT_SECRET",
+        "PORT",
+        "VITE_API_URL",
+        "VITE_STRIPE_PUBLISHABLE_KEY",
+        "EXPO_PUBLIC_API_URL"
+      ]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "lint:fix": {
+      "cache": false,
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "env": [
+        "DATABASE_URL",
+        "TEST_DATABASE_URL"
+      ]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false,
+      "outputs": []
+    },
+    "deploy": {
+      "dependsOn": ["build", "test", "lint"],
+      "outputs": []
+    },
+    "db:push": {
+      "cache": false,
+      "outputs": []
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true,
+      "outputs": []
+    },
+    "db:seed": {
+      "cache": false,
+      "outputs": []
+    }
+  }
+}
