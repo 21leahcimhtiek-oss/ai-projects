@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TemplateHub — Premium Notion, Figma & Digital Templates</title>
+  <meta name="description" content="Browse 500+ premium Notion templates, Figma UI kits, Canva designs, and digital products. Instant download. Trusted by 30,000+ creators."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  🎉 New: 120+ Notion AI templates just dropped — <a href="#new">Shop Now →</a>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="logo">Template<span>Hub</span></a>
+    <div class="nav-center">
+      <a href="#" class="nav-cat active">All Products</a>
+      <a href="#" class="nav-cat">Notion</a>
+      <a href="#" class="nav-cat">Figma</a>
+      <a href="#" class="nav-cat">Canva</a>
+      <a href="#" class="nav-cat">Framer</a>
+      <a href="#" class="nav-cat">Bundles</a>
+    </div>
+    <div class="nav-right">
+      <div class="search-bar">🔍 &nbsp;Search templates...</div>
+      <a href="#sell" class="btn-sell">Sell Templates</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag">⚡ 500+ Premium Templates</div>
+        <h1 class="hero-title">
+          The #1 Marketplace for<br/>
+          <span class="highlight">Digital Templates</span><br/>
+          & Creative Assets
+        </h1>
+        <p class="hero-desc">
+          Notion dashboards, Figma UI kits, Canva presentations, Framer websites and more.
+          Download instantly. Use forever. Save hundreds of design hours.
+        </p>
+        <div class="hero-actions">
+          <a href="#featured" class="btn-hero-primary">Browse Templates →</a>
+          <a href="#sell" class="btn-hero-secondary">Start Selling</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-value">500+</div>
+            <div class="hero-stat-label">Templates</div>
+          </div>
+          <div>
+            <div class="hero-stat-value">30K+</div>
+            <div class="hero-stat-label">Customers</div>
+          </div>
+          <div>
+            <div class="hero-stat-value">4.9★</div>
+            <div class="hero-stat-label">Avg Rating</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-products">
+        <div class="mini-product-card" onclick="openProduct('notion-os')">
+          <div class="mini-thumb" style="background:rgba(108,71,255,0.2)">🗂️</div>
+          <div class="mini-info">
+            <div class="mini-title">Ultimate Life OS — Notion</div>
+            <div class="mini-meta">⭐ 4.9 · 2,840 sales</div>
+          </div>
+          <div>
+            <div class="mini-price">$29</div>
+            <div class="mini-badge">BESTSELLER</div>
+          </div>
+        </div>
+        <div class="mini-product-card" onclick="openProduct('figma-ui')">
+          <div class="mini-thumb" style="background:rgba(255,107,53,0.2)">🎨</div>
+          <div class="mini-info">
+            <div class="mini-title">SaaS UI Kit — Figma</div>
+            <div class="mini-meta">⭐ 4.8 · 1,640 sales</div>
+          </div>
+          <div>
+            <div class="mini-price">$49</div>
+            <div class="mini-badge" style="background:rgba(255,107,53,0.2);color:#FF8F65;border-color:rgba(255,107,53,0.3)">NEW</div>
+          </div>
+        </div>
+        <div class="mini-product-card" onclick="openProduct('canva-brand')">
+          <div class="mini-thumb" style="background:rgba(0,200,150,0.2)">✨</div>
+          <div class="mini-info">
+            <div class="mini-title">Brand Identity Kit — Canva</div>
+            <div class="mini-meta">⭐ 5.0 · 980 sales</div>
+          </div>
+          <div>
+            <div class="mini-price">$19</div>
+          </div>
+        </div>
+        <div class="mini-product-card" onclick="openProduct('startup-bundle')">
+          <div class="mini-thumb" style="background:rgba(255,184,0,0.2)">🚀</div>
+          <div class="mini-info">
+            <div class="mini-title">Startup Founder Bundle</div>
+            <div class="mini-meta">⭐ 4.9 · 740 sales · 12 files</div>
+          </div>
+          <div>
+            <div class="mini-price">$79</div>
+            <div class="mini-badge" style="background:rgba(255,59,59,0.3);color:#FF8080;border-color:rgba(255,59,59,0.4)">SALE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY PILLS -->
+<section id="categories">
+  <div class="container">
+    <div class="cats-scroll">
+      <a href="#" class="cat-pill active"><span class="cat-icon">🏠</span> All <span class="cat-count">500+</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">🗂️</span> Notion <span class="cat-count">180</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">🎨</span> Figma <span class="cat-count">120</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">✨</span> Canva <span class="cat-count">90</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">🌐</span> Framer <span class="cat-count">45</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">📊</span> Dashboards <span class="cat-count">60</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">📧</span> Email Templates <span class="cat-count">38</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">📱</span> Social Media <span class="cat-count">72</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">💼</span> Business <span class="cat-count">55</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">🎓</span> Education <span class="cat-count">28</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">💸</span> Finance <span class="cat-count">33</span></a>
+      <a href="#" class="cat-pill"><span class="cat-icon">🆓</span> Free <span class="cat-count">22</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">🔥 Bestsellers</h2>
+      <a href="#" class="section-link">View all →</a>
+    </div>
+    <div class="products-grid" id="products-grid">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <!-- BUNDLE BANNER -->
+    <div class="bundle-banner">
+      <div class="bundle-text">
+        <h2>🚀 Ultimate Creator Bundle</h2>
+        <p>Get ALL 12 bestselling templates in one discounted bundle. Notion OS, Figma UI Kit, Canva Brand Kit, and more — everything you need to run your business.</p>
+      </div>
+      <div class="bundle-value">
+        <div class="bundle-original">Value: $297</div>
+        <div class="bundle-price">$79</div>
+        <div class="bundle-save">Save 73%</div>
+      </div>
+      <a href="#" class="btn-bundle" onclick="openProduct('startup-bundle')">Get the Bundle →</a>
+    </div>
+  </div>
+</section>
+
+<!-- NEW ARRIVALS -->
+<section class="section section-alt" id="new">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">✨ New Arrivals</h2>
+      <a href="#" class="section-link">View all →</a>
+    </div>
+    <div class="products-grid" id="new-grid"></div>
+  </div>
+</section>
+
+<!-- FREE PICKS -->
+<section class="section" id="free">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">🆓 Free Templates</h2>
+      <a href="#" class="section-link">View all free →</a>
+    </div>
+    <div class="products-grid" id="free-grid"></div>
+  </div>
+</section>
+
+<!-- SELL YOUR TEMPLATES -->
+<section id="sell">
+  <div class="container">
+    <div class="sell-grid">
+      <div>
+        <div class="sell-tag">💰 For Creators</div>
+        <h2 class="sell-title">Turn your templates into<br/><span class="highlight">passive income</span></h2>
+        <p class="sell-desc">Upload once, sell forever. Join 2,000+ creators earning monthly passive income by selling their Notion, Figma, Canva, and Framer templates on TemplateHub.</p>
+        <ul class="sell-features">
+          <li><span class="icon">💸</span> Keep 80% of every sale — industry-best rates</li>
+          <li><span class="icon">⚡</span> Automatic delivery — we handle fulfillment</li>
+          <li><span class="icon">📊</span> Real-time analytics dashboard</li>
+          <li><span class="icon">🌍</span> Reach 30,000+ buyers instantly</li>
+          <li><span class="icon">🔒</span> Secure payments via Stripe & PayPal</li>
+          <li><span class="icon">🚀</span> Get listed in 24 hours</li>
+        </ul>
+        <a href="#" class="btn-hero-primary" style="display:inline-block">Start Selling Free →</a>
+      </div>
+      <div class="sell-earnings">
+        <div class="earning-card">
+          <div class="earning-value">$4,200</div>
+          <div class="earning-label">Avg. creator monthly earnings</div>
+        </div>
+        <div class="earning-card">
+          <div class="earning-value">80%</div>
+          <div class="earning-label">Revenue you keep</div>
+        </div>
+        <div class="earning-card">
+          <div class="earning-value">24h</div>
+          <div class="earning-label">Time to get listed</div>
+        </div>
+        <div class="earning-card">
+          <div class="earning-value">2K+</div>
+          <div class="earning-label">Active sellers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">💬 What customers say</h2>
+    </div>
+    <div class="testimonials-row">
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"The Notion Life OS template completely transformed how I manage my business, projects, and personal life. Worth every dollar and then some."</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:linear-gradient(135deg,#6C47FF,#FF6B35)">AC</div>
+          <div><div class="t-name">Alex Chen</div><div class="t-role">Indie Hacker</div></div>
+        </div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"I downloaded the Figma SaaS UI kit and saved at least 40 hours of design work on my startup. The quality is insane for the price."</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:linear-gradient(135deg,#FF6B35,#FFB800)">MR</div>
+          <div><div class="t-name">Maya Rodriguez</div><div class="t-role">Product Designer</div></div>
+        </div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"I sell my Notion templates here and made $3,200 last month from a single template. Best passive income decision I've ever made."</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:linear-gradient(135deg,#00C896,#6C47FF)">JP</div>
+          <div><div class="t-name">James Park</div><div class="t-role">Notion Creator</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="container">
+    <div class="newsletter-inner">
+      <h2 class="newsletter-title">Get free templates every week</h2>
+      <p class="newsletter-desc">Join 15,000+ creators and get our best templates, design tips, and exclusive discounts — delivered free to your inbox.</p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Your email address..." id="nl-email"/>
+        <button class="btn-newsletter" onclick="subscribeNewsletter()">Subscribe →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <a href="#" class="logo">Template<span style="color:var(--primary)">Hub</span></a>
+        <p class="footer-tagline">The #1 marketplace for premium digital templates and creative assets.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Marketplace</h4>
+        <ul>
+          <li><a href="#">Browse All</a></li>
+          <li><a href="#">Notion Templates</a></li>
+          <li><a href="#">Figma UI Kits</a></li>
+          <li><a href="#">Canva Templates</a></li>
+          <li><a href="#">Bundles</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Sell</h4>
+        <ul>
+          <li><a href="#">Start Selling</a></li>
+          <li><a href="#">Creator Dashboard</a></li>
+          <li><a href="#">Seller Guidelines</a></li>
+          <li><a href="#">Pricing & Fees</a></li>
+          <li><a href="#">Success Stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 TemplateHub. All rights reserved.</span>
+      <span class="footer-copy">🔒 Secure checkout · Instant delivery · 30-day guarantee</span>
+    </div>
+  </div>
+</footer>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="product-modal" id="modalContent"></div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

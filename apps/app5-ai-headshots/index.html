@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HeadshotAI — Studio-Quality AI Headshots in Minutes</title>
+  <meta name="description" content="Get 120 professional AI headshots in 4K quality for just $19. No photographer. No studio. No awkward posing. Used by 80,000+ professionals."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<div class="topbar">📸 Limited Time: 120 headshots for $19 (regular $99) — <a href="#pricing">Claim offer →</a></div>
+
+<nav>
+  <div class="container nav-row">
+    <a href="#" class="logo">HeadshotAI</a>
+    <ul class="nav-links">
+      <li><a href="#styles">Styles</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <div class="nav-btns">
+      <a href="#" class="btn-ghost">Sign In</a>
+      <button class="btn-main" onclick="openModal('starter')">Get My Headshots →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-badge">📸 80,000+ professionals trust HeadshotAI</div>
+    <h1 class="hero-h1">
+      Look Like a <span class="g">Fortune 500 CEO</span><br/>
+      For $19
+    </h1>
+    <p class="hero-sub">Upload 10 selfies. Get 120 studio-quality professional headshots in 4K. No photographer, no studio, no awkward posing. Ready in 2 hours.</p>
+    <div class="hero-btns">
+      <button class="btn-hero" onclick="openModal('starter')">📸 Get 120 Headshots — $19</button>
+      <a href="#styles" class="btn-hero-out">See Examples →</a>
+    </div>
+    <div class="hero-proof">
+      <span>⭐ 4.9/5 from 8,400+ reviews</span>
+      <span class="proof-sep">|</span>
+      <span>⚡ Ready in under 2 hours</span>
+      <span class="proof-sep">|</span>
+      <span>🎨 20+ professional styles</span>
+      <span class="proof-sep">|</span>
+      <span>🔒 Photos deleted after 48h</span>
+    </div>
+
+    <!-- BEFORE/AFTER SHOWCASE -->
+    <div class="showcase">
+      <div class="ba-card">
+        <div class="ba-before" style="background:linear-gradient(135deg,#1A1A2E,#2D2D44)">
+          <span>🤳</span>
+          <span style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">BEFORE</span>
+        </div>
+        <div class="ba-arrow">→ AI Transformed →</div>
+        <div class="ba-after" style="background:linear-gradient(135deg,#0A2A4A,#1A4A7A)">
+          <span>👔</span>
+          <span class="quality-badge">4K</span>
+          <span style="position:absolute;bottom:8px;left:8px;background:rgba(0,200,150,0.8);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">AFTER</span>
+        </div>
+        <div class="ba-style">Corporate Executive</div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-before" style="background:linear-gradient(135deg,#1A1A2E,#2D2D44)"><span>🤳</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">BEFORE</span></div>
+        <div class="ba-arrow">→ AI Transformed →</div>
+        <div class="ba-after" style="background:linear-gradient(135deg,#1A0A2E,#2D1A4E)"><span>💻</span><span class="quality-badge">4K</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,200,150,0.8);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">AFTER</span></div>
+        <div class="ba-style">Tech Professional</div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-before" style="background:linear-gradient(135deg,#1A1A2E,#2D2D44)"><span>🤳</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">BEFORE</span></div>
+        <div class="ba-arrow">→ AI Transformed →</div>
+        <div class="ba-after" style="background:linear-gradient(135deg,#0A2A1A,#1A4A2A)"><span>📊</span><span class="quality-badge">4K</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,200,150,0.8);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">AFTER</span></div>
+        <div class="ba-style">LinkedIn Profile</div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-before" style="background:linear-gradient(135deg,#1A1A2E,#2D2D44)"><span>🤳</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">BEFORE</span></div>
+        <div class="ba-arrow">→ AI Transformed →</div>
+        <div class="ba-after" style="background:linear-gradient(135deg,#2A1A0A,#4A2A1A)"><span>🎤</span><span class="quality-badge">4K</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,200,150,0.8);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">AFTER</span></div>
+        <div class="ba-style">Speaker & Creator</div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-before" style="background:linear-gradient(135deg,#1A1A2E,#2D2D44)"><span>🤳</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">BEFORE</span></div>
+        <div class="ba-arrow">→ AI Transformed →</div>
+        <div class="ba-after" style="background:linear-gradient(135deg,#1A0A0A,#4A1A1A)"><span>⚖️</span><span class="quality-badge">4K</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,200,150,0.8);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">AFTER</span></div>
+        <div class="ba-style">Legal & Finance</div>
+      </div>
+      <div class="ba-card">
+        <div class="ba-before" style="background:linear-gradient(135deg,#1A1A2E,#2D2D44)"><span>🤳</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">BEFORE</span></div>
+        <div class="ba-arrow">→ AI Transformed →</div>
+        <div class="ba-after" style="background:linear-gradient(135deg,#0A1A2A,#1A2A4A)"><span>🏥</span><span class="quality-badge">4K</span><span style="position:absolute;bottom:8px;left:8px;background:rgba(0,200,150,0.8);color:white;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700">AFTER</span></div>
+        <div class="ba-style">Healthcare Pro</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div><div class="s-val">80K+</div><div class="s-lbl">Headshots Generated</div></div>
+      <div><div class="s-val">120</div><div class="s-lbl">Photos Per Package</div></div>
+      <div><div class="s-val">2hrs</div><div class="s-lbl">Average Delivery Time</div></div>
+      <div><div class="s-val">4.9★</div><div class="s-lbl">Average Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- UPLOAD DEMO -->
+<section id="upload-demo">
+  <div class="container">
+    <div class="upload-grid">
+      <div>
+        <div class="sec-label">📤 How It Works</div>
+        <h2 class="sec-title" style="text-align:left;margin-bottom:32px">From selfie to <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">studio headshot</span> in 3 steps</h2>
+        <div class="upload-info">
+          <div class="info-step">
+            <div class="info-num">1</div>
+            <div>
+              <div class="info-title">Upload 10–20 selfies</div>
+              <div class="info-desc">Take photos in different angles and lighting. No professional photos needed — just clear selfies from your phone. Our AI handles the rest.</div>
+            </div>
+          </div>
+          <div class="info-step">
+            <div class="info-num">2</div>
+            <div>
+              <div class="info-title">Choose your styles</div>
+              <div class="info-desc">Pick from 20+ professional styles: corporate, LinkedIn, casual business, creative, healthcare, legal, and more. Mix and match backgrounds and outfits.</div>
+            </div>
+          </div>
+          <div class="info-step">
+            <div class="info-num">3</div>
+            <div>
+              <div class="info-title">Download in 2 hours</div>
+              <div class="info-desc">Receive 120 stunning 4K headshots directly in your inbox. Download as JPG or PNG. Your photos are permanently deleted from our servers after 48 hours.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="upload-box" onclick="openModal('starter')">
+        <div class="upload-icon">📤</div>
+        <div class="upload-title">Upload Your Photos</div>
+        <div class="upload-sub">Drop your selfies here or click to browse.<br/>We accept JPG, PNG, HEIC formats.</div>
+        <button class="upload-btn">📸 Upload & Get Headshots</button>
+        <div class="upload-formats">JPG · PNG · HEIC · Up to 20 photos · Max 10MB each</div>
+        <div style="margin-top:20px;padding:14px;background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:10px;font-size:0.8rem;color:var(--muted)">
+          🔒 <strong style="color:var(--text)">Privacy first:</strong> Photos encrypted in transit, auto-deleted after 48h. Never used for AI training.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STYLES -->
+<section id="styles">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">🎨 Styles</div>
+      <h2 class="sec-title">20+ professional <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">styles included</span></h2>
+      <p class="sec-sub">Every package includes all styles. Switch between corporate, creative, and casual with one click.</p>
+    </div>
+    <div class="styles-grid">
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#0A2A4A,#1A4A7A)">
+          <span>👔</span>
+          <span class="style-popular">🔥 #1 Popular</span>
+        </div>
+        <div class="style-name">Corporate Executive</div>
+        <div class="style-meta">Dark blue · White shirt · Neutral background</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#1A1A2E,#2D2D5E)">
+          <span>💻</span>
+        </div>
+        <div class="style-name">Tech Professional</div>
+        <div class="style-meta">Casual business · Modern office background</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#F0E8D0,#D4C5A0)">
+          <span>🎨</span>
+        </div>
+        <div class="style-name">Creative Director</div>
+        <div class="style-meta">Warm tones · Studio setting · Artistic feel</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#0A2A1A,#1A5A2A)">
+          <span>⚕️</span>
+        </div>
+        <div class="style-name">Healthcare Professional</div>
+        <div class="style-meta">Clean white · Medical setting · Trust-inspiring</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#2A1A0A,#5A3A1A)">
+          <span>⚖️</span>
+        </div>
+        <div class="style-name">Legal & Finance</div>
+        <div class="style-meta">Formal · Authoritative · Traditional office</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#1A0A2E,#4A1A7A)">
+          <span>🎤</span>
+          <span class="style-popular" style="background:var(--grad2)">✨ New</span>
+        </div>
+        <div class="style-name">Speaker & Thought Leader</div>
+        <div class="style-meta">Dynamic · Stage-ready · High energy</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#E8F4FD,#B8D4F0)">
+          <span>🌟</span>
+        </div>
+        <div class="style-name">Entrepreneur</div>
+        <div class="style-meta">Approachable · Confident · Bright background</div>
+      </div>
+      <div class="style-card" onclick="openModal('starter')">
+        <div class="style-thumb" style="background:linear-gradient(135deg,#1A2A1A,#2A4A2A)">
+          <span>📊</span>
+        </div>
+        <div class="style-name">LinkedIn Optimized</div>
+        <div class="style-meta">Perfect crop · High contrast · Profile-ready</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">⚡ Why HeadshotAI</div>
+      <h2 class="sec-title">Everything a <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$500 photographer</span> gives you — for $19</h2>
+    </div>
+    <div class="feat-row">
+      <div class="f-card">
+        <div class="f-icon">🎨</div>
+        <h3 class="f-title">True 4K Resolution</h3>
+        <p class="f-desc">Every headshot rendered at 4K resolution (4096×4096px). Print-ready for business cards, websites, press kits, and conference materials.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon">⚡</div>
+        <h3 class="f-title">2-Hour Turnaround</h3>
+        <p class="f-desc">Most orders are completed in under 2 hours. No waiting days for a photographer's editing queue. Need it in 30 minutes? Rush processing available.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon">🔒</div>
+        <h3 class="f-title">Privacy First</h3>
+        <p class="f-desc">Your photos are encrypted in transit and at rest. Automatically deleted from our servers after 48 hours. Never used to train AI models. GDPR compliant.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon">🎭</div>
+        <h3 class="f-title">Outfit & Background Editor</h3>
+        <p class="f-desc">Change your outfit, background color, and setting without new photos. Try the navy suit with an office background, then switch to casual with an outdoor setting.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon">🌈</div>
+        <h3 class="f-title">Diversity & Inclusion</h3>
+        <p class="f-desc">Our AI is trained on diverse datasets to accurately represent all skin tones, hair types, and facial features without bias or whitewashing. Your headshot, authentically you.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon">♾️</div>
+        <h3 class="f-title">Commercial License</h3>
+        <p class="f-desc">All headshots come with full commercial rights. Use them on your website, LinkedIn, business cards, press releases, and marketing materials — forever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">💰 Pricing</div>
+      <h2 class="sec-title">One-time or <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">unlimited subscription</span></h2>
+      <p class="sec-sub">No subscription required. Pay once, download forever. Or go unlimited for professionals who need fresh headshots regularly.</p>
+    </div>
+    <div class="p-wrap">
+      <div class="p-card">
+        <div class="p-name">Starter</div>
+        <div class="p-price"><sup>$</sup>19</div>
+        <div class="p-sub">one-time payment</div>
+        <p class="p-desc">Perfect for your first professional headshot pack.</p>
+        <ul class="p-feats">
+          <li class="on">40 headshots (4K)</li>
+          <li class="on">8 professional styles</li>
+          <li class="on">2 background options</li>
+          <li class="on">Commercial license</li>
+          <li class="on">2-hour delivery</li>
+          <li class="off">Outfit editor</li>
+          <li class="off">Rush processing</li>
+          <li class="off">Unlimited retakes</li>
+        </ul>
+        <button class="btn-pp out" onclick="openModal('starter')">Get 40 Headshots — $19</button>
+      </div>
+      <div class="p-card pop">
+        <div class="p-badge">🔥 Best Value</div>
+        <div class="p-name">Professional</div>
+        <div class="p-price"><sup>$</sup>39</div>
+        <div class="p-sub">one-time payment</div>
+        <p class="p-desc">The complete headshot package for serious professionals.</p>
+        <ul class="p-feats">
+          <li class="on"><strong>120 headshots</strong> (4K)</li>
+          <li class="on">All 20+ styles</li>
+          <li class="on">10 background options</li>
+          <li class="on">Outfit editor</li>
+          <li class="on">Commercial license</li>
+          <li class="on">Priority 1-hr delivery</li>
+          <li class="on">3 free retakes</li>
+          <li class="off">Unlimited retakes</li>
+        </ul>
+        <button class="btn-pp fill" onclick="openModal('professional')">Get 120 Headshots — $39 →</button>
+      </div>
+      <div class="p-card">
+        <div class="p-name">Unlimited</div>
+        <div class="p-price"><sup>$</sup>29</div>
+        <div class="p-sub">per month · cancel anytime</div>
+        <p class="p-desc">For executives, recruiters, and personal brands who need fresh headshots every month.</p>
+        <ul class="p-feats">
+          <li class="on">Unlimited headshots</li>
+          <li class="on">All 20+ styles (+ new)</li>
+          <li class="on">Custom backgrounds</li>
+          <li class="on">Outfit editor</li>
+          <li class="on">Rush processing (30min)</li>
+          <li class="on">Unlimited retakes</li>
+          <li class="on">Team sharing (3 members)</li>
+          <li class="on">Priority support</li>
+        </ul>
+        <button class="btn-pp out" onclick="openModal('unlimited')">Start Free Trial →</button>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:0.8rem;color:var(--muted)">🔒 Stripe-secured · 30-day money-back guarantee · Photos auto-deleted after 48h</p>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">💬 Reviews</div>
+      <h2 class="sec-title">80,000+ professionals <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">look their best</span></h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rv-card">
+        <div class="rv-stars">★★★★★</div>
+        <p class="rv-text">"I spent $400 on a professional photographer last year and the results weren't as good as HeadshotAI. These photos got me 3 LinkedIn recruiter messages in the first week."</p>
+        <div class="rv-author">
+          <div class="rv-av" style="background:linear-gradient(135deg,#FF6B6B,#FFB347)">DK</div>
+          <div><div class="rv-name">David Kim</div><div class="rv-role">VP Engineering · Stripe</div></div>
+        </div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-stars">★★★★★</div>
+        <p class="rv-text">"As a consultant I need to look polished everywhere — website, LinkedIn, conference speaker bios. HeadshotAI gave me 120 photos I actually love. Total game changer."</p>
+        <div class="rv-author">
+          <div class="rv-av" style="background:linear-gradient(135deg,#4ECDC4,#6C47FF)">PR</div>
+          <div><div class="rv-name">Patricia Reyes</div><div class="rv-role">Management Consultant · McKinsey</div></div>
+        </div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-stars">★★★★★</div>
+        <p class="rv-text">"My old LinkedIn photo was from 2018. Used HeadshotAI and my profile views went up 340% in a month. Worth every penny and then some. The quality is remarkable."</p>
+        <div class="rv-author">
+          <div class="rv-av" style="background:linear-gradient(135deg,#FFB347,#FF6B6B)">JO</div>
+          <div><div class="rv-name">James O'Brien</div><div class="rv-role">Sales Director · HubSpot</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-box">
+      <h2 class="cta-title">Look like a <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">top executive</span> today</h2>
+      <p class="cta-sub">Join 80,000+ professionals who upgraded their headshot and their career. Upload your selfies and get 120 stunning photos in under 2 hours.</p>
+      <div class="cta-form">
+        <input type="email" class="cta-inp" placeholder="Enter your email..." id="ctaEmail"/>
+        <button class="btn-cta" onclick="ctaStart()">Get Started →</button>
+      </div>
+      <p class="cta-note">📸 120 headshots for <span>$39</span> · ⚡ Ready in 2 hours · 🔒 30-day guarantee</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="foot-logo">HeadshotAI</a>
+        <p class="foot-desc">Studio-quality AI headshots for professionals. No photographer required. Privacy first, results guaranteed.</p>
+      </div>
+      <div>
+        <div class="foot-h">Product</div>
+        <ul class="foot-links">
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Styles Gallery</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">For Teams</a></li>
+          <li><a href="#">API</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-h">Use Cases</div>
+        <ul class="foot-links">
+          <li><a href="#">LinkedIn Profile</a></li>
+          <li><a href="#">Company Website</a></li>
+          <li><a href="#">Press & Media</a></li>
+          <li><a href="#">Speaker Bio</a></li>
+          <li><a href="#">Dating Apps</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-h">Company</div>
+        <ul class="foot-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span class="foot-copy">© 2025 HeadshotAI. All rights reserved.</span>
+      <span class="foot-copy">🔒 Photos auto-deleted after 48h · GDPR compliant · SOC 2</span>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-ov" id="checkoutModal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="m-label" id="m-plan-label">Professional Package</div>
+    <h2 class="m-title" id="m-title-text">Get Your AI Headshots</h2>
+    <form class="m-form" onsubmit="handleCheckout(event)">
+      <input type="email" class="m-inp" placeholder="Email address" required/>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 15px;font-size:0.85rem;color:var(--muted)">
+        💳 &nbsp;Secure checkout powered by <strong style="color:var(--text)">Stripe</strong>
+      </div>
+      <button type="submit" class="m-btn" id="m-btn-text">📸 Get My Headshots Now →</button>
+    </form>
+    <p class="m-note">🔒 256-bit SSL · 30-day money-back · Photos deleted after 48h</p>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RankIQ — AI SEO Audit & Rank Tracking Platform</title>
+  <meta name="description" content="Audit your website, track keyword rankings, analyze backlinks, and outrank your competition with AI-powered SEO insights. Free trial."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#05080E;--bg2:#0A0D17;--bg3:#0F1320;--bg4:#151929;--text:#EEF2FF;--muted:#8892B0;--border:rgba(255,255,255,0.07);--p:#3B82F6;--p2:#60A5FA;--p3:#10B981;--p4:#F59E0B;--grad:linear-gradient(135deg,#3B82F6,#8B5CF6);--grad2:linear-gradient(135deg,#10B981,#3B82F6);--glow:0 0 50px rgba(59,130,246,0.2);--shadow:0 24px 64px rgba(0,0,0,0.5)}
+    *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+    body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+    .container{max-width:1160px;margin:0 auto;padding:0 24px}
+    .topbar{background:var(--grad);color:white;text-align:center;padding:9px;font-size:0.82rem;font-weight:500}
+    .topbar a{color:white;font-weight:800;text-decoration:underline}
+    nav{position:sticky;top:0;z-index:200;background:rgba(5,8,14,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 0}
+    .nav-row{display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:1.25rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;letter-spacing:-0.5px}
+    .nav-links{display:flex;gap:28px;list-style:none}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.87rem;transition:color 0.2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-btns{display:flex;gap:10px}
+    .btn-g{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:8px;font-size:0.85rem;cursor:pointer;text-decoration:none}
+    .btn-p{background:var(--grad);color:white;padding:9px 20px;border-radius:8px;font-size:0.85rem;font-weight:700;border:none;cursor:pointer;text-decoration:none;box-shadow:0 4px 16px rgba(59,130,246,0.35);transition:all 0.2s}
+    .btn-p:hover{transform:translateY(-1px)}
+
+    /* HERO */
+    #hero{padding:96px 0 60px;background:radial-gradient(ellipse at 40% 0%,rgba(59,130,246,0.12) 0%,transparent 60%),radial-gradient(ellipse at 80%,rgba(139,92,246,0.08) 0%,transparent 55%),var(--bg)}
+    .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+    .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);color:var(--p2);padding:5px 14px;border-radius:100px;font-size:0.77rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px}
+    .h1{font-size:clamp(2rem,3.5vw,3.4rem);font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+    .h1 .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .sub{font-size:1rem;color:var(--muted);margin-bottom:28px;line-height:1.7;max-width:460px}
+    /* URL AUDIT BOX */
+    .audit-box{display:flex;gap:0;background:var(--bg3);border:1px solid rgba(59,130,246,0.25);border-radius:12px;overflow:hidden;margin-bottom:20px;box-shadow:0 8px 30px rgba(59,130,246,0.15)}
+    .audit-input{flex:1;background:transparent;border:none;color:var(--text);padding:14px 18px;font-size:0.95rem;font-family:inherit}
+    .audit-input:focus{outline:none}
+    .audit-input::placeholder{color:var(--muted)}
+    .btn-audit{background:var(--grad);color:white;border:none;padding:14px 24px;font-weight:700;cursor:pointer;font-size:0.9rem;white-space:nowrap;transition:all 0.2s}
+    .btn-audit:hover{filter:brightness(1.1)}
+    .trust-row{display:flex;gap:18px;flex-wrap:wrap}
+    .trust-i{display:flex;align-items:center;gap:5px;font-size:0.8rem;color:var(--muted)}
+
+    /* AUDIT RESULT PREVIEW */
+    .audit-result{background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow),var(--glow)}
+    .ar-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:8px}
+    .ar-dot{width:10px;height:10px;border-radius:50%}
+    .ar-body{padding:20px}
+    .score-row{display:flex;align-items:center;gap:20px;margin-bottom:18px}
+    .score-circle{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0}
+    .score-num{font-size:1.6rem;font-weight:900;letter-spacing:-1px}
+    .score-lbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+    .score-details{flex:1}
+    .score-site{font-weight:800;font-size:0.95rem;margin-bottom:4px}
+    .score-sub{font-size:0.78rem;color:var(--muted)}
+    .issues-list{display:flex;flex-direction:column;gap:8px}
+    .issue{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:0.8rem}
+    .issue.crit{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2)}
+    .issue.warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
+    .issue.good{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)}
+    .issue-icon{font-size:1rem}
+    .issue-text{flex:1;font-size:0.8rem}
+    .issue-badge{padding:2px 8px;border-radius:100px;font-size:0.65rem;font-weight:800}
+    .crit .issue-badge{background:rgba(239,68,68,0.2);color:#FCA5A5}
+    .warn .issue-badge{background:rgba(245,158,11,0.2);color:#FCD34D}
+    .good .issue-badge{background:rgba(16,185,129,0.2);color:#6EE7B7}
+    .rank-table{background:var(--bg3);border-radius:10px;overflow:hidden;margin-top:12px}
+    .rank-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:8px 12px;font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border)}
+    .rank-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:9px 12px;font-size:0.78rem;border-bottom:1px solid var(--border);align-items:center}
+    .rank-row:last-child{border-bottom:none}
+    .rank-pos{font-weight:900;color:var(--p2)}
+    .rank-change{font-size:0.7rem}
+    .up{color:#10B981}.down{color:#EF4444}.same{color:var(--muted)}
+
+    /* FEATURES */
+    #features{padding:80px 0}
+    .sec-label{display:inline-block;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--p2);padding:5px 14px;border-radius:100px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+    .sec-title{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;letter-spacing:-1px;margin-bottom:12px}
+    .sec-sub{font-size:0.95rem;color:var(--muted);max-width:520px;margin:0 auto;line-height:1.7}
+    .sec-head{text-align:center;margin-bottom:52px}
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .f-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:26px;transition:all 0.3s}
+    .f-card:hover{border-color:rgba(59,130,246,0.3);transform:translateY(-3px);box-shadow:var(--glow)}
+    .f-icon{font-size:1.6rem;margin-bottom:14px}
+    .f-title{font-size:0.98rem;font-weight:800;margin-bottom:8px}
+    .f-desc{font-size:0.83rem;color:var(--muted);line-height:1.65}
+
+    /* PRICING */
+    #pricing{padding:80px 0;background:radial-gradient(ellipse at 50%,rgba(59,130,246,0.06) 0%,transparent 70%)}
+    .p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:48px auto 0}
+    .p-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:30px;position:relative}
+    .p-card.pop{border-color:var(--p);background:rgba(59,130,246,0.07);box-shadow:0 0 50px rgba(59,130,246,0.15)}
+    .p-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--grad);color:white;padding:3px 16px;border-radius:100px;font-size:0.72rem;font-weight:800;white-space:nowrap}
+    .p-name{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px}
+    .p-price{font-size:3rem;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px}
+    .p-price sup{font-size:1.1rem;vertical-align:super;letter-spacing:0}
+    .p-per{font-size:0.8rem;color:var(--muted);margin-bottom:10px}
+    .p-desc{font-size:0.82rem;color:var(--muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+    .p-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+    .p-list li{font-size:0.83rem;display:flex;gap:8px}
+    .p-list li.on::before{content:'✓';color:#34D399;font-weight:700}
+    .p-list li.off{color:var(--muted)}
+    .p-list li.off::before{content:'✗';color:var(--muted)}
+    .btn-pp{width:100%;padding:12px;border-radius:10px;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.3s;border:none}
+    .btn-pp.out{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn-pp.out:hover{border-color:var(--p);background:rgba(59,130,246,0.08)}
+    .btn-pp.grad{background:var(--grad);color:white;box-shadow:0 6px 20px rgba(59,130,246,0.35)}
+    .btn-pp.grad:hover{transform:translateY(-1px)}
+
+    /* STATS / REVIEWS / CTA / FOOTER same pattern */
+    #stats{padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+    .s-val{font-size:2.6rem;font-weight:900;letter-spacing:-1.5px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .s-lbl{font-size:0.82rem;color:var(--muted);margin-top:4px}
+    #reviews{padding:80px 0}
+    .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .rv{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px}
+    .rv-stars{color:#FFB800;font-size:0.85rem;margin-bottom:10px}
+    .rv-text{font-size:0.86rem;color:var(--muted);line-height:1.65;margin-bottom:14px;font-style:italic}
+    .rv-auth{display:flex;align-items:center;gap:10px}
+    .rv-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem;color:white}
+    .rv-name{font-weight:700;font-size:0.85rem}
+    .rv-role{font-size:0.75rem;color:var(--muted)}
+    #cta{padding:80px 0}
+    .cta-box{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid rgba(59,130,246,0.2);border-radius:24px;padding:60px 48px;text-align:center;box-shadow:var(--glow);max-width:680px;margin:0 auto}
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 0 24px}
+    .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
+    .foot-logo{font-size:1.2rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;margin-bottom:10px;text-decoration:none}
+    .foot-desc{font-size:0.82rem;color:var(--muted);max-width:230px;line-height:1.6}
+    .foot-h{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:14px}
+    .foot-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+    .foot-list a{color:var(--muted);text-decoration:none;font-size:0.82rem;transition:color 0.2s}
+    .foot-list a:hover{color:var(--text)}
+    .foot-bottom{display:flex;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px}
+    .foot-copy{font-size:0.78rem;color:var(--muted)}
+    .modal-ov{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);align-items:center;justify-content:center}
+    .modal-ov.on{display:flex}
+    .modal-box{background:var(--bg2);border:1px solid rgba(59,130,246,0.2);border-radius:20px;padding:40px;max-width:420px;width:90%;box-shadow:var(--glow),var(--shadow);position:relative}
+    .modal-x{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer}
+    .m-form{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+    .m-inp{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px 15px;border-radius:10px;font-size:0.88rem;font-family:inherit}
+    .m-inp:focus{outline:none;border-color:var(--p)}
+    .m-btn{background:var(--grad);color:white;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:0.92rem;cursor:pointer;box-shadow:0 6px 20px rgba(59,130,246,0.35);transition:all 0.3s}
+    .m-note{font-size:0.74rem;color:var(--muted);text-align:center;margin-top:8px}
+    @media(max-width:768px){.hero-grid,.feat-grid,.p-grid,.rev-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr}.stats-row{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+  </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<div class="topbar">🚀 New: AI-powered competitor gap analysis — <a href="#pricing">Try free →</a></div>
+
+<nav>
+  <div class="container nav-row">
+    <a href="#" class="logo">RankIQ</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <div class="nav-btns">
+      <a href="#" class="btn-g">Sign In</a>
+      <button class="btn-p" onclick="openModal('pro')">Start Free Audit →</button>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag">🔍 40,000+ SEO professionals</div>
+        <h1 class="h1">Outrank Your<br/><span class="g">Competition</span><br/>with AI SEO</h1>
+        <p class="sub">RankIQ audits your entire website, tracks keyword rankings daily, analyzes competitor strategies, and gives you a precise action plan to reach page 1.</p>
+        <div class="audit-box">
+          <input type="text" class="audit-input" placeholder="Enter your website URL... (e.g. yoursite.com)" id="auditUrl"/>
+          <button class="btn-audit" onclick="runAudit()">🔍 Run Free Audit</button>
+        </div>
+        <div class="trust-row">
+          <span class="trust-i">⭐ 4.9/5 rating</span>
+          <span class="trust-i">⚡ Audit in 60 seconds</span>
+          <span class="trust-i">🆓 Free forever plan</span>
+          <span class="trust-i">🔒 No credit card</span>
+        </div>
+      </div>
+      <div class="audit-result">
+        <div class="ar-bar">
+          <div class="ar-dot" style="background:#FF5F57"></div>
+          <div class="ar-dot" style="background:#FEBC2E"></div>
+          <div class="ar-dot" style="background:#28C840"></div>
+          <span style="margin-left:10px;font-size:0.75rem;color:var(--muted)">RankIQ — Site Audit Report</span>
+        </div>
+        <div class="ar-body">
+          <div class="score-row">
+            <div class="score-circle" style="background:conic-gradient(#3B82F6 0% 72%,rgba(255,255,255,0.1) 72% 100%);box-shadow:0 0 20px rgba(59,130,246,0.3)">
+              <div class="score-num" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">72</div>
+              <div class="score-lbl">SEO Score</div>
+            </div>
+            <div class="score-details">
+              <div class="score-site">yourwebsite.com</div>
+              <div class="score-sub" style="margin-bottom:8px">Scanned 847 pages · 23 issues found</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span style="background:rgba(239,68,68,0.15);color:#FCA5A5;padding:2px 8px;border-radius:100px;font-size:0.68rem;font-weight:700">🔴 5 Critical</span>
+                <span style="background:rgba(245,158,11,0.15);color:#FCD34D;padding:2px 8px;border-radius:100px;font-size:0.68rem;font-weight:700">🟡 12 Warnings</span>
+                <span style="background:rgba(16,185,129,0.15);color:#6EE7B7;padding:2px 8px;border-radius:100px;font-size:0.68rem;font-weight:700">🟢 6 Passed</span>
+              </div>
+            </div>
+          </div>
+          <div class="issues-list">
+            <div class="issue crit"><span class="issue-icon">🔴</span><span class="issue-text">14 pages missing meta descriptions</span><span class="issue-badge">CRITICAL</span></div>
+            <div class="issue crit"><span class="issue-icon">🔴</span><span class="issue-text">Core Web Vitals failing on mobile</span><span class="issue-badge">CRITICAL</span></div>
+            <div class="issue warn"><span class="issue-icon">🟡</span><span class="issue-text">38 broken internal links detected</span><span class="issue-badge">WARNING</span></div>
+            <div class="issue warn"><span class="issue-icon">🟡</span><span class="issue-text">Images missing alt text (67 pages)</span><span class="issue-badge">WARNING</span></div>
+            <div class="issue good"><span class="issue-icon">🟢</span><span class="issue-text">SSL certificate valid & secure</span><span class="issue-badge">PASSED</span></div>
+          </div>
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:12px 0 6px">📈 Top Keyword Rankings</div>
+          <div class="rank-table">
+            <div class="rank-header"><span>Keyword</span><span>Position</span><span>Volume</span><span>Change</span></div>
+            <div class="rank-row"><span style="font-weight:600">ai writing tool</span><span class="rank-pos">#4</span><span style="color:var(--muted)">18.2K</span><span class="rank-change up">↑ +3</span></div>
+            <div class="rank-row"><span style="font-weight:600">content generator</span><span class="rank-pos">#7</span><span style="color:var(--muted)">12.4K</span><span class="rank-change up">↑ +1</span></div>
+            <div class="rank-row"><span style="font-weight:600">seo writing tool</span><span class="rank-pos">#12</span><span style="color:var(--muted)">8.8K</span><span class="rank-change down">↓ -2</span></div>
+            <div class="rank-row"><span style="font-weight:600">blog post writer ai</span><span class="rank-pos">#9</span><span style="color:var(--muted)">6.2K</span><span class="rank-change same">— 0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="container">
+    <div class="stats-row">
+      <div><div class="s-val">40K+</div><div class="s-lbl">SEO Professionals</div></div>
+      <div><div class="s-val">2.4M</div><div class="s-lbl">Keywords Tracked Daily</div></div>
+      <div><div class="s-val">98%</div><div class="s-lbl">Audit Accuracy vs. Google</div></div>
+      <div><div class="s-val">4.9★</div><div class="s-lbl">User Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">⚡ Features</div>
+      <h2 class="sec-title">Everything you need to <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">dominate search rankings</span></h2>
+      <p class="sec-sub">From technical audits to competitor intelligence — RankIQ is your complete SEO command center.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="f-card"><div class="f-icon">🔍</div><h3 class="f-title">Full Site SEO Audit</h3><p class="f-desc">Crawl every page of your site and get a prioritized list of fixes. Technical SEO, on-page issues, speed problems, broken links, duplicate content, and schema markup — all analyzed automatically.</p></div>
+      <div class="f-card"><div class="f-icon">📈</div><h3 class="f-title">Daily Rank Tracking</h3><p class="f-desc">Track unlimited keywords across Google, Bing, and YouTube. See position changes daily with historical charts. Get alerts when rankings drop more than 3 positions so you can react instantly.</p></div>
+      <div class="f-card"><div class="f-icon">🎯</div><h3 class="f-title">Competitor Intelligence</h3><p class="f-desc">See exactly what keywords your competitors rank for that you don't. Identify content gaps, track their backlink acquisitions, and discover their top-performing pages to model your strategy.</p></div>
+      <div class="f-card"><div class="f-icon">🔗</div><h3 class="f-title">Backlink Analysis</h3><p class="f-desc">Monitor your backlink profile in real-time. Track new and lost backlinks, analyze domain authority of linking sites, disavow toxic links, and find link-building opportunities automatically.</p></div>
+      <div class="f-card"><div class="f-icon">🤖</div><h3 class="f-title">AI Content Optimizer</h3><p class="f-desc">Paste any URL and get AI-powered recommendations to improve its ranking. Semantic keyword suggestions, content length benchmarks, internal linking opportunities, and readability scores.</p></div>
+      <div class="f-card"><div class="f-icon">📊</div><h3 class="f-title">White-Label Reports</h3><p class="f-desc">Generate beautiful branded SEO reports in one click. Schedule automated weekly or monthly report delivery to clients. Full white-label with your logo, colors, and domain. Agency-ready from day one.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">💰 Pricing</div>
+      <h2 class="sec-title">SEO ROI starts <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">on day one</span></h2>
+      <p class="sec-sub">One keyword hitting page 1 pays for a year of RankIQ. Start free, no credit card needed.</p>
+    </div>
+    <div class="p-grid">
+      <div class="p-card">
+        <div class="p-name">Starter</div>
+        <div class="p-price"><sup>$</sup>0</div>
+        <div class="p-per">forever free</div>
+        <p class="p-desc">For bloggers and small site owners getting started with SEO.</p>
+        <ul class="p-list">
+          <li class="on">1 website</li>
+          <li class="on">50 keywords tracked</li>
+          <li class="on">Monthly site audit</li>
+          <li class="on">Basic rank tracking</li>
+          <li class="on">Core SEO checklist</li>
+          <li class="off">Competitor analysis</li>
+          <li class="off">Backlink monitoring</li>
+          <li class="off">White-label reports</li>
+        </ul>
+        <button class="btn-pp out" onclick="openModal('starter')">Get Started Free</button>
+      </div>
+      <div class="p-card pop">
+        <div class="p-badge">🔥 Most Popular</div>
+        <div class="p-name">Pro</div>
+        <div class="p-price"><sup>$</sup>29</div>
+        <div class="p-per">per month</div>
+        <p class="p-desc">For SEOs, marketers, and growing businesses serious about organic traffic.</p>
+        <ul class="p-list">
+          <li class="on">5 websites</li>
+          <li class="on">500 keywords tracked</li>
+          <li class="on">Daily site audits</li>
+          <li class="on">Competitor analysis (3)</li>
+          <li class="on">Backlink monitoring</li>
+          <li class="on">AI content optimizer</li>
+          <li class="on">Rank alert notifications</li>
+          <li class="off">White-label reports</li>
+        </ul>
+        <button class="btn-pp grad" onclick="openModal('pro')">Start 14-Day Free Trial →</button>
+      </div>
+      <div class="p-card">
+        <div class="p-name">Agency</div>
+        <div class="p-price"><sup>$</sup>79</div>
+        <div class="p-per">per month</div>
+        <p class="p-desc">For agencies managing SEO for multiple clients at scale.</p>
+        <ul class="p-list">
+          <li class="on">Unlimited websites</li>
+          <li class="on">5,000 keywords tracked</li>
+          <li class="on">Unlimited competitors</li>
+          <li class="on">White-label reports</li>
+          <li class="on">API access</li>
+          <li class="on">Team members (10)</li>
+          <li class="on">Client dashboard</li>
+          <li class="on">Priority support</li>
+        </ul>
+        <button class="btn-pp out" onclick="openModal('agency')">Start 14-Day Free Trial →</button>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:0.8rem;color:var(--muted)">🔒 Stripe-secured · Cancel anytime · 30-day money-back guarantee</p>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">💬 Reviews</div>
+      <h2 class="sec-title">Trusted by <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">40,000+ SEO professionals</span></h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rv"><div class="rv-stars">★★★★★</div><p class="rv-text">"RankIQ found 47 critical SEO issues on our site that we had no idea about. After fixing them, our organic traffic doubled in 8 weeks. The ROI is absolutely insane."</p><div class="rv-auth"><div class="rv-av" style="background:linear-gradient(135deg,#3B82F6,#8B5CF6)">TN</div><div><div class="rv-name">Tom Nakamura</div><div class="rv-role">Head of SEO · SaaS startup</div></div></div></div>
+      <div class="rv"><div class="rv-stars">★★★★★</div><p class="rv-text">"The competitor gap analysis alone is worth the entire subscription. I found 200+ keywords my competitors rank for that I was completely missing. Added $40K in organic revenue."</p><div class="rv-auth"><div class="rv-av" style="background:linear-gradient(135deg,#10B981,#3B82F6)">CR</div><div><div class="rv-name">Claire Roberts</div><div class="rv-role">SEO Consultant · Agency Owner</div></div></div></div>
+      <div class="rv"><div class="rv-stars">★★★★★</div><p class="rv-text">"We use RankIQ for all 18 of our clients. The white-label reports save us 6 hours per week. Clients love the professional dashboards and our retention rate is at an all-time high."</p><div class="rv-auth"><div class="rv-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">DW</div><div><div class="rv-name">David Wilson</div><div class="rv-role">Founder, SEO Growth Agency</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="container">
+    <div class="cta-box">
+      <h2 style="font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;letter-spacing:-1px;margin-bottom:12px">Audit your site <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">for free right now</span></h2>
+      <p style="font-size:1rem;color:var(--muted);margin-bottom:24px">Enter your URL and get a full SEO audit in 60 seconds. No account needed to start.</p>
+      <div style="display:flex;gap:0;background:var(--bg3);border:1px solid rgba(59,130,246,0.25);border-radius:12px;overflow:hidden;max-width:500px;margin:0 auto 12px">
+        <input type="text" style="flex:1;background:transparent;border:none;color:var(--text);padding:14px 18px;font-size:0.9rem;font-family:inherit" placeholder="yoursite.com" id="ctaUrl"/>
+        <button style="background:var(--grad);color:white;border:none;padding:14px 22px;font-weight:700;cursor:pointer;font-size:0.9rem;white-space:nowrap" onclick="runAuditCta()">🔍 Audit My Site →</button>
+      </div>
+      <p style="font-size:0.78rem;color:var(--muted)">🆓 Free audit · No account needed · Results in 60 seconds</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div><a href="#" class="foot-logo">RankIQ</a><p class="foot-desc">The AI-powered SEO platform for professionals who demand results. Audit, track, and outrank — all in one tool.</p></div>
+      <div><div class="foot-h">Product</div><ul class="foot-list"><li><a href="#">Site Audit</a></li><li><a href="#">Rank Tracker</a></li><li><a href="#">Backlinks</a></li><li><a href="#">Competitors</a></li><li><a href="#">Reports</a></li></ul></div>
+      <div><div class="foot-h">Resources</div><ul class="foot-list"><li><a href="#">SEO Blog</a></li><li><a href="#">Case Studies</a></li><li><a href="#">Help Center</a></li><li><a href="#">API Docs</a></li></ul></div>
+      <div><div class="foot-h">Company</div><ul class="foot-list"><li><a href="#">About</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span class="foot-copy">© 2025 RankIQ. All rights reserved.</span>
+      <span class="foot-copy">🔒 SOC 2 · GDPR · Data encrypted at rest</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-ov" id="signupModal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:6px" id="m-plan">Pro Plan — 14 days free</div>
+    <h2 style="font-size:1.3rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px">Start your free SEO audit</h2>
+    <form class="m-form" onsubmit="handleSignup(event)">
+      <input type="text" class="m-inp" placeholder="Your website URL" id="m-url"/>
+      <input type="email" class="m-inp" placeholder="Email address" required/>
+      <button type="submit" class="m-btn" id="m-btn">🔍 Run Free Audit →</button>
+    </form>
+    <p class="m-note">🔒 No credit card required · Cancel anytime</p>
+  </div>
+</div>
+
+<script>
+const PLANS={starter:{l:'Free Plan',b:'🚀 Start Free Audit'},pro:{l:'Pro Plan — 14 days free, then $29/month',b:'🔍 Start Free Trial'},agency:{l:'Agency Plan — 14 days free, then $79/month',b:'⚡ Start Free Trial'}};
+function openModal(p){const d=PLANS[p]||PLANS.pro;document.getElementById('m-plan').textContent=d.l;document.getElementById('m-btn').textContent=d.b;const url=document.getElementById('auditUrl');if(url&&url.value)document.getElementById('m-url').value=url.value;document.getElementById('signupModal').classList.add('on');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('signupModal').classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('click',e=>{if(e.target.id==='signupModal')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function runAudit(){const url=document.getElementById('auditUrl').value.trim();if(!url){document.getElementById('auditUrl').style.borderColor='#EF4444';return;}openModal('pro');}
+function runAuditCta(){const url=document.getElementById('ctaUrl').value.trim();if(!url)return;document.getElementById('auditUrl').value=url;openModal('pro');}
+async function handleSignup(e){e.preventDefault();const btn=document.getElementById('m-btn');btn.textContent='⏳ Crawling site...';btn.disabled=true;await new Promise(r=>setTimeout(r,2000));document.querySelector('.modal-box').innerHTML='<div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:14px">🎯</div><h2 style="font-size:1.3rem;font-weight:800;margin-bottom:10px">Audit Complete!</h2><p style="font-size:0.88rem;color:var(--muted);margin-bottom:8px">We found 23 SEO issues on your site.</p><div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:12px;margin:14px 0;font-size:0.82rem;color:var(--p2)">📧 Full report sent to your email</div><button onclick="closeModal()" style="background:var(--grad);color:white;border:none;padding:12px 28px;border-radius:10px;font-weight:700;cursor:pointer">View Full Report →</button></div>';}
+document.addEventListener('DOMContentLoaded',()=>{const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.07});document.querySelectorAll('.f-card,.p-card,.rv').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.45s ease, transform 0.45s ease';obs.observe(el);});});
+</script>
+</body>
+</html>

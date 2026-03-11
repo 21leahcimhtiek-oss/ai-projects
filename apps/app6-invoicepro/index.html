@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InvoicePro — Invoicing & Finance for Freelancers</title>
+  <meta name="description" content="Send professional invoices, track expenses, and get paid faster. The #1 finance tool for freelancers and solopreneurs. Free to start."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<div class="topbar">💸 New: Auto-reminders cut late payments by 73% — <a href="#features">See how →</a></div>
+
+<nav>
+  <div class="container nav-row">
+    <a href="#" class="logo">InvoicePro</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <div class="nav-btns">
+      <a href="#" class="btn-ghost">Sign In</a>
+      <button class="btn-main" onclick="openModal('pro')">Start Free Trial →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag">💸 Trusted by 120,000+ freelancers</div>
+        <h1 class="hero-h1">
+          Stop Chasing Payments.<br/>
+          <span class="g">Start Getting Paid.</span>
+        </h1>
+        <p class="hero-sub">InvoicePro automates your invoicing, tracks expenses, sends payment reminders, and gives you a clear picture of your freelance finances — all in one beautiful dashboard.</p>
+        <div class="hero-btns">
+          <button class="btn-hero-p" onclick="openModal('free')">✅ Start Free — No Card Needed</button>
+          <a href="#features" class="btn-hero-s">See Features →</a>
+        </div>
+        <div class="hero-trust">
+          <span class="trust-item"><span class="trust-icon">⭐</span> 4.9/5 rating</span>
+          <span class="trust-item"><span class="trust-icon">⚡</span> Send invoice in 60 seconds</span>
+          <span class="trust-item"><span class="trust-icon">💰</span> Get paid 2x faster</span>
+          <span class="trust-item"><span class="trust-icon">🆓</span> Free forever plan</span>
+        </div>
+      </div>
+      <!-- DASHBOARD PREVIEW -->
+      <div class="dash-preview">
+        <div class="dash-bar">
+          <div class="dash-dot" style="background:#FF5F57"></div>
+          <div class="dash-dot" style="background:#FEBC2E"></div>
+          <div class="dash-dot" style="background:#28C840"></div>
+          <span style="margin-left:12px;font-size:0.75rem;color:var(--muted)">app.invoicepro.io/dashboard</span>
+        </div>
+        <div class="dash-body">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">📊 November Overview</div>
+          <div class="dash-stats">
+            <div class="ds-card">
+              <div class="ds-label">Revenue</div>
+              <div class="ds-value">$8,420</div>
+              <div class="ds-change">↑ 23% vs last month</div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-label">Outstanding</div>
+              <div class="ds-value" style="color:var(--accent)">$1,840</div>
+              <div class="ds-change" style="color:var(--accent)">2 invoices due</div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-label">Expenses</div>
+              <div class="ds-value" style="color:var(--danger)">$1,240</div>
+              <div class="ds-change" style="color:var(--muted)">↓ 8% this month</div>
+            </div>
+          </div>
+          <div class="invoice-list">
+            <div class="invoice-header">
+              <span>Client</span><span>Amount</span><span>Due</span><span>Status</span>
+            </div>
+            <div class="invoice-row">
+              <span style="font-weight:600">Acme Corp</span>
+              <span style="font-weight:700">$3,200</span>
+              <span style="color:var(--muted)">Nov 15</span>
+              <span class="inv-status paid">✓ Paid</span>
+            </div>
+            <div class="invoice-row">
+              <span style="font-weight:600">TechStart Ltd</span>
+              <span style="font-weight:700">$1,840</span>
+              <span style="color:var(--accent)">Nov 22</span>
+              <span class="inv-status pending">⏳ Pending</span>
+            </div>
+            <div class="invoice-row">
+              <span style="font-weight:600">Studio XYZ</span>
+              <span style="font-weight:700">$960</span>
+              <span style="color:var(--danger)">Nov 10</span>
+              <span class="inv-status overdue">⚠ Overdue</span>
+            </div>
+          </div>
+          <button onclick="openModal('pro')" style="width:100%;margin-top:10px;padding:10px;background:var(--grad);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.85rem;box-shadow:0 4px 12px rgba(16,185,129,0.3)">+ Create New Invoice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-row">
+      <div><div class="s-val">120K+</div><div class="s-lbl">Freelancers & Solopreneurs</div></div>
+      <div><div class="s-val">$2.4B</div><div class="s-lbl">Invoiced Through InvoicePro</div></div>
+      <div><div class="s-val">2x</div><div class="s-lbl">Faster Payment vs Paper Invoices</div></div>
+      <div><div class="s-val">73%</div><div class="s-lbl">Reduction in Late Payments</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">⚡ Features</div>
+      <h2 class="sec-title">Everything you need to <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">run your freelance business</span></h2>
+      <p class="sec-sub">From your first invoice to your tax return — InvoicePro handles the financial side of freelancing.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">📄</div>
+        <h3 class="feat-title">Beautiful Invoices in 60 Seconds</h3>
+        <p class="feat-desc">Create and send polished, branded invoices in under a minute. Add your logo, choose from 20+ templates, and set payment terms. Clients can pay by card, bank transfer, or PayPal with one click.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⏰</div>
+        <h3 class="feat-title">Automated Payment Reminders</h3>
+        <p class="feat-desc">Set it and forget it. InvoicePro automatically sends polite payment reminders at 7, 3, and 1 day before due date — and escalating reminders for overdue invoices. Cut late payments by 73%.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💳</div>
+        <h3 class="feat-title">Online Payments Built-In</h3>
+        <p class="feat-desc">Accept credit cards, debit cards, bank transfers (ACH), and PayPal directly from your invoice. Funds deposited to your bank in 1-2 business days. Stripe-powered, bank-grade security.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <h3 class="feat-title">Expense Tracking</h3>
+        <p class="feat-desc">Snap photos of receipts, categorize expenses, and track your business costs automatically. Connect your bank account for automatic transaction import. Never miss a tax deduction again.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🧮</div>
+        <h3 class="feat-title">Tax Preparation</h3>
+        <p class="feat-desc">Export profit & loss statements, expense reports, and tax summaries with one click. Integrates with QuickBooks, FreshBooks, and TurboTax. Makes tax season genuinely painless.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📈</div>
+        <h3 class="feat-title">Revenue Analytics</h3>
+        <p class="feat-desc">Track your income trends, top clients, most profitable project types, and payment velocity. See your business health at a glance and make data-driven decisions about your rates and clients.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔄</div>
+        <h3 class="feat-title">Recurring Invoices</h3>
+        <p class="feat-desc">Set up monthly retainer invoices that send automatically. Perfect for ongoing client relationships. Automatic late fees can be applied after a set number of days, compounding at the rate you choose.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌍</div>
+        <h3 class="feat-title">Multi-Currency & Global</h3>
+        <p class="feat-desc">Invoice clients in 50+ currencies. Automatic exchange rate conversion. Support for international payment methods including SEPA, iDEAL, Bancontact, and more for European clients.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔗</div>
+        <h3 class="feat-title">Integrations</h3>
+        <p class="feat-desc">Connect with Stripe, PayPal, QuickBooks, Xero, Zapier, Slack, Google Drive, Dropbox, and 50+ other tools. Your invoicing synced with your entire business workflow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">💰 Pricing</div>
+      <h2 class="sec-title">Simple pricing — <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">scales with your business</span></h2>
+      <p class="sec-sub">Start free. The Pro plan pays for itself after your very first invoice. Cancel any time.</p>
+    </div>
+    <div class="p-grid">
+      <div class="p-card">
+        <div class="p-name">Free</div>
+        <div class="p-price"><sup>$</sup>0</div>
+        <div class="p-per">forever free</div>
+        <p class="p-desc">Perfect for freelancers just getting started.</p>
+        <ul class="p-list">
+          <li class="on">5 invoices/month</li>
+          <li class="on">3 clients</li>
+          <li class="on">Basic templates</li>
+          <li class="on">Online payments</li>
+          <li class="on">Basic dashboard</li>
+          <li class="off">Automated reminders</li>
+          <li class="off">Expense tracking</li>
+          <li class="off">Recurring invoices</li>
+          <li class="off">Tax reports</li>
+        </ul>
+        <button class="btn-plan out" onclick="openModal('free')">Get Started Free</button>
+      </div>
+      <div class="p-card pop">
+        <div class="p-badge">🔥 Most Popular</div>
+        <div class="p-name">Pro</div>
+        <div class="p-price"><sup>$</sup>12</div>
+        <div class="p-per">per month · billed monthly</div>
+        <p class="p-desc">For active freelancers who want to get paid faster.</p>
+        <ul class="p-list">
+          <li class="on"><strong>Unlimited</strong> invoices</li>
+          <li class="on">Unlimited clients</li>
+          <li class="on">20+ premium templates</li>
+          <li class="on">Automated reminders</li>
+          <li class="on">Expense tracking</li>
+          <li class="on">Recurring invoices</li>
+          <li class="on">Tax reports</li>
+          <li class="on">Priority support</li>
+        </ul>
+        <button class="btn-plan grad" onclick="openModal('pro')">Start 14-Day Free Trial →</button>
+      </div>
+      <div class="p-card">
+        <div class="p-name">Business</div>
+        <div class="p-price"><sup>$</sup>29</div>
+        <div class="p-per">per month · billed monthly</div>
+        <p class="p-desc">For agencies and freelancers with a growing team.</p>
+        <ul class="p-list">
+          <li class="on">Everything in Pro</li>
+          <li class="on">Up to 5 team members</li>
+          <li class="on">Custom branding & domain</li>
+          <li class="on">Client portal</li>
+          <li class="on">Contracts & e-signatures</li>
+          <li class="on">Time tracking</li>
+          <li class="on">QuickBooks/Xero sync</li>
+          <li class="on">Dedicated account manager</li>
+        </ul>
+        <button class="btn-plan out" onclick="openModal('business')">Start 14-Day Free Trial →</button>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:0.82rem;color:var(--muted)">🔒 Secured by Stripe · 30-day money-back guarantee · Cancel anytime</p>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">💬 Reviews</div>
+      <h2 class="sec-title">Loved by <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">120,000+ freelancers</span></h2>
+    </div>
+    <div class="rev-grid">
+      <div class="rev-card">
+        <div class="rev-stars">★★★★★</div>
+        <p class="rev-text">"InvoicePro cut my overdue payments from 6 per month to 1. The automatic reminders are firm but polite — clients actually pay faster without me having to chase them."</p>
+        <div class="rev-author">
+          <div class="rev-av" style="background:linear-gradient(135deg,#10B981,#6366F1)">FD</div>
+          <div><div class="rev-name">Fiona Davies</div><div class="rev-role">Freelance Designer</div><div class="rev-earnings">Earns $8,400/mo</div></div>
+        </div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-stars">★★★★★</div>
+        <p class="rev-text">"I was tracking invoices in a spreadsheet before. Now I spend 30 minutes a week on admin instead of 4 hours. The tax report alone saved me $800 in accountant fees."</p>
+        <div class="rev-author">
+          <div class="rev-av" style="background:linear-gradient(135deg,#6366F1,#F59E0B)">MT</div>
+          <div><div class="rev-name">Marco Torres</div><div class="rev-role">Freelance Developer</div><div class="rev-earnings">Earns $14,200/mo</div></div>
+        </div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-stars">★★★★★</div>
+        <p class="rev-text">"The client portal is phenomenal. My clients can see all their invoices, payment history, and project files in one place. It makes me look like a real agency, not just a freelancer."</p>
+        <div class="rev-author">
+          <div class="rev-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">AL</div>
+          <div><div class="rev-name">Aisha Lawal</div><div class="rev-role">Brand Strategist</div><div class="rev-earnings">Agency: $35K/mo</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-inner">
+      <h2 class="cta-title">Start getting paid <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">2x faster</span> today</h2>
+      <p class="cta-sub">Join 120,000+ freelancers who use InvoicePro to spend less time on admin and more time doing work they love. Free plan available, no credit card needed.</p>
+      <div class="cta-form">
+        <input type="email" class="cta-inp" placeholder="Enter your email..." id="ctaEmail"/>
+        <button class="btn-cta" onclick="ctaSignup()">Start Free →</button>
+      </div>
+      <p class="cta-note">🆓 Free forever plan available · <span>14-day Pro trial</span> · No credit card required</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="foot-logo">InvoicePro</a>
+        <p class="foot-desc">The freelancer's finance platform. Send invoices, get paid faster, and grow your business with confidence.</p>
+      </div>
+      <div>
+        <div class="foot-h">Product</div>
+        <ul class="foot-list">
+          <li><a href="#">Invoicing</a></li>
+          <li><a href="#">Expenses</a></li>
+          <li><a href="#">Payments</a></li>
+          <li><a href="#">Tax Reports</a></li>
+          <li><a href="#">Contracts</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-h">For</div>
+        <ul class="foot-list">
+          <li><a href="#">Freelancers</a></li>
+          <li><a href="#">Designers</a></li>
+          <li><a href="#">Developers</a></li>
+          <li><a href="#">Consultants</a></li>
+          <li><a href="#">Agencies</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-h">Company</div>
+        <ul class="foot-list">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span class="foot-copy">© 2025 InvoicePro. All rights reserved.</span>
+      <span class="foot-copy">🔒 Bank-grade security · SOC 2 · GDPR · PCI-DSS</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-ov" id="signupModal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="m-label" id="m-plan-text">Pro Plan — 14 days free</div>
+    <h2 class="m-title">Create your free account</h2>
+    <form class="m-form" onsubmit="handleSignup(event)">
+      <input type="text" class="m-inp" placeholder="Full Name" required/>
+      <input type="email" class="m-inp" placeholder="Email Address" required/>
+      <input type="password" class="m-inp" placeholder="Create Password" required/>
+      <button type="submit" class="m-btn" id="m-btn">✅ Create Free Account</button>
+    </form>
+    <p class="m-note">🔒 No credit card required · SOC 2 secure · Cancel anytime</p>
+  </div>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+/* InvoicePro — App JS */
+'use strict';
+const PLANS={free:{l:'Free Plan — No credit card required',b:'🚀 Create Free Account'},pro:{l:'Pro Plan — 14 days free, then $12/month',b:'✅ Start Free Trial'},business:{l:'Business Plan — 14 days free, then $29/month',b:'⚡ Start Free Trial'}};
+let plan='pro';
+function openModal(p){plan=p||'pro';const d=PLANS[plan]||PLANS.pro;document.getElementById('m-plan-text').textContent=d.l;document.getElementById('m-btn').textContent=d.b;document.getElementById('signupModal').classList.add('on');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('signupModal').classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('click',e=>{if(e.target.id==='signupModal')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+async function handleSignup(e){e.preventDefault();const btn=document.getElementById('m-btn');btn.textContent='⏳ Creating account...';btn.disabled=true;await new Promise(r=>setTimeout(r,1600));document.querySelector('.modal-box').innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:14px">🎉</div><h2 style="font-size:1.3rem;font-weight:800;margin-bottom:10px;color:var(--text)">Welcome to InvoicePro!</h2><p style="font-size:0.88rem;color:var(--muted);margin-bottom:20px">Your account is ready. Send your first invoice in 60 seconds.</p><button onclick="closeModal()" style="background:var(--grad);color:white;border:none;padding:12px 28px;border-radius:10px;font-weight:700;cursor:pointer">Go to Dashboard →</button></div>`;}
+function ctaSignup(){const email=document.getElementById('ctaEmail').value.trim();if(!email.includes('@')){document.getElementById('ctaEmail').style.borderColor='#EF4444';return;}openModal('pro');}
+document.addEventListener('DOMContentLoaded',()=>{const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.07});document.querySelectorAll('.feat-card,.p-card,.rev-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.45s ease, transform 0.45s ease';obs.observe(el);});});
