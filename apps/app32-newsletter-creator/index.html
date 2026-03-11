@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsletterCreator AI - Create Stunning Newsletters in Minutes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #a1a1aa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: #ffffff;
+        }
+        
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            background: radial-gradient(ellipse at top right, rgba(139, 92, 246, 0.1), transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(236, 72, 153, 0.1), transparent 50%);
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-text p {
+            font-size: 1.25rem;
+            color: #a1a1aa;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #71717a;
+        }
+        
+        .hero-visual {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .newsletter-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .preview-toolbar {
+            display: flex;
+            gap: 0.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tool-btn {
+            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #a1a1aa;
+        }
+        
+        .tool-btn.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            color: #ffffff;
+        }
+        
+        .newsletter-content {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: #1a1a2e;
+        }
+        
+        .email-header {
+            text-align: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .email-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #8b5cf6;
+        }
+        
+        .email-subject {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-top: 0.5rem;
+        }
+        
+        .email-body {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #4a4a5a;
+        }
+        
+        .email-body h3 {
+            font-size: 0.95rem;
+            color: #1a1a2e;
+            margin: 1rem 0 0.5rem;
+        }
+        
+        .email-cta {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .preview-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .preview-stat {
+            text-align: center;
+        }
+        
+        .preview-stat-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+        
+        .preview-stat-label {
+            font-size: 0.7rem;
+            color: #71717a;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.02));
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+        }
+        
+        /* Templates Section */
+        .templates {
+            padding: 6rem 2rem;
+        }
+        
+        .templates-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .template-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .template-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-3px);
+        }
+        
+        .template-preview {
+            aspect-ratio: 3/4;
+            background: linear-gradient(180deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .template-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .template-card p {
+            font-size: 0.75rem;
+            color: #71717a;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+            background: rgba(139, 92, 246, 0.02);
+        }
+        
+        .pricing-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card.popular {
+            border-color: #8b5cf6;
+            transform: scale(1.05);
+            background: linear-gradient(180deg, rgba(139, 92, 246, 0.1), transparent);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+        
+        .popular-badge {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #71717a;
+        }
+        
+        .pricing-card .description {
+            color: #a1a1aa;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .check {
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: radial-gradient(ellipse at center, rgba(236, 72, 153, 0.05), transparent);
+        }
+        
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-card p {
+            font-style: italic;
+            color: #a1a1aa;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .author-info span {
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .footer-brand p {
+            color: #71717a;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            padding: 0.25rem 0;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #141420;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .modal p {
+            color: #a1a1aa;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #71717a;
+            font-size: 0.875rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid,
+            .pricing-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .templates-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid,
+            .pricing-grid,
+            .testimonials-grid,
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">📧</div>
+            <span>NewsletterCreator<span class="gradient-text">AI</span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#templates">Templates</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#examples">Examples</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-ghost" onclick="openModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Create Stunning Newsletters <span class="gradient-text">In Minutes</span></h1>
+                <p>AI-powered newsletter builder with beautiful templates, smart content suggestions, and powerful analytics. No design skills required.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-large" onclick="openModal('signup')">Create Newsletter Free</button>
+                    <button class="btn btn-ghost btn-large">View Templates</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number gradient-text">50K+</div>
+                        <div class="stat-label">Newsletters Sent</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number gradient-text">42%</div>
+                        <div class="stat-label">Avg Open Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number gradient-text">4.9★</div>
+                        <div class="stat-label">User Rating</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="newsletter-preview">
+                    <div class="preview-toolbar">
+                        <span class="tool-btn active">Design</span>
+                        <span class="tool-btn">Content</span>
+                        <span class="tool-btn">Preview</span>
+                        <span class="tool-btn">Analytics</span>
+                    </div>
+                    <div class="newsletter-content">
+                        <div class="email-header">
+                            <div class="email-logo">YourBrand</div>
+                            <div class="email-subject">✨ Your Weekly Update is Here!</div>
+                        </div>
+                        <div class="email-body">
+                            <p>Hi there!</p>
+                            <h3>What's New This Week</h3>
+                            <p>We've got exciting updates to share with you. From new features to helpful tips, there's something for everyone.</p>
+                            <h3>Featured Story</h3>
+                            <p>Discover how our latest AI features can transform your workflow and save you hours every week.</p>
+                            <a href="#" class="email-cta">Read More →</a>
+                        </div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">2,450</div>
+                            <div class="preview-stat-label">Recipients</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">42%</div>
+                            <div class="preview-stat-label">Est. Open Rate</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">A+</div>
+                            <div class="preview-stat-label">Spam Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Everything You Need to <span class="gradient-text">Succeed</span></h2>
+            <p>Powerful features to create, send, and track beautiful newsletters.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Drag & Drop Builder</h3>
+                <p>Intuitive visual editor with pre-built blocks. Create stunning layouts without touching code.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Content Writer</h3>
+                <p>Generate subject lines, body copy, and CTAs with AI. Never face writer's block again.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile-Responsive</h3>
+                <p>Every newsletter looks perfect on any device. Automatic optimization for mobile readers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Advanced Analytics</h3>
+                <p>Track opens, clicks, unsubscribes, and more. Understand what resonates with your audience.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✉️</div>
+                <h3>Smart Sending</h3>
+                <p>AI-optimized send times for maximum engagement. Reach subscribers when they're most likely to open.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>A/B Testing</h3>
+                <p>Test subject lines, content, and send times. Let data guide your newsletter strategy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Subscriber Management</h3>
+                <p>Organize lists, segments, and tags. Personalize content for different audience groups.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Integrations</h3>
+                <p>Connect with Shopify, WordPress, Zapier, and 50+ tools. Sync your data automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>GDPR Compliant</h3>
+                <p>Built-in compliance tools, unsubscribe management, and data protection you can trust.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Section -->
+    <section class="templates" id="templates">
+        <div class="section-header">
+            <h2>100+ Professional <span class="gradient-text">Templates</span></h2>
+            <p>Start with beautiful designs, customize to match your brand.</p>
+        </div>
+        <div class="templates-grid">
+            <div class="template-card">
+                <div class="template-preview">📰</div>
+                <h4>Newsletter</h4>
+                <p>Classic layout</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">🛍️</div>
+                <h4>Promotional</h4>
+                <p>Sales & offers</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">🎉</div>
+                <h4>Announcement</h4>
+                <p>Product updates</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">📝</div>
+                <h4>Blog Digest</h4>
+                <p>Content roundups</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">👋</div>
+                <h4>Welcome</h4>
+                <p>Onboarding series</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">❄️</div>
+                <h4>Seasonal</h4>
+                <p>Holiday themes</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">📊</div>
+                <h4>Report</h4>
+                <p>Data updates</p>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">💬</div>
+                <h4>Digest</h4>
+                <p>Weekly roundups</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple, Transparent <span class="gradient-text">Pricing</span></h2>
+            <p>Start free, scale as you grow.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/mo</span></div>
+                <p class="description">Perfect for getting started</p>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> 1,000 subscribers</li>
+                    <li><span class="check">✓</span> 10,000 emails/month</li>
+                    <li><span class="check">✓</span> Basic templates</li>
+                    <li><span class="check">✓</span> Drag & drop editor</li>
+                    <li><span class="check">✓</span> Basic analytics</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <h3>Growth</h3>
+                <div class="price">$29<span>/mo</span></div>
+                <p class="description">For growing businesses</p>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> 10,000 subscribers</li>
+                    <li><span class="check">✓</span> Unlimited emails</li>
+                    <li><span class="check">✓</span> All templates</li>
+                    <li><span class="check">✓</span> AI content writer</li>
+                    <li><span class="check">✓</span> A/B testing</li>
+                    <li><span class="check">✓</span> Advanced analytics</li>
+                    <li><span class="check">✓</span> Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="openModal('signup')">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Business</h3>
+                <div class="price">$79<span>/mo</span></div>
+                <p class="description">For teams & agencies</p>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> 50,000 subscribers</li>
+                    <li><span class="check">✓</span> Everything in Growth</li>
+                    <li><span class="check">✓</span> Team collaboration</li>
+                    <li><span class="check">✓</span> Custom branding</li>
+                    <li><span class="check">✓</span> API access</li>
+                    <li><span class="check">✓</span> Dedicated IP option</li>
+                    <li><span class="check">✓</span> Dedicated support</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Loved by <span class="gradient-text">50,000+ Creators</span></h2>
+            <p>See what our users have to say about NewsletterCreator AI.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"I used to spend 4 hours on every newsletter. Now I'm done in 30 minutes. The AI writer is incredibly helpful for subject lines and intros."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JW</div>
+                    <div class="author-info">
+                        <h4>Jennifer Wu</h4>
+                        <span>Content Creator</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"Our open rates jumped from 18% to 42% after switching. The smart send times and A/B testing made a huge difference for our campaigns."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MC</div>
+                    <div class="author-info">
+                        <h4>Michael Chen</h4>
+                        <span>Marketing Director</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The templates are gorgeous and the drag-and-drop builder is so intuitive. Finally, a newsletter tool that doesn't require a design degree!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SR</div>
+                    <div class="author-info">
+                        <h4>Sarah Roberts</h4>
+                        <span>Small Business Owner</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Create Your <span class="gradient-text">First Newsletter?</span></h2>
+            <p>Join 50,000+ creators sending beautiful newsletters with NewsletterCreator AI.</p>
+            <button class="btn btn-primary btn-large" onclick="openModal('signup')">Start Free — No Credit Card</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <div class="logo-icon">📧</div>
+                    <span>NewsletterCreator<span class="gradient-text">AI</span></span>
+                </div>
+                <p>The easiest way to create, send, and track beautiful newsletters that your subscribers will love.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Templates</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">API</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signup-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('signup')">&times;</button>
+            <h2>Create Your Account</h2>
+            <p>Start sending beautiful newsletters today</p>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password">
+            </div>
+            <button class="btn btn-primary">Create Free Account</button>
+            <div class="divider"><span>or continue with</span></div>
+            <div class="social-buttons">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">GitHub</button>
+                <button class="social-btn">Apple</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="openModal('login')">&times;</button>
+            <h2>Welcome Back</h2>
+            <p>Log in to your NewsletterCreator account</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Your password">
+            </div>
+            <button class="btn btn-primary">Log In</button>
+            <div class="divider"><span>or continue with</span></div>
+            <div class="social-buttons">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">GitHub</button>
+                <button class="social-btn">Apple</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) {
+            document.getElementById(type + '-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(type) {
+            document.getElementById(type + '-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
