@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow AI - Intelligent Task Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e0; line-height: 1.6; }
+        
+        .gradient-text { background: linear-gradient(135deg, #00d4aa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-bg { background: linear-gradient(135deg, #00d4aa, #7c3aed); }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 2rem; background: rgba(10,10,15,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #00d4aa; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-size: 0.9rem; }
+        .btn-primary { background: linear-gradient(135deg, #00d4aa, #7c3aed); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,212,170,0.3); }
+        .btn-ghost { background: transparent; color: #e0e0e0; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-ghost:hover { border-color: #00d4aa; color: #00d4aa; }
+        
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 20%, rgba(0,212,170,0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(124,58,237,0.15) 0%, transparent 50%); }
+        .hero-content { max-width: 1200px; text-align: center; position: relative; z-index: 1; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero p { font-size: 1.3rem; color: #a0a0a0; max-width: 600px; margin: 0 auto 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .hero-stats { display: flex; gap: 3rem; justify-content: center; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; }
+        .stat-label { color: #666; font-size: 0.9rem; }
+        
+        /* Features */
+        .features { padding: 6rem 2rem; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .section-header p { color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .feature-card { padding: 2rem; border-radius: 16px; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); }
+        .feature-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .feature-card p { color: #888; font-size: 0.95rem; }
+        
+        /* How It Works */
+        .how-it-works { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .steps { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .step { text-align: center; padding: 2rem; }
+        .step-number { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; margin: 0 auto 1rem; }
+        .step h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .step p { color: #888; font-size: 0.9rem; }
+        
+        /* Pricing */
+        .pricing { padding: 6rem 2rem; }
+        .pricing-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .pricing-card { padding: 2.5rem; border-radius: 20px; position: relative; }
+        .pricing-card.popular { border: 2px solid #00d4aa; }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .pricing-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .pricing-card .price { font-size: 3rem; font-weight: 800; margin: 1rem 0; }
+        .pricing-card .price span { font-size: 1rem; font-weight: 400; color: #888; }
+        .pricing-features { list-style: none; margin: 1.5rem 0; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #00d4aa; font-weight: 600; }
+        
+        /* Testimonials */
+        .testimonials { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .testimonials-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; }
+        .testimonial { padding: 2rem; border-radius: 16px; }
+        .testimonial-content { font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .author-info h4 { font-size: 1rem; }
+        .author-info p { font-size: 0.85rem; color: #888; }
+        
+        /* CTA */
+        .cta { padding: 6rem 2rem; text-align: center; }
+        .cta-content { max-width: 700px; margin: 0 auto; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #888; font-size: 1.1rem; margin-bottom: 2rem; }
+        
+        /* Footer */
+        footer { padding: 4rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1rem; margin-bottom: 1rem; color: #e0e0e0; }
+        .footer-col a { display: block; color: #666; text-decoration: none; padding: 0.3rem 0; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-col a:hover { color: #00d4aa; }
+        .footer-bottom { text-align: center; padding-top: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 0.85rem; }
+        
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 2rem; }
+        .modal { background: #151520; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 100%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .modal p { color: #888; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.9rem 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #00d4aa; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #fff; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
+        .divider { text-align: center; color: #666; margin: 1.5rem 0; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(255,255,255,0.1); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-stats { flex-direction: column; gap: 1.5rem; }
+            .steps { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon gradient-bg">⚡</div>
+                <span>TaskFlow<span class="gradient-text">AI</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#testimonials">Reviews</a>
+                <button class="btn btn-ghost" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Manage Tasks with <span class="gradient-text">AI Intelligence</span></h1>
+            <p>TaskFlow AI automatically prioritizes, schedules, and optimizes your team's workflow. Get 3x more done with smart automation and predictive task management.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Free Trial</button>
+                <button class="btn btn-ghost">Watch Demo</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value gradient-text">2M+</div>
+                    <div class="stat-label">Tasks Completed Daily</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value gradient-text">150K+</div>
+                    <div class="stat-label">Active Teams</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value gradient-text">99.9%</div>
+                    <div class="stat-label">Uptime Guaranteed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>AI-Powered Task Management</h2>
+            <p>Intelligent features that transform how your team works together</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">🧠</div>
+                <h3>Smart Prioritization</h3>
+                <p>AI analyzes deadlines, dependencies, and team capacity to automatically prioritize your task queue</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">📅</div>
+                <h3>Auto-Scheduling</h3>
+                <p>Intelligent scheduling finds the optimal time slots for tasks based on team availability and preferences</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">👥</div>
+                <h3>Team Collaboration</h3>
+                <p>Real-time collaboration with comments, mentions, file sharing, and activity tracking</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">📊</div>
+                <h3>Progress Analytics</h3>
+                <p>Detailed insights into team productivity, bottlenecks, and project health metrics</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">🔔</div>
+                <h3>Smart Reminders</h3>
+                <p>Context-aware notifications that remind you at the right time without overwhelming</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">🔗</div>
+                <h3>Workflow Automation</h3>
+                <p>Create custom automation rules to eliminate repetitive tasks and streamline workflows</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>Get Started in Minutes</h2>
+            <p>Simple setup, powerful results</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number gradient-bg">1</div>
+                <h3>Import Your Tasks</h3>
+                <p>Import from Trello, Asana, or start fresh. Our AI learns your workflow instantly.</p>
+            </div>
+            <div class="step">
+                <div class="step-number gradient-bg">2</div>
+                <h3>Invite Your Team</h3>
+                <p>Add team members in seconds. Set permissions and organize into groups.</p>
+            </div>
+            <div class="step">
+                <div class="step-number gradient-bg">3</div>
+                <h3>Let AI Optimize</h3>
+                <p>Watch as TaskFlow AI reorganizes and optimizes your workflow automatically.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Start free, upgrade when you need more power</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card glass">
+                <h3>Free</h3>
+                <div class="price">$0<span>/mo</span></div>
+                <p style="color: #888; font-size: 0.9rem;">Perfect for individuals</p>
+                <ul class="pricing-features">
+                    <li>Up to 100 tasks</li>
+                    <li>1 team member</li>
+                    <li>Basic AI prioritization</li>
+                    <li>Mobile app access</li>
+                    <li>7-day history</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card glass popular">
+                <div class="popular-badge gradient-bg">Most Popular</div>
+                <h3>Pro</h3>
+                <div class="price">$9<span>/mo</span></div>
+                <p style="color: #888; font-size: 0.9rem;">For growing teams</p>
+                <ul class="pricing-features">
+                    <li>Unlimited tasks</li>
+                    <li>Up to 25 team members</li>
+                    <li>Advanced AI features</li>
+                    <li>Workflow automation</li>
+                    <li>90-day history</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="openModal('signup')">Start Free Trial</button>
+            </div>
+            <div class="pricing-card glass">
+                <h3>Business</h3>
+                <div class="price">$19<span>/mo</span></div>
+                <p style="color: #888; font-size: 0.9rem;">For larger organizations</p>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>Unlimited team members</li>
+                    <li>Custom AI training</li>
+                    <li>SSO & advanced security</li>
+                    <li>Unlimited history</li>
+                    <li>Dedicated support</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Loved by Teams Worldwide</h2>
+            <p>See what our customers have to say</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial glass">
+                <div class="testimonial-content">"TaskFlow AI transformed our chaotic workflow into a well-oiled machine. Our team's productivity increased by 40% in the first month."</div>
+                <div class="testimonial-author">
+                    <div class="author-avatar gradient-bg">SK</div>
+                    <div class="author-info">
+                        <h4>Sarah Kim</h4>
+                        <p>Product Manager, TechCorp</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial glass">
+                <div class="testimonial-content">"The AI prioritization is game-changing. It knows what needs attention before we even realize it ourselves. Absolutely brilliant."</div>
+                <div class="testimonial-author">
+                    <div class="author-avatar gradient-bg">MR</div>
+                    <div class="author-info">
+                        <h4>Marcus Rodriguez</h4>
+                        <p>Engineering Lead, StartupXYZ</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial glass">
+                <div class="testimonial-content">"We tried every task management tool out there. TaskFlow AI is the only one that actually made our team more efficient."</div>
+                <div class="testimonial-author">
+                    <div class="author-avatar gradient-bg">JL</div>
+                    <div class="author-info">
+                        <h4>Jennifer Lee</h4>
+                        <p>CEO, DesignStudio</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Workflow?</h2>
+            <p>Join 150,000+ teams already using TaskFlow AI to get more done. Start your free trial today.</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free Trial</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Integrations</a>
+                <a href="#">API</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+                <a href="#">Press</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">Help Center</a>
+                <a href="#">Templates</a>
+                <a href="#">Community</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Security</a>
+                <a href="#">GDPR</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 TaskFlow AI. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal" style="position: relative;">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 id="modal-title">Create Account</h2>
+            <p id="modal-subtitle">Start your free trial today</p>
+            <form id="modal-form">
+                <div class="form-group" id="name-group" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Get Started</button>
+            </form>
+            <div class="divider">or continue with</div>
+            <div class="social-login">
+                <button class="social-btn">🔵 Google</button>
+                <button class="social-btn">⚫ GitHub</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) {
+            document.getElementById('modal').style.display = 'flex';
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const nameGroup = document.getElementById('name-group');
+            
+            if (type === 'signup') {
+                title.textContent = 'Create Account';
+                subtitle.textContent = 'Start your free trial today';
+                nameGroup.style.display = 'block';
+            } else {
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Log in to your account';
+                nameGroup.style.display = 'none';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+        
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        document.getElementById('modal-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('🎉 Welcome to TaskFlow AI! Your account has been created.');
+            closeModal();
+        });
+    </script>
+</body>
+</html>
