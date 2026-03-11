@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MailGenius AI - Professional Email Writing Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e0e0e0; line-height: 1.6; }
+        
+        .gradient-text { background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 2rem; background: rgba(10,10,15,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #667eea; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; font-size: 0.9rem; }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(102,126,234,0.3); }
+        .btn-ghost { background: transparent; color: #e0e0e0; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-ghost:hover { border-color: #667eea; color: #667eea; }
+        
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 20%, rgba(102,126,234,0.2) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(118,75,162,0.2) 0%, transparent 50%); }
+        .hero-content { max-width: 1200px; text-align: center; position: relative; z-index: 1; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero p { font-size: 1.3rem; color: #a0a0a0; max-width: 600px; margin: 0 auto 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .hero-stats { display: flex; gap: 3rem; justify-content: center; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; }
+        .stat-label { color: #666; font-size: 0.9rem; }
+        
+        .features { padding: 6rem 2rem; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .section-header p { color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .feature-card { padding: 2rem; border-radius: 16px; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); }
+        .feature-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .feature-card p { color: #888; font-size: 0.95rem; }
+        
+        .demo { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .demo-content { max-width: 900px; margin: 0 auto; }
+        .demo-box { padding: 2rem; border-radius: 20px; }
+        .demo-box h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
+        .demo-input { width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 1rem; margin-bottom: 1rem; resize: vertical; min-height: 100px; }
+        .demo-input:focus { outline: none; border-color: #667eea; }
+        .demo-output { background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; margin-top: 1rem; min-height: 150px; }
+        .demo-output p { color: #a0a0a0; font-style: italic; }
+        
+        .pricing { padding: 6rem 2rem; }
+        .pricing-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .pricing-card { padding: 2.5rem; border-radius: 20px; position: relative; }
+        .pricing-card.popular { border: 2px solid #667eea; }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: white; }
+        .pricing-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .pricing-card .price { font-size: 3rem; font-weight: 800; margin: 1rem 0; }
+        .pricing-card .price span { font-size: 1rem; font-weight: 400; color: #888; }
+        .pricing-features { list-style: none; margin: 1.5rem 0; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #667eea; font-weight: 600; }
+        
+        .testimonials { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .testimonials-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; }
+        .testimonial { padding: 2rem; border-radius: 16px; }
+        .testimonial-content { font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .author-info h4 { font-size: 1rem; }
+        .author-info p { font-size: 0.85rem; color: #888; }
+        
+        .cta { padding: 6rem 2rem; text-align: center; }
+        .cta-content { max-width: 700px; margin: 0 auto; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #888; font-size: 1.1rem; margin-bottom: 2rem; }
+        
+        footer { padding: 4rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; }
+        .footer-col h4 { font-size: 1rem; margin-bottom: 1rem; color: #e0e0e0; }
+        .footer-col a { display: block; color: #666; text-decoration: none; padding: 0.3rem 0; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-col a:hover { color: #667eea; }
+        .footer-bottom { text-align: center; padding-top: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 0.85rem; }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 2rem; }
+        .modal { background: #151520; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 100%; border: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .modal h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .modal p { color: #888; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.9rem 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #fff; cursor: pointer; font-size: 0.9rem; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
+        .divider { text-align: center; color: #666; margin: 1.5rem 0; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(255,255,255,0.1); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-stats { flex-direction: column; gap: 1.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon gradient-bg">✉️</div>
+                <span>MailGenius<span class="gradient-text">AI</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#testimonials">Reviews</a>
+                <button class="btn btn-ghost" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Try Free</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Write Perfect Emails <span class="gradient-text">in Seconds</span></h1>
+            <p>AI-powered email writing assistant that crafts professional, persuasive emails for any situation. Save hours every week with intelligent composition.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Writing Free</button>
+                <button class="btn btn-ghost">See Examples</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value gradient-text">50M+</div>
+                    <div class="stat-label">Emails Generated</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value gradient-text">500K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value gradient-text">95%</div>
+                    <div class="stat-label">Time Saved</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Professional Emails, Instantly</h2>
+            <p>Powerful AI features for every email need</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">📝</div>
+                <h3>Smart Composition</h3>
+                <p>Describe your intent and let AI craft the perfect email with proper tone, structure, and call-to-action</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">🎯</div>
+                <h3>Tone Adjustment</h3>
+                <p>Switch between formal, friendly, persuasive, or urgent tones with one click</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">🔄</div>
+                <h3>Reply Generator</h3>
+                <p>Paste any email and get intelligent, context-aware responses instantly</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">🌍</div>
+                <h3>Multi-Language</h3>
+                <p>Write and translate emails in 50+ languages with native-level quality</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">✨</div>
+                <h3>Grammar & Style</h3>
+                <p>Automatic proofreading and style improvements for polished communications</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon gradient-bg">📋</div>
+                <h3>Templates Library</h3>
+                <p>Access 500+ professional templates for any business scenario</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo">
+        <div class="demo-content">
+            <div class="section-header">
+                <h2>Try It Now</h2>
+                <p>See how MailGenius AI transforms your ideas into professional emails</p>
+            </div>
+            <div class="demo-box glass">
+                <h3>Describe your email intent:</h3>
+                <textarea class="demo-input" id="email-input" placeholder="Example: Write a follow-up email to a potential client who showed interest in our product demo last week..."></textarea>
+                <button class="btn btn-primary" onclick="generateEmail()">Generate Email</button>
+                <div class="demo-output" id="email-output">
+                    <p>Your AI-generated email will appear here...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple Pricing</h2>
+            <p>Start free, upgrade when you need more</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card glass">
+                <h3>Free</h3>
+                <div class="price">$0<span>/mo</span></div>
+                <p style="color: #888; font-size: 0.9rem;">For occasional use</p>
+                <ul class="pricing-features">
+                    <li>10 emails/month</li>
+                    <li>Basic templates</li>
+                    <li>Standard tone options</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card glass popular">
+                <div class="popular-badge gradient-bg">Most Popular</div>
+                <h3>Pro</h3>
+                <div class="price">$12<span>/mo</span></div>
+                <p style="color: #888; font-size: 0.9rem;">For professionals</p>
+                <ul class="pricing-features">
+                    <li>Unlimited emails</li>
+                    <li>All templates</li>
+                    <li>Advanced AI models</li>
+                    <li>Multi-language support</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="openModal('signup')">Start Free Trial</button>
+            </div>
+            <div class="pricing-card glass">
+                <h3>Team</h3>
+                <div class="price">$29<span>/mo</span></div>
+                <p style="color: #888; font-size: 0.9rem;">For teams & agencies</p>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>5 team members</li>
+                    <li>Shared templates</li>
+                    <li>Brand voice training</li>
+                    <li>Analytics dashboard</li>
+                    <li>API access</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Trusted by Professionals</h2>
+            <p>See what our users have to say</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial glass">
+                <div class="testimonial-content">"I used to spend 2+ hours daily on emails. Now it takes 20 minutes. MailGenius AI understands exactly what I want to say and says it better."</div>
+                <div class="testimonial-author">
+                    <div class="author-avatar gradient-bg">DM</div>
+                    <div class="author-info">
+                        <h4>David Mitchell</h4>
+                        <p>Sales Director</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial glass">
+                <div class="testimonial-content">"As a non-native English speaker, this tool has been a game-changer. My emails now sound professional and natural."</div>
+                <div class="testimonial-author">
+                    <div class="author-avatar gradient-bg">YL</div>
+                    <div class="author-info">
+                        <h4>Yuki Tanaka</h4>
+                        <p>Marketing Manager</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial glass">
+                <div class="testimonial-content">"The reply generator is incredible. It captures the context perfectly and crafts responses that would have taken me 15 minutes to write."</div>
+                <div class="testimonial-author">
+                    <div class="author-avatar gradient-bg">SC</div>
+                    <div class="author-info">
+                        <h4>Sarah Chen</h4>
+                        <p>Customer Success Lead</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Start Writing Better Emails Today</h2>
+            <p>Join 500,000+ professionals using AI to write perfect emails in seconds.</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Try Free for 7 Days</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Templates</a>
+                <a href="#">Integrations</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#">Blog</a>
+                <a href="#">Guides</a>
+                <a href="#">Help Center</a>
+                <a href="#">API Docs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="#">About</a>
+                <a href="#">Careers</a>
+                <a href="#">Press</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Security</a>
+                <a href="#">GDPR</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 MailGenius AI. All rights reserved.
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 id="modal-title">Create Account</h2>
+            <p id="modal-subtitle">Start your free trial today</p>
+            <form id="modal-form">
+                <div class="form-group" id="name-group" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Get Started</button>
+            </form>
+            <div class="divider">or continue with</div>
+            <div class="social-login">
+                <button class="social-btn">🔵 Google</button>
+                <button class="social-btn">⚫ GitHub</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) {
+            document.getElementById('modal').style.display = 'flex';
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const nameGroup = document.getElementById('name-group');
+            
+            if (type === 'signup') {
+                title.textContent = 'Create Account';
+                subtitle.textContent = 'Start your free trial today';
+                nameGroup.style.display = 'block';
+            } else {
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Log in to your account';
+                nameGroup.style.display = 'none';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+        
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        document.getElementById('modal-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('🎉 Welcome to MailGenius AI! Your account has been created.');
+            closeModal();
+        });
+        
+        function generateEmail() {
+            const input = document.getElementById('email-input').value;
+            const output = document.getElementById('email-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p style="color: #ff6b6b;">Please describe your email intent first...</p>';
+                return;
+            }
+            
+            output.innerHTML = '<p style="color: #667eea;">Generating your email...</p>';
+            
+            setTimeout(() => {
+                output.innerHTML = `
+                    <p style="color: #e0e0e0; font-style: normal; margin-bottom: 1rem;"><strong>Subject: Following Up on Our Product Demo Discussion</strong></p>
+                    <p style="color: #e0e0e0; font-style: normal; line-height: 1.8;">
+                        Dear [Client Name],<br><br>
+                        I hope this email finds you well. I wanted to follow up on our conversation from last week regarding the product demo we conducted. It was a pleasure discussing how our solution can help streamline your operations.<br><br>
+                        As promised, I've attached additional documentation that highlights the key features we discussed. I'd love to schedule a brief call to address any questions you might have and explore next steps.<br><br>
+                        Would you be available for a 15-minute call this week? I'm flexible and can work around your schedule.<br><br>
+                        Looking forward to hearing from you.<br><br>
+                        Best regards,<br>
+                        [Your Name]
+                    </p>
+                    <p style="color: #888; font-size: 0.8rem; margin-top: 1rem; font-style: italic;">AI-generated by MailGenius AI</p>
+                `;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
