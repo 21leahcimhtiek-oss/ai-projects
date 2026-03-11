@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetScheduler AI - Smart Meeting Scheduling with AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #a855f7;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .btn-outline:hover {
+            border-color: #a855f7;
+            color: #a855f7;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .calendar-demo {
+            margin-top: 4rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .calendar-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .calendar-month {
+            font-weight: 600;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .calendar-nav button {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calendar-nav button:hover {
+            border-color: #a855f7;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            padding: 1rem;
+        }
+        
+        .calendar-day-name {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6b7280;
+            padding: 0.5rem 0;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calendar-day:hover {
+            background: rgba(168, 85, 247, 0.2);
+        }
+        
+        .calendar-day.today {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            font-weight: 600;
+        }
+        
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 4px;
+            height: 4px;
+            background: #a855f7;
+            border-radius: 50%;
+        }
+        
+        .calendar-day.other-month {
+            color: #4b5563;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(168, 85, 247, 0.02));
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: #a855f7;
+            transform: translateY(-5px);
+            background: rgba(168, 85, 247, 0.05);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        
+        /* Integrations Section */
+        .integrations {
+            padding: 6rem 2rem;
+        }
+        
+        .integrations-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .integration-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s;
+        }
+        
+        .integration-item:hover {
+            border-color: #a855f7;
+            transform: scale(1.05);
+        }
+        
+        .integration-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* Demo Section */
+        .demo-section {
+            padding: 6rem 2rem;
+            background: rgba(168, 85, 247, 0.02);
+        }
+        
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .demo-info h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-info p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+        
+        .demo-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #a855f7;
+        }
+        
+        .stat-box .label {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        .demo-visual {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+        
+        .meeting-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+        
+        .meeting-item:hover {
+            background: rgba(168, 85, 247, 0.1);
+        }
+        
+        .meeting-time {
+            text-align: center;
+            min-width: 60px;
+        }
+        
+        .meeting-time .time {
+            font-weight: 600;
+            color: #a855f7;
+        }
+        
+        .meeting-time .duration {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .meeting-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .meeting-details p {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: #a855f7;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card:hover {
+            border-color: #a855f7;
+        }
+        
+        .pricing-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: #a855f7;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: rgba(168, 85, 247, 0.02);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-stars {
+            color: #a855f7;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-text {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .author-name {
+            font-weight: 600;
+        }
+        
+        .author-title {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #a855f7;
+        }
+        
+        .copyright {
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #0a0a0f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .modal p {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .divider {
+            text-align: center;
+            color: #4b5563;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        
+        .social-btn:hover {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.1);
+        }
+        
+        .modal-switch {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .modal-switch a {
+            color: #a855f7;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .demo-container { grid-template-columns: 1fr; }
+            .pricing-card.featured { transform: scale(1); }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo gradient-text">MeetScheduler AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#integrations">Integrations</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="showLogin()">Login</button>
+            <button class="btn btn-primary" onclick="showSignup()">Start Free</button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Schedule Meetings <span class="gradient-text">Without the Hassle</span></h1>
+            <p>AI-powered scheduling that finds the perfect time for everyone. Say goodbye to endless email chains and calendar conflicts.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="showSignup()">Start Scheduling Free</button>
+                <button class="btn btn-outline btn-large">Watch Demo</button>
+            </div>
+            <div class="calendar-demo">
+                <div class="calendar-header">
+                    <span class="calendar-month">January 2025</span>
+                    <div class="calendar-nav">
+                        <button>←</button>
+                        <button>→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <span class="calendar-day-name">Sun</span>
+                    <span class="calendar-day-name">Mon</span>
+                    <span class="calendar-day-name">Tue</span>
+                    <span class="calendar-day-name">Wed</span>
+                    <span class="calendar-day-name">Thu</span>
+                    <span class="calendar-day-name">Fri</span>
+                    <span class="calendar-day-name">Sat</span>
+                    <span class="calendar-day other-month">29</span>
+                    <span class="calendar-day other-month">30</span>
+                    <span class="calendar-day other-month">31</span>
+                    <span class="calendar-day">1</span>
+                    <span class="calendar-day">2</span>
+                    <span class="calendar-day">3</span>
+                    <span class="calendar-day">4</span>
+                    <span class="calendar-day">5</span>
+                    <span class="calendar-day">6</span>
+                    <span class="calendar-day">7</span>
+                    <span class="calendar-day">8</span>
+                    <span class="calendar-day today">9</span>
+                    <span class="calendar-day">10</span>
+                    <span class="calendar-day">11</span>
+                    <span class="calendar-day">12</span>
+                    <span class="calendar-day">13</span>
+                    <span class="calendar-day">14</span>
+                    <span class="calendar-day">15</span>
+                    <span class="calendar-day">16</span>
+                    <span class="calendar-day">17</span>
+                    <span class="calendar-day">18</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Features That <span class="gradient-text">Save You Time</span></h2>
+            <p>Smart scheduling tools designed to eliminate the back-and-forth.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Time Finder</h3>
+                <p>AI analyzes everyone's calendar and suggests the optimal meeting time that works for all attendees.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Calendar Sync</h3>
+                <p>Syncs with Google Calendar, Outlook, Apple Calendar, and more. Always up-to-date availability.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Shareable Links</h3>
+                <p>Share your scheduling link and let others book time with you. No more back-and-forth emails.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>Time Zone Magic</h3>
+                <p>Automatically detects and converts time zones. Never miss a meeting across continents.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Round Robin</h3>
+                <p>Distribute meetings among team members fairly. Perfect for sales and support teams.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics Dashboard</h3>
+                <p>Track meeting trends, no-shows, and productivity insights to optimize your schedule.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Integrations Section -->
+    <section class="integrations" id="integrations">
+        <div class="section-header">
+            <h2>Integrates with <span class="gradient-text">Your Tools</span></h2>
+            <p>Connect with 100+ apps and services you already use.</p>
+        </div>
+        <div class="integrations-grid">
+            <div class="integration-item">
+                <span class="integration-icon">📅</span>
+                <span>Google Calendar</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">📧</span>
+                <span>Outlook</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">🍎</span>
+                <span>Apple Calendar</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">💬</span>
+                <span>Slack</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">🎥</span>
+                <span>Zoom</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">📺</span>
+                <span>Google Meet</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">💼</span>
+                <span>Teams</span>
+            </div>
+            <div class="integration-item">
+                <span class="integration-icon">📱</span>
+                <span>Calendly Import</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Demo Section -->
+    <section class="demo-section">
+        <div class="demo-container">
+            <div class="demo-info">
+                <h3>Your Day, <span class="gradient-text">Perfectly Organized</span></h3>
+                <p>See all your meetings at a glance. AI helps you find gaps for focus time and suggests optimal meeting times.</p>
+                <div class="demo-stats">
+                    <div class="stat-box">
+                        <div class="number">4.2h</div>
+                        <div class="label">Avg Time Saved/Week</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">89%</div>
+                        <div class="label">Fewer Conflicts</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">50+</div>
+                        <div class="label">Integrations</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">2M+</div>
+                        <div class="label">Active Users</div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-visual">
+                <div class="meeting-item">
+                    <div class="meeting-time">
+                        <div class="time">9:00</div>
+                        <div class="duration">30 min</div>
+                    </div>
+                    <div class="meeting-details">
+                        <h4>Team Standup</h4>
+                        <p>Daily sync with engineering team</p>
+                    </div>
+                </div>
+                <div class="meeting-item">
+                    <div class="meeting-time">
+                        <div class="time">11:00</div>
+                        <div class="duration">1 hr</div>
+                    </div>
+                    <div class="meeting-details">
+                        <h4>Product Review</h4>
+                        <p>Q1 roadmap discussion</p>
+                    </div>
+                </div>
+                <div class="meeting-item">
+                    <div class="meeting-time">
+                        <div class="time">2:00</div>
+                        <div class="duration">45 min</div>
+                    </div>
+                    <div class="meeting-details">
+                        <h4>Client Demo</h4>
+                        <p>Product walkthrough for Acme Inc</p>
+                    </div>
+                </div>
+                <div class="meeting-item">
+                    <div class="meeting-time">
+                        <div class="time">4:30</div>
+                        <div class="duration">30 min</div>
+                    </div>
+                    <div class="meeting-details">
+                        <h4>1:1 with Manager</h4>
+                        <p>Weekly check-in and feedback</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple <span class="gradient-text">Pricing</span></h2>
+            <p>Start free, upgrade when you need more features.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-icon">🆓</div>
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>1 calendar connection</li>
+                    <li>Basic scheduling links</li>
+                    <li>5 event types</li>
+                    <li>Email reminders</li>
+                    <li>Standard support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-icon">⭐</div>
+                <h3>Pro</h3>
+                <div class="price">$8<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited calendars</li>
+                    <li>AI time finder</li>
+                    <li>Unlimited event types</li>
+                    <li>Round robin scheduling</li>
+                    <li>Team scheduling</li>
+                    <li>Analytics dashboard</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-icon">🏢</div>
+                <h3>Team</h3>
+                <div class="price">$12<span>/user/mo</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>Admin controls</li>
+                    <li>Custom branding</li>
+                    <li>API access</li>
+                    <li>SSO/SAML</li>
+                    <li>Dedicated support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Loved by <span class="gradient-text">Teams Worldwide</span></h2>
+            <p>See how MeetScheduler AI has transformed scheduling for thousands.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"The AI time finder is incredible. It found a time that worked for 8 people across 4 time zones instantly. What used to take days now takes seconds."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">LM</div>
+                    <div>
+                        <div class="author-name">Lisa M.</div>
+                        <div class="author-title">Project Manager</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Switched from Calendly and never looked back. The round robin feature alone has made our sales team 30% more efficient."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">TC</div>
+                    <div>
+                        <div class="author-name">Tom C.</div>
+                        <div class="author-title">Sales Director</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Finally, a scheduler that understands time zones. I work with clients globally and MeetScheduler AI has eliminated all the confusion."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AR</div>
+                    <div>
+                        <div class="author-name">Amy R.</div>
+                        <div class="author-title">Consultant</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-box">
+            <h2>Start <span class="gradient-text">Scheduling Smarter</span></h2>
+            <p>Join 2 million+ professionals who save hours every week with AI-powered scheduling.</p>
+            <button class="btn btn-primary btn-large" onclick="showSignup()">Get Started Free</button>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo gradient-text">MeetScheduler AI</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="copyright">© 2025 MeetScheduler AI. All rights reserved.</div>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h3>Welcome Back</h3>
+            <p>Access your scheduling dashboard</p>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary">Login</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+        </div>
+    </div>
+    
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <h3>Start Scheduling Free</h3>
+            <p>No credit card required</p>
+            <input type="text" placeholder="Full name">
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Create password">
+            <button class="btn btn-primary">Create Account</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function showLogin() {
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        function showSignup() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('signupModal').classList.add('active');
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
