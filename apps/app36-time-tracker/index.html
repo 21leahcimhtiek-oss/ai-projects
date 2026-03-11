@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeTracker AI - Smart Time Management with AI Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fbbf24, #f97316, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #fbbf24, #f97316, #ef4444);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #fbbf24;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .btn-outline:hover {
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            color: #0a0a0f;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .timer-demo {
+            margin-top: 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .timer-display {
+            font-size: 4rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.1em;
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .timer-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .timer-btn:hover {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+        
+        .timer-btn.active {
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            color: #0a0a0f;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(251, 191, 36, 0.02));
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: #fbbf24;
+            transform: translateY(-5px);
+            background: rgba(251, 191, 36, 0.05);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        
+        /* Dashboard Section */
+        .dashboard-section {
+            padding: 6rem 2rem;
+        }
+        
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        
+        .dashboard-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dashboard-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(249, 115, 22, 0.2));
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+        
+        .dashboard-content {
+            padding: 2rem;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        
+        .stat-card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+        
+        .stat-card .label {
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .chart-area {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 1rem 0;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #fbbf24, #f97316);
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+        
+        .chart-bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+        
+        /* Projects Section */
+        .projects-section {
+            padding: 6rem 2rem;
+            background: rgba(251, 191, 36, 0.02);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .project-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .project-card:hover {
+            border-color: #fbbf24;
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .project-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .project-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .project-time {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        
+        .project-progress {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .project-progress-bar {
+            height: 100%;
+            border-radius: 2px;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: #fbbf24;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0a0a0f;
+        }
+        
+        .pricing-card:hover {
+            border-color: #fbbf24;
+        }
+        
+        .pricing-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: #fbbf24;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: rgba(251, 191, 36, 0.02);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-stars {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-text {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #0a0a0f;
+        }
+        
+        .author-name {
+            font-weight: 600;
+        }
+        
+        .author-title {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(249, 115, 22, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #fbbf24;
+        }
+        
+        .copyright {
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #0a0a0f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .modal p {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: #fbbf24;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .divider {
+            text-align: center;
+            color: #4b5563;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        
+        .social-btn:hover {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+        
+        .modal-switch {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .modal-switch a {
+            color: #fbbf24;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .pricing-card.featured { transform: scale(1); }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo gradient-text">TimeTracker AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="showLogin()">Login</button>
+            <button class="btn btn-primary" onclick="showSignup()">Start Free</button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Master Your Time, <span class="gradient-text">Maximize Your Life</span></h1>
+            <p>AI-powered time tracking that reveals productivity patterns, eliminates time-wasters, and helps you achieve work-life balance with smart insights.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="showSignup()">Start Tracking Free</button>
+                <button class="btn btn-outline btn-large">See Demo</button>
+            </div>
+            <div class="timer-demo">
+                <div class="timer-display gradient-text">02:34:17</div>
+                <div class="timer-controls">
+                    <button class="timer-btn">⏸</button>
+                    <button class="timer-btn active">▶</button>
+                    <button class="timer-btn">⏹</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Features That <span class="gradient-text">Boost Productivity</span></h2>
+            <p>Everything you need to understand and optimize how you spend your time.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>One-Click Tracking</h3>
+                <p>Start and stop timers instantly. Automatic time detection knows what you're working on.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>AI Productivity Insights</h3>
+                <p>Get personalized recommendations on how to optimize your work patterns and eliminate distractions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>Project Organization</h3>
+                <p>Organize time by projects, clients, or categories. Perfect for billing and reporting.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Goal Setting</h3>
+                <p>Set daily, weekly, or project-based time goals. Track progress in real-time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile + Desktop</h3>
+                <p>Track time anywhere with our cross-platform apps. Everything syncs automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Detailed Reports</h3>
+                <p>Beautiful, exportable reports for clients, managers, or personal review.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Dashboard Section -->
+    <section class="dashboard-section" id="dashboard">
+        <div class="section-header">
+            <h2>Your <span class="gradient-text">Productivity Dashboard</span></h2>
+            <p>Visualize your time and make data-driven decisions.</p>
+        </div>
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <span class="dashboard-title">📊 Weekly Overview</span>
+                <div class="dashboard-tabs">
+                    <button class="tab active">Week</button>
+                    <button class="tab">Month</button>
+                    <button class="tab">Year</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="value">42.5h</div>
+                        <div class="label">Total Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">8.5h</div>
+                        <div class="label">Daily Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">12</div>
+                        <div class="label">Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">+18%</div>
+                        <div class="label">Productivity</div>
+                    </div>
+                </div>
+                <div class="chart-area">
+                    <div class="chart-bar" style="height: 70%;" data-label="Mon"></div>
+                    <div class="chart-bar" style="height: 85%;" data-label="Tue"></div>
+                    <div class="chart-bar" style="height: 60%;" data-label="Wed"></div>
+                    <div class="chart-bar" style="height: 90%;" data-label="Thu"></div>
+                    <div class="chart-bar" style="height: 75%;" data-label="Fri"></div>
+                    <div class="chart-bar" style="height: 40%;" data-label="Sat"></div>
+                    <div class="chart-bar" style="height: 30%;" data-label="Sun"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section class="projects-section">
+        <div class="section-header">
+            <h2>Track by <span class="gradient-text">Project</span></h2>
+            <p>Organize your work and see exactly where your time goes.</p>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-header">
+                    <span class="project-name">
+                        <span class="project-dot" style="background: #fbbf24;"></span>
+                        Website Redesign
+                    </span>
+                    <span class="project-time">24h 30m</span>
+                </div>
+                <div class="project-progress">
+                    <div class="project-progress-bar gradient-bg" style="width: 78%;"></div>
+                </div>
+                <div class="project-meta">
+                    <span>78% complete</span>
+                    <span>Due in 5 days</span>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <span class="project-name">
+                        <span class="project-dot" style="background: #f97316;"></span>
+                        Mobile App MVP
+                    </span>
+                    <span class="project-time">18h 45m</span>
+                </div>
+                <div class="project-progress">
+                    <div class="project-progress-bar gradient-bg" style="width: 45%;"></div>
+                </div>
+                <div class="project-meta">
+                    <span>45% complete</span>
+                    <span>Due in 12 days</span>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <span class="project-name">
+                        <span class="project-dot" style="background: #ef4444;"></span>
+                        Client Presentation
+                    </span>
+                    <span class="project-time">6h 15m</span>
+                </div>
+                <div class="project-progress">
+                    <div class="project-progress-bar gradient-bg" style="width: 92%;"></div>
+                </div>
+                <div class="project-meta">
+                    <span>92% complete</span>
+                    <span>Due tomorrow</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple <span class="gradient-text">Pricing</span></h2>
+            <p>Start free and upgrade when you need more features.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-icon">🆓</div>
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited time tracking</li>
+                    <li>3 active projects</li>
+                    <li>Basic reports</li>
+                    <li>Mobile app access</li>
+                    <li>7-day data history</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-icon">⭐</div>
+                <h3>Pro</h3>
+                <div class="price">$7.99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited projects</li>
+                    <li>AI productivity insights</li>
+                    <li>Advanced reports & exports</li>
+                    <li>Team collaboration</li>
+                    <li>Unlimited history</li>
+                    <li>Calendar integration</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-icon">🏢</div>
+                <h3>Team</h3>
+                <div class="price">$5.99<span>/user/mo</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>Team dashboard</li>
+                    <li>Admin controls</li>
+                    <li>Billable rates</li>
+                    <li>Invoice generation</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Trusted by <span class="gradient-text">Productive Teams</span></h2>
+            <p>See how TimeTracker AI has transformed workflows worldwide.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Finally a time tracker that I actually enjoy using. The AI insights helped me identify 3 hours of daily wasted time I didn't even know about!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JC</div>
+                    <div>
+                        <div class="author-name">Jennifer C.</div>
+                        <div class="author-title">Freelance Designer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"We've tried many time tracking tools. This is the only one our team actually uses consistently. The reports are incredibly detailed."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MR</div>
+                    <div>
+                        <div class="author-name">Michael R.</div>
+                        <div class="author-title">Agency Owner</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"The billing integration is flawless. I've recovered thousands in unbilled hours since switching to TimeTracker AI."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AT</div>
+                    <div>
+                        <div class="author-name">Alex T.</div>
+                        <div class="author-title">Consultant</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-box">
+            <h2>Start <span class="gradient-text">Tracking</span> Today</h2>
+            <p>Join 500,000+ professionals who have transformed their productivity.</p>
+            <button class="btn btn-primary btn-large" onclick="showSignup()">Get Started Free</button>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo gradient-text">TimeTracker AI</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="copyright">© 2025 TimeTracker AI. All rights reserved.</div>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h3>Welcome Back</h3>
+            <p>Continue tracking your time</p>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary">Login</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+        </div>
+    </div>
+    
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <h3>Start Tracking Free</h3>
+            <p>No credit card required</p>
+            <input type="text" placeholder="Full name">
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Create password">
+            <button class="btn btn-primary">Create Account</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function showLogin() {
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        function showSignup() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('signupModal').classList.add('active');
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+        
+        // Timer animation
+        let seconds = 9257;
+        function updateTimer() {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            document.querySelector('.timer-display').textContent = 
+                String(h).padStart(2, '0') + ':' + 
+                String(m).padStart(2, '0') + ':' + 
+                String(s).padStart(2, '0');
+            seconds++;
+        }
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
