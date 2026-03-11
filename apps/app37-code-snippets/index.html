@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSnippets AI - Your AI-Powered Code Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #06b6d4;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .btn-outline:hover {
+            border-color: #06b6d4;
+            color: #06b6d4;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .code-preview {
+            margin-top: 4rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        
+        .code-header {
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dot.red { background: #ef4444; }
+        .code-dot.yellow { background: #fbbf24; }
+        .code-dot.green { background: #22c55e; }
+        
+        .code-lang {
+            margin-left: auto;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        
+        .code-body {
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+        
+        .code-keyword { color: #c084fc; }
+        .code-function { color: #06b6d4; }
+        .code-string { color: #22c55e; }
+        .code-comment { color: #6b7280; }
+        .code-number { color: #f472b6; }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(6, 182, 212, 0.02));
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: #06b6d4;
+            transform: translateY(-5px);
+            background: rgba(6, 182, 212, 0.05);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        
+        /* Languages Section */
+        .languages {
+            padding: 6rem 2rem;
+        }
+        
+        .languages-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .language-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #9ca3af;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .language-tag:hover {
+            border-color: #06b6d4;
+            color: #06b6d4;
+        }
+        
+        /* Demo Section */
+        .demo-section {
+            padding: 6rem 2rem;
+            background: rgba(6, 182, 212, 0.02);
+        }
+        
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .demo-info h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-info p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+        
+        .demo-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #06b6d4;
+        }
+        
+        .stat-box .label {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        .demo-visual {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .snippet-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .snippet-item:hover {
+            background: rgba(6, 182, 212, 0.05);
+        }
+        
+        .snippet-item:last-child {
+            border-bottom: none;
+        }
+        
+        .snippet-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .snippet-lang {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            background: rgba(6, 182, 212, 0.2);
+            border-radius: 4px;
+            color: #06b6d4;
+        }
+        
+        .snippet-meta {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: #06b6d4;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card:hover {
+            border-color: #06b6d4;
+        }
+        
+        .pricing-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: #06b6d4;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: rgba(6, 182, 212, 0.02);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-stars {
+            color: #06b6d4;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-text {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .author-name {
+            font-weight: 600;
+        }
+        
+        .author-title {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #06b6d4;
+        }
+        
+        .copyright {
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #0a0a0f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .modal p {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .divider {
+            text-align: center;
+            color: #4b5563;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        
+        .social-btn:hover {
+            border-color: #06b6d4;
+            background: rgba(6, 182, 212, 0.1);
+        }
+        
+        .modal-switch {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .modal-switch a {
+            color: #06b6d4;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .demo-container { grid-template-columns: 1fr; }
+            .pricing-card.featured { transform: scale(1); }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo gradient-text">CodeSnippets AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#languages">Languages</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="showLogin()">Login</button>
+            <button class="btn btn-primary" onclick="showSignup()">Start Free</button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your <span class="gradient-text">AI-Powered</span> Code Library</h1>
+            <p>Save, organize, and instantly retrieve code snippets with AI-powered search. Never write the same code twice.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="showSignup()">Start Saving Code</button>
+                <button class="btn btn-outline btn-large">Browse Snippets</button>
+            </div>
+            <div class="code-preview">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-lang">JavaScript</span>
+                </div>
+                <div class="code-body">
+                    <span class="code-comment">// AI-optimized search</span><br>
+                    <span class="code-keyword">const</span> <span class="code-function">findSnippet</span> = <span class="code-keyword">async</span> (query) => {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">const</span> results = <span class="code-keyword">await</span> <span class="code-function">ai.search</span>(query);<br>
+                    &nbsp;&nbsp;<span class="code-keyword">return</span> results.<span class="code-function">sort</span>(<span class="code-string">'relevance'</span>);<br>
+                    };
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Features Built for <span class="gradient-text">Developers</span></h2>
+            <p>Everything you need to build your personal code knowledge base.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>AI-Powered Search</h3>
+                <p>Search by description, not just keywords. Our AI understands what you're looking for.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3>Smart Tagging</h3>
+                <p>Automatic language detection and smart tag suggestions keep your library organized.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>One-Click Copy</h3>
+                <p>Copy any snippet instantly with formatted code ready to paste into your project.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Private by Default</h3>
+                <p>Your snippets are encrypted and private. Share only what you want to share.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>IDE Extensions</h3>
+                <p>VS Code, JetBrains, and Vim plugins let you access snippets without leaving your editor.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Usage Analytics</h3>
+                <p>See which snippets you use most and discover patterns in your coding style.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Languages Section -->
+    <section class="languages" id="languages">
+        <div class="section-header">
+            <h2>Supports <span class="gradient-text">Every Language</span></h2>
+            <p>From Python to Rust, we've got you covered with syntax highlighting and language-specific features.</p>
+        </div>
+        <div class="languages-grid">
+            <span class="language-tag">🐍 Python</span>
+            <span class="language-tag">⚡ JavaScript</span>
+            <span class="language-tag">🎯 TypeScript</span>
+            <span class="language-tag">🦀 Rust</span>
+            <span class="language-tag">🐹 Go</span>
+            <span class="language-tag">☕ Java</span>
+            <span class="language-tag">💎 Ruby</span>
+            <span class="language-tag">🐘 PHP</span>
+            <span class="language-tag">🍎 Swift</span>
+            <span class="language-tag">🤖 Kotlin</span>
+            <span class="language-tag">☁️ C#</span>
+            <span class="language-tag">⚙️ C++</span>
+            <span class="language-tag">🎯 Dart</span>
+            <span class="language-tag">📊 R</span>
+            <span class="language-tag">🐙 Scala</span>
+            <span class="language-tag">🔥 Elixir</span>
+        </div>
+    </section>
+    
+    <!-- Demo Section -->
+    <section class="demo-section">
+        <div class="demo-container">
+            <div class="demo-info">
+                <h3>Your <span class="gradient-text">Snippet Library</span></h3>
+                <p>Build a personal knowledge base of useful code patterns, utilities, and solutions. Access them anywhere, instantly.</p>
+                <div class="demo-stats">
+                    <div class="stat-box">
+                        <div class="number">50+</div>
+                        <div class="label">Languages</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">0.1s</div>
+                        <div class="label">Search Time</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">∞</div>
+                        <div class="label">Snippets</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">99.9%</div>
+                        <div class="label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-visual">
+                <div class="snippet-item">
+                    <span class="snippet-name">
+                        <span class="snippet-lang">JS</span>
+                        Debounce Function
+                    </span>
+                    <span class="snippet-meta">Used 45 times</span>
+                </div>
+                <div class="snippet-item">
+                    <span class="snippet-name">
+                        <span class="snippet-lang">PY</span>
+                        API Rate Limiter
+                    </span>
+                    <span class="snippet-meta">Used 32 times</span>
+                </div>
+                <div class="snippet-item">
+                    <span class="snippet-name">
+                        <span class="snippet-lang">TS</span>
+                        React useDebounce Hook
+                    </span>
+                    <span class="snippet-meta">Used 28 times</span>
+                </div>
+                <div class="snippet-item">
+                    <span class="snippet-name">
+                        <span class="snippet-lang">GO</span>
+                        HTTP Client Wrapper
+                    </span>
+                    <span class="snippet-meta">Used 21 times</span>
+                </div>
+                <div class="snippet-item">
+                    <span class="snippet-name">
+                        <span class="snippet-lang">RS</span>
+                        Async File Reader
+                    </span>
+                    <span class="snippet-meta">Used 15 times</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple <span class="gradient-text">Pricing</span></h2>
+            <p>Start free, upgrade when you need more power.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-icon">🆓</div>
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>100 snippets</li>
+                    <li>Basic search</li>
+                    <li>5 languages</li>
+                    <li>Web access only</li>
+                    <li>Community support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-icon">⭐</div>
+                <h3>Pro</h3>
+                <div class="price">$4.99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited snippets</li>
+                    <li>AI-powered search</li>
+                    <li>All 50+ languages</li>
+                    <li>IDE extensions</li>
+                    <li>Snippet sharing</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-icon">🏢</div>
+                <h3>Team</h3>
+                <div class="price">$3.99<span>/user/mo</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>Team libraries</li>
+                    <li>Admin controls</li>
+                    <li>SSO integration</li>
+                    <li>API access</li>
+                    <li>Dedicated support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Loved by <span class="gradient-text">Developers</span></h2>
+            <p>Join thousands of developers who never write the same code twice.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"The AI search is incredible. I describe what I need and it finds the exact snippet I wrote months ago. Game changer."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DL</div>
+                    <div>
+                        <div class="author-name">David L.</div>
+                        <div class="author-title">Full Stack Developer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"I've built up a library of 500+ snippets. The VS Code extension means I never have to context switch."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SK</div>
+                    <div>
+                        <div class="author-name">Sarah K.</div>
+                        <div class="author-title">Senior Engineer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Our team shares a library of approved patterns. Code quality has improved and onboarding is so much faster."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MR</div>
+                    <div>
+                        <div class="author-name">Mike R.</div>
+                        <div class="author-title">Tech Lead</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-box">
+            <h2>Build Your <span class="gradient-text">Code Library</span> Today</h2>
+            <p>Start saving time with your personal AI-powered snippet library.</p>
+            <button class="btn btn-primary btn-large" onclick="showSignup()">Get Started Free</button>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo gradient-text">CodeSnippets AI</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+                <a href="#">API</a>
+            </div>
+            <div class="copyright">© 2025 CodeSnippets AI. All rights reserved.</div>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h3>Welcome Back</h3>
+            <p>Access your snippet library</p>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary">Login</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+        </div>
+    </div>
+    
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <h3>Start Saving Code</h3>
+            <p>100 free snippets to get started</p>
+            <input type="text" placeholder="Full name">
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Create password">
+            <button class="btn btn-primary">Create Account</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function showLogin() {
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        function showSignup() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('signupModal').classList.add('active');
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
