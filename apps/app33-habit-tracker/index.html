@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitTracker AI - Build Better Habits with AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #22c55e, #14b8a6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #22c55e, #14b8a6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #a1a1aa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: #ffffff;
+        }
+        
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #14b8a6);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            background: radial-gradient(ellipse at top right, rgba(34, 197, 94, 0.1), transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(20, 184, 166, 0.1), transparent 50%);
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-text p {
+            font-size: 1.25rem;
+            color: #a1a1aa;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #71717a;
+        }
+        
+        .hero-visual {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .habit-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .preview-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .preview-streak {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #22c55e;
+        }
+        
+        .habit-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .habit-check {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .habit-check.done {
+            background: linear-gradient(135deg, #22c55e, #14b8a6);
+        }
+        
+        .habit-check.pending {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .habit-info {
+            flex: 1;
+        }
+        
+        .habit-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .habit-streak {
+            font-size: 0.7rem;
+            color: #71717a;
+        }
+        
+        .habit-time {
+            font-size: 0.7rem;
+            color: #a1a1aa;
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 1rem auto;
+            position: relative;
+        }
+        
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+        
+        .progress-ring .bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-ring .progress {
+            stroke: url(#gradient);
+            stroke-linecap: round;
+            stroke-dasharray: 339.292;
+            stroke-dashoffset: 84.823;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .progress-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .progress-label {
+            font-size: 0.7rem;
+            color: #71717a;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.02));
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(34, 197, 94, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(20, 184, 166, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+        }
+        
+        /* Habit Categories */
+        .categories {
+            padding: 6rem 2rem;
+        }
+        
+        .categories-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .category-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .category-card:hover {
+            border-color: #22c55e;
+            transform: translateY(-3px);
+        }
+        
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .category-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .category-card p {
+            font-size: 0.75rem;
+            color: #71717a;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+            background: rgba(34, 197, 94, 0.02);
+        }
+        
+        .pricing-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card.popular {
+            border-color: #22c55e;
+            transform: scale(1.05);
+            background: linear-gradient(180deg, rgba(34, 197, 94, 0.1), transparent);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+        
+        .popular-badge {
+            background: linear-gradient(135deg, #22c55e, #14b8a6);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #71717a;
+        }
+        
+        .pricing-card .description {
+            color: #a1a1aa;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.05), transparent);
+        }
+        
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-card p {
+            font-style: italic;
+            color: #a1a1aa;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #22c55e, #14b8a6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .author-info span {
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(20, 184, 166, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .footer-brand p {
+            color: #71717a;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            padding: 0.25rem 0;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #141420;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .modal p {
+            color: #a1a1aa;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #22c55e;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #71717a;
+            font-size: 0.875rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid,
+            .pricing-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid,
+            .pricing-grid,
+            .testimonials-grid,
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">✓</div>
+            <span>HabitTracker<span class="gradient-text">AI</span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#categories">Categories</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-ghost" onclick="openModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Build Better Habits <span class="gradient-text">With AI</span></h1>
+                <p>AI-powered habit tracking that understands your patterns, motivates you when you need it, and helps you become the best version of yourself.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-large" onclick="openModal('signup')">Start Building Habits</button>
+                    <button class="btn btn-ghost btn-large">View Demo</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number gradient-text">3M+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number gradient-text">89%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number gradient-text">4.9★</div>
+                        <div class="stat-label">App Rating</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="habit-preview">
+                    <div class="preview-header">
+                        <span class="preview-title">Today's Habits</span>
+                        <span class="preview-streak">🔥 45 day streak!</span>
+                    </div>
+                    <div class="habit-item">
+                        <div class="habit-check done">✓</div>
+                        <div class="habit-info">
+                            <div class="habit-name">Morning Meditation</div>
+                            <div class="habit-streak">45 day streak</div>
+                        </div>
+                        <span class="habit-time">7:00 AM</span>
+                    </div>
+                    <div class="habit-item">
+                        <div class="habit-check done">✓</div>
+                        <div class="habit-info">
+                            <div class="habit-name">Exercise 30 mins</div>
+                            <div class="habit-streak">21 day streak</div>
+                        </div>
+                        <span class="habit-time">8:00 AM</span>
+                    </div>
+                    <div class="habit-item">
+                        <div class="habit-check pending"></div>
+                        <div class="habit-info">
+                            <div class="habit-name">Read 20 pages</div>
+                            <div class="habit-streak">14 day streak</div>
+                        </div>
+                        <span class="habit-time">9:00 PM</span>
+                    </div>
+                    <div class="progress-ring">
+                        <svg width="120" height="120">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#22c55e"/>
+                                    <stop offset="100%" style="stop-color:#14b8a6"/>
+                                </linearGradient>
+                            </defs>
+                            <circle class="bg" cx="60" cy="60" r="54"/>
+                            <circle class="progress" cx="60" cy="60" r="54"/>
+                        </svg>
+                        <div class="progress-text">
+                            <div class="progress-value gradient-text">75%</div>
+                            <div class="progress-label">Today</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Features That <span class="gradient-text">Actually Work</span></h2>
+            <p>Science-backed features designed to help you build lasting habits.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Habit Coach</h3>
+                <p>Personal AI coach that learns your patterns and provides personalized advice, reminders, and motivation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Smart Analytics</h3>
+                <p>Track your progress with beautiful charts. See streaks, completion rates, and trends over time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>Smart Reminders</h3>
+                <p>AI-powered reminders that adapt to your schedule and send notifications when you're most likely to act.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Streaks & Rewards</h3>
+                <p>Stay motivated with streaks, achievements, and rewards. Celebrate your wins, big and small.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Community Challenges</h3>
+                <p>Join challenges with friends and the community. Accountability partners help you stay on track.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Cross-Platform Sync</h3>
+                <p>iOS, Android, and Web. Your habits sync seamlessly across all your devices.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Flexible Scheduling</h3>
+                <p>Daily, weekly, or custom schedules. Build habits that fit your lifestyle, not the other way around.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Habit Stacking</h3>
+                <p>Link new habits to existing ones. AI suggests optimal stacking for maximum success.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy Focused</h3>
+                <p>Your habit data is personal. We use end-to-end encryption and never sell your data.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Habit Categories -->
+    <section class="categories" id="categories">
+        <div class="section-header">
+            <h2>Track Any <span class="gradient-text">Habit Type</span></h2>
+            <p>From health to productivity, we've got you covered.</p>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="category-icon">🏃</div>
+                <h4>Fitness</h4>
+                <p>Exercise, steps, gym</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🧘</div>
+                <h4>Mindfulness</h4>
+                <p>Meditation, journaling</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">📚</div>
+                <h4>Learning</h4>
+                <p>Reading, courses</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">💧</div>
+                <h4>Health</h4>
+                <p>Water, sleep, nutrition</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">💰</div>
+                <h4>Finance</h4>
+                <p>Saving, budgeting</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🎨</div>
+                <h4>Creativity</h4>
+                <p>Writing, art, music</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">💼</div>
+                <h4>Productivity</h4>
+                <p>Deep work, planning</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🤝</div>
+                <h4>Social</h4>
+                <p>Networking, family</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple, Transparent <span class="gradient-text">Pricing</span></h2>
+            <p>Start free, upgrade when you're ready.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/mo</span></div>
+                <p class="description">Perfect for getting started</p>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Up to 10 habits</li>
+                    <li><span class="check">✓</span> Basic tracking</li>
+                    <li><span class="check">✓</span> Daily reminders</li>
+                    <li><span class="check">✓</span> 7-day history</li>
+                    <li><span class="check">✓</span> Basic streaks</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <h3>Premium</h3>
+                <div class="price">$6.99<span>/mo</span></div>
+                <p class="description">For serious habit builders</p>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Unlimited habits</li>
+                    <li><span class="check">✓</span> AI habit coach</li>
+                    <li><span class="check">✓</span> Smart reminders</li>
+                    <li><span class="check">✓</span> Unlimited history</li>
+                    <li><span class="check">✓</span> Advanced analytics</li>
+                    <li><span class="check">✓</span> Community challenges</li>
+                    <li><span class="check">✓</span> Data export</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="openModal('signup')">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Team</h3>
+                <div class="price">$4.99<span>/user/mo</span></div>
+                <p class="description">For teams & organizations</p>
+                <ul class="pricing-features">
+                    <li><span class="check">✓</span> Everything in Premium</li>
+                    <li><span class="check">✓</span> Team challenges</li>
+                    <li><span class="check">✓</span> Leaderboards</li>
+                    <li><span class="check">✓</span> Admin dashboard</li>
+                    <li><span class="check">✓</span> Team analytics</li>
+                    <li><span class="check">✓</span> Priority support</li>
+                    <li><span class="check">✓</span> Custom branding</li>
+                </ul>
+                <button class="btn btn-ghost" style="width: 100%;" onclick="openModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Loved by <span class="gradient-text">3M+ Users</span></h2>
+            <p>See how HabitTracker AI has changed lives.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"I've tried dozens of habit apps. This is the only one that stuck. The AI coach knew exactly when I was about to give up and sent the perfect motivation. 90-day streak and counting!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DK</div>
+                    <div class="author-info">
+                        <h4>David Kim</h4>
+                        <span>Software Engineer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The habit stacking feature is brilliant. I linked my meditation practice to my morning coffee, and now it's automatic. The AI suggestions are genuinely helpful, not gimmicky."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AL</div>
+                    <div class="author-info">
+                        <h4>Amanda Lee</h4>
+                        <span>Yoga Instructor</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"I've lost 30 pounds, read 24 books, and meditated for 100+ days straight. This app didn't just track my habits—it changed how I think about building them."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MR</div>
+                    <div class="author-info">
+                        <h4>Michael Roberts</h4>
+                        <span>Entrepreneur</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Build <span class="gradient-text">Better Habits?</span></h2>
+            <p>Join 3 million people using HabitTracker AI to become their best selves.</p>
+            <button class="btn btn-primary btn-large" onclick="openModal('signup')">Start Your Journey Free</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <div class="logo-icon">✓</div>
+                    <span>HabitTracker<span class="gradient-text">AI</span></span>
+                </div>
+                <p>The AI-powered habit tracker that helps you build lasting habits and become the best version of yourself.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Download</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">Integrations</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Community</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signup-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('signup')">&times;</button>
+            <h2>Start Your Journey</h2>
+            <p>Create your free account</p>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password">
+            </div>
+            <button class="btn btn-primary">Create Free Account</button>
+            <div class="divider"><span>or continue with</span></div>
+            <div class="social-buttons">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Apple</button>
+                <button class="social-btn">Facebook</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('login')">&times;</button>
+            <h2>Welcome Back</h2>
+            <p>Log in to continue your streak</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Your password">
+            </div>
+            <button class="btn btn-primary">Log In</button>
+            <div class="divider"><span>or continue with</span></div>
+            <div class="social-buttons">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Apple</button>
+                <button class="social-btn">Facebook</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) {
+            document.getElementById(type + '-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(type) {
+            document.getElementById(type + '-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
