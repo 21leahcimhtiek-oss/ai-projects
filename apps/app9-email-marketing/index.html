@@ -1,0 +1,315 @@
+<![CDATA[<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MailFlow Pro - Email Marketing Automation Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #14b8a6;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--darker); color: var(--light); line-height: 1.6; }
+        nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(99, 102, 241, 0.2); }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--gray); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--light); }
+        .nav-cta { display: flex; gap: 1rem; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; border: none; font-size: 0.9rem; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4); }
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%); }
+        .hero-content { text-align: center; max-width: 900px; position: relative; z-index: 1; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: 1.25rem; color: var(--gray); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .hero-cta { display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem; }
+        .btn-large { padding: 1rem 2rem; font-size: 1rem; }
+        .hero-stats { display: flex; gap: 3rem; justify-content: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .stat-label { color: var(--gray); font-size: 0.875rem; }
+        .email-preview { margin-top: 3rem; background: var(--dark); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(99, 102, 241, 0.2); max-width: 800px; margin-left: auto; margin-right: auto; }
+        .email-header { display: flex; align-items: center; gap: 0.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; }
+        .email-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .email-preview-content { background: white; border-radius: 8px; padding: 2rem; color: #333; }
+        .email-subject { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #1a1a1a; }
+        .email-body { color: #666; }
+        .email-cta-btn { display: inline-block; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 0.75rem 1.5rem; border-radius: 6px; margin-top: 1rem; text-decoration: none; font-weight: 600; }
+        .features { padding: 6rem 2rem; background: var(--dark); }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .section-header p { color: var(--gray); font-size: 1.1rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: var(--darker); border-radius: 16px; padding: 2rem; border: 1px solid rgba(99, 102, 241, 0.2); transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .feature-card p { color: var(--gray); }
+        .automation { padding: 6rem 2rem; }
+        .automation-flow { display: flex; align-items: center; justify-content: center; gap: 1rem; max-width: 1000px; margin: 0 auto; flex-wrap: wrap; }
+        .flow-step { background: var(--dark); border-radius: 12px; padding: 1.5rem; text-align: center; min-width: 150px; border: 1px solid rgba(99, 102, 241, 0.2); }
+        .flow-step-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .flow-step-title { font-weight: 600; font-size: 0.9rem; }
+        .flow-arrow { color: var(--primary); font-size: 1.5rem; }
+        .dashboard-preview { padding: 6rem 2rem; background: var(--dark); }
+        .dashboard-mockup { max-width: 1000px; margin: 0 auto; background: var(--darker); border-radius: 16px; overflow: hidden; border: 1px solid rgba(99, 102, 241, 0.2); }
+        .dashboard-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .dashboard-title { font-weight: 700; }
+        .dashboard-body { padding: 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .dash-stat { background: var(--dark); border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .dash-stat-value { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .dash-stat-value.green { color: var(--success); }
+        .dash-stat-value.blue { color: var(--primary); }
+        .dash-stat-value.pink { color: var(--secondary); }
+        .dash-stat-value.orange { color: var(--warning); }
+        .dash-stat-label { color: var(--gray); font-size: 0.8rem; }
+        .chart-area { background: var(--dark); border-radius: 12px; padding: 1.5rem; height: 200px; display: flex; align-items: flex-end; gap: 8px; justify-content: space-around; }
+        .chart-bar { width: 30px; background: linear-gradient(to top, var(--primary), var(--secondary)); border-radius: 4px 4px 0 0; animation: growBar 1s ease-out forwards; opacity: 0; }
+        @keyframes growBar { from { height: 0; opacity: 0; } to { opacity: 1; } }
+        .pricing { padding: 6rem 2rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: var(--dark); border-radius: 20px; padding: 2.5rem; border: 1px solid rgba(99, 102, 241, 0.2); text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: var(--primary); transform: scale(1.05); position: relative; }
+        .popular-badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 0.5rem 1.5rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3); }
+        .pricing-card.popular:hover { transform: scale(1.05) translateY(-10px); }
+        .plan-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .plan-price { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .plan-price span { font-size: 1rem; color: var(--gray); font-weight: 400; }
+        .plan-desc { color: var(--gray); margin-bottom: 1.5rem; }
+        .plan-features { list-style: none; text-align: left; margin-bottom: 2rem; }
+        .plan-features li { padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; }
+        .plan-features li::before { content: "✓"; color: var(--success); font-weight: bold; }
+        .testimonials { padding: 6rem 2rem; background: var(--dark); }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial { background: var(--darker); border-radius: 16px; padding: 2rem; border: 1px solid rgba(99, 102, 241, 0.2); }
+        .testimonial-text { font-style: italic; margin-bottom: 1.5rem; color: var(--gray); }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .author-info h4 { font-weight: 600; }
+        .author-info p { color: var(--gray); font-size: 0.875rem; }
+        .cta-section { padding: 6rem 2rem; text-align: center; }
+        .cta-box { max-width: 700px; margin: 0 auto; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border-radius: 24px; padding: 4rem; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .cta-box h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .cta-box p { color: var(--gray); margin-bottom: 2rem; }
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; color: var(--gray); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--dark); border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .modal h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .modal p { color: var(--gray); margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group input { width: 100%; padding: 1rem; background: var(--darker); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px; color: var(--light); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .hero-stats { flex-direction: column; gap: 1rem; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .automation-flow { flex-direction: column; } .flow-arrow { transform: rotate(90deg); } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">MailFlow Pro</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#automation">Automation</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-cta">
+            <a href="#" class="btn btn-outline" onclick="openModal('login')">Log In</a>
+            <a href="#" class="btn btn-primary" onclick="openModal('signup')">Start Free</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Email Marketing That <span>Converts</span></h1>
+            <p>Build automated email sequences, segment your audience, and track performance with our powerful yet simple email marketing platform.</p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary btn-large" onclick="openModal('signup')">Start Free Trial</a>
+                <a href="#demo" class="btn btn-outline btn-large">Watch Demo</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat"><div class="stat-value">50M+</div><div class="stat-label">Emails Sent Daily</div></div>
+                <div class="stat"><div class="stat-value">99.9%</div><div class="stat-label">Delivery Rate</div></div>
+                <div class="stat"><div class="stat-value">42%</div><div class="stat-label">Avg Open Rate</div></div>
+            </div>
+            <div class="email-preview">
+                <div class="email-header">
+                    <div class="email-dot" style="background: #ef4444;"></div>
+                    <div class="email-dot" style="background: #f59e0b;"></div>
+                    <div class="email-dot" style="background: #10b981;"></div>
+                    <span style="margin-left: 1rem; color: var(--gray);">Email Preview</span>
+                </div>
+                <div class="email-preview-content">
+                    <div class="email-subject">🎉 Welcome! Here's 20% Off Your First Order</div>
+                    <div class="email-body">
+                        <p>Hi Sarah,</p>
+                        <p style="margin-top: 0.5rem;">Thanks for joining our community! We're thrilled to have you on board. As a special welcome gift, here's an exclusive discount just for you.</p>
+                        <p style="margin-top: 0.5rem;">Use code: <strong>WELCOME20</strong></p>
+                        <a href="#" class="email-cta-btn">Shop Now →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Everything You Need to Succeed</h2>
+            <p>Powerful features designed to help you grow your audience and revenue</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon">📧</div><h3>Drag & Drop Builder</h3><p>Create beautiful emails in minutes with our intuitive drag-and-drop editor. No coding required.</p></div>
+            <div class="feature-card"><div class="feature-icon">🤖</div><h3>Smart Automation</h3><p>Set up automated sequences that trigger based on subscriber behavior and engagement.</p></div>
+            <div class="feature-card"><div class="feature-icon">👥</div><h3>Advanced Segmentation</h3><p>Target the right audience with powerful segmentation based on behavior, demographics, and more.</p></div>
+            <div class="feature-card"><div class="feature-icon">📊</div><h3>Real-Time Analytics</h3><p>Track opens, clicks, conversions, and revenue with comprehensive analytics dashboards.</p></div>
+            <div class="feature-card"><div class="feature-icon">🎯</div><h3>A/B Testing</h3><p>Optimize your campaigns with built-in A/B testing for subject lines, content, and send times.</p></div>
+            <div class="feature-card"><div class="feature-icon">🔗</div><h3>Integrations</h3><p>Connect with 100+ tools including Shopify, WordPress, Zapier, and more.</p></div>
+        </div>
+    </section>
+
+    <section class="automation" id="automation">
+        <div class="section-header">
+            <h2>Automate Your Email Marketing</h2>
+            <p>Set it once, watch it convert forever</p>
+        </div>
+        <div class="automation-flow">
+            <div class="flow-step"><div class="flow-step-icon">🚀</div><div class="flow-step-title">User Signs Up</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><div class="flow-step-icon">📧</div><div class="flow-step-title">Welcome Email</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><div class="flow-step-icon">⏰</div><div class="flow-step-title">Wait 3 Days</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><div class="flow-step-icon">🎁</div><div class="flow-step-title">Offer Email</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step"><div class="flow-step-icon">💰</div><div class="flow-step-title">Conversion!</div></div>
+        </div>
+    </section>
+
+    <section class="dashboard-preview" id="demo">
+        <div class="section-header">
+            <h2>Powerful Campaign Dashboard</h2>
+            <p>Everything you need to manage and optimize your email marketing</p>
+        </div>
+        <div class="dashboard-mockup">
+            <div class="dashboard-header"><div class="dashboard-title">📊 Campaign Overview</div><div>Last 30 Days</div></div>
+            <div class="dashboard-body">
+                <div class="stats-grid">
+                    <div class="dash-stat"><div class="dash-stat-value green">42.3%</div><div class="dash-stat-label">Open Rate</div></div>
+                    <div class="dash-stat"><div class="dash-stat-value blue">8.7%</div><div class="dash-stat-label">Click Rate</div></div>
+                    <div class="dash-stat"><div class="dash-stat-value pink">$12.4K</div><div class="dash-stat-label">Revenue</div></div>
+                    <div class="dash-stat"><div class="dash-stat-value orange">2,847</div><div class="dash-stat-label">New Subscribers</div></div>
+                </div>
+                <div class="chart-area">
+                    <div class="chart-bar" style="height: 60%;"></div>
+                    <div class="chart-bar" style="height: 80%;"></div>
+                    <div class="chart-bar" style="height: 45%;"></div>
+                    <div class="chart-bar" style="height: 90%;"></div>
+                    <div class="chart-bar" style="height: 70%;"></div>
+                    <div class="chart-bar" style="height: 85%;"></div>
+                    <div class="chart-bar" style="height: 55%;"></div>
+                    <div class="chart-bar" style="height: 95%;"></div>
+                    <div class="chart-bar" style="height: 65%;"></div>
+                    <div class="chart-bar" style="height: 75%;"></div>
+                    <div class="chart-bar" style="height: 88%;"></div>
+                    <div class="chart-bar" style="height: 72%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Start free, upgrade as you grow</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">$0<span>/mo</span></div>
+                <div class="plan-desc">Perfect for getting started</div>
+                <ul class="plan-features"><li>Up to 1,000 subscribers</li><li>10,000 emails/month</li><li>Basic email templates</li><li>Sign-up forms</li><li>Basic analytics</li><li>Email support</li></ul>
+                <a href="#" class="btn btn-outline" onclick="selectPlan('starter')" style="width: 100%; display: block;">Get Started</a>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-name">Growth</div>
+                <div class="plan-price">$29<span>/mo</span></div>
+                <div class="plan-desc">For growing businesses</div>
+                <ul class="plan-features"><li>Up to 10,000 subscribers</li><li>Unlimited emails</li><li>Premium templates</li><li>Marketing automation</li><li>A/B testing</li><li>Advanced analytics</li><li>Priority support</li></ul>
+                <a href="#" class="btn btn-primary" onclick="selectPlan('growth')" style="width: 100%; display: block;">Start Free Trial</a>
+            </div>
+            <div class="pricing-card">
+                <div class="plan-name">Business</div>
+                <div class="plan-price">$79<span>/mo</span></div>
+                <div class="plan-desc">For scaling companies</div>
+                <ul class="plan-features"><li>Unlimited subscribers</li><li>Unlimited emails</li><li>Custom branding</li><li>Advanced automation</li><li>Multi-user access</li><li>API access</li><li>Dedicated support</li></ul>
+                <a href="#" class="btn btn-outline" onclick="selectPlan('business')" style="width: 100%; display: block;">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Loved by Marketers</h2>
+            <p>Join thousands of satisfied customers</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial"><div class="testimonial-text">"MailFlow Pro increased our email revenue by 340% in just 3 months. The automation features are incredibly powerful yet easy to use."</div><div class="testimonial-author"><div class="author-avatar">JM</div><div class="author-info"><h4>Jessica Martinez</h4><p>E-commerce Owner</p></div></div></div>
+            <div class="testimonial"><div class="testimonial-text">"We switched from Mailchimp and haven't looked back. Better deliverability, better features, and half the price. What's not to love?"</div><div class="testimonial-author"><div class="author-avatar">DK</div><div class="author-info"><h4>David Kim</h4><p>Marketing Director</p></div></div></div>
+            <div class="testimonial"><div class="testimonial-text">"The segmentation features are a game-changer. We can now send highly targeted campaigns that actually convert."</div><div class="testimonial-author"><div class="author-avatar">SP</div><div class="author-info"><h4>Sarah Peterson</h4><p>Growth Lead at Startup</p></div></div></div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to Grow Your Business?</h2>
+            <p>Start your free trial today. No credit card required. Cancel anytime.</p>
+            <a href="#" class="btn btn-primary btn-large" onclick="openModal('signup')">Start Free Trial</a>
+        </div>
+    </section>
+
+    <footer><p>&copy; 2024 MailFlow Pro. All rights reserved.</p></footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-title">Start Your Free Trial</h3>
+            <p id="modal-subtitle">Join 10,000+ marketers growing with MailFlow Pro</p>
+            <form id="signup-form">
+                <div class="form-group"><input type="text" placeholder="Full Name" required></div>
+                <div class="form-group"><input type="email" placeholder="Work Email" required></div>
+                <div class="form-group"><input type="password" placeholder="Create Password" required></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+            <p style="margin-top: 1rem; text-align: center; font-size: 0.875rem; color: var(--gray);">Already have an account? <a href="#" style="color: var(--primary);">Log in</a></p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { event.preventDefault(); const modal = document.getElementById('modal'); const title = document.getElementById('modal-title'); const subtitle = document.getElementById('modal-subtitle'); if (type === 'login') { title.textContent = 'Welcome Back'; subtitle.textContent = 'Log in to your MailFlow Pro account'; } else { title.textContent = 'Start Your Free Trial'; subtitle.textContent = 'Join 10,000+ marketers growing with MailFlow Pro'; } modal.classList.add('active'); }
+        document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('active'); } });
+        function selectPlan(plan) { event.preventDefault(); openModal('signup'); console.log('Selected plan:', plan); }
+        document.getElementById('signup-form').addEventListener('submit', function(e) { e.preventDefault(); alert('🎉 Account created! Check your email to verify.'); document.getElementById('modal').classList.remove('active'); });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { const bars = entry.target.querySelectorAll('.chart-bar'); bars.forEach((bar, i) => { bar.style.animationDelay = `${i * 0.1}s`; }); } }); });
+        const chartArea = document.querySelector('.chart-area'); if (chartArea) { observer.observe(chartArea); }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { const href = this.getAttribute('href'); if (href !== '#') { e.preventDefault(); const target = document.querySelector(href); if (target) { target.scrollIntoView({ behavior: 'smooth' }); } } }); });
+    </script>
+</body>
+</html>]]>
