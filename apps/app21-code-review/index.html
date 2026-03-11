@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeReview AI - Automated Code Analysis & Review</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #22c55e, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #22c55e, #06b6d4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+        }
+        
+        .btn-outline:hover {
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #06b6d4);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            color: #22c55e;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .code-preview {
+            background: #1a1a2e;
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+        }
+        
+        .code-header {
+            background: #252540;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-body {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .line-number {
+            color: #666;
+            user-select: none;
+            min-width: 30px;
+        }
+        
+        .code-content {
+            color: #e0e0e0;
+        }
+        
+        .keyword { color: #c792ea; }
+        .function { color: #82aaff; }
+        .string { color: #c3e88d; }
+        .comment { color: #546e7a; }
+        .variable { color: #f78c6c; }
+        
+        .review-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 1rem;
+        }
+        
+        .review-badge.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .review-badge.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .review-badge.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #a0a0a0;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .demo-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 4rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .code-input, .review-output {
+            background: #1a1a2e;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .demo-header {
+            background: #252540;
+            padding: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-editor {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            min-height: 300px;
+            color: #e0e0e0;
+            background: transparent;
+            border: none;
+            width: 100%;
+            resize: none;
+        }
+        
+        .code-editor:focus {
+            outline: none;
+        }
+        
+        .review-panel {
+            padding: 1.5rem;
+        }
+        
+        .review-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 3px solid;
+        }
+        
+        .review-item.warning { border-color: #f59e0b; }
+        .review-item.error { border-color: #ef4444; }
+        .review-item.success { border-color: #22c55e; }
+        .review-item.info { border-color: #06b6d4; }
+        
+        .review-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        
+        .review-item.warning .review-icon { background: rgba(245, 158, 11, 0.2); }
+        .review-item.error .review-icon { background: rgba(239, 68, 68, 0.2); }
+        .review-item.success .review-icon { background: rgba(34, 197, 94, 0.2); }
+        .review-item.info .review-icon { background: rgba(6, 182, 212, 0.2); }
+        
+        .review-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .review-content p {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+        }
+        
+        .languages-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        
+        .lang-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .lang-tag:hover {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: #22c55e;
+            transform: scale(1.05);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #22c55e, #06b6d4);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: #a0a0a0;
+            font-weight: 400;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: #c0c0c0;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-info span {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 32px;
+            padding: 4rem 2rem;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-col ul li a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col ul li a:hover {
+            color: #22c55e;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-header h3 {
+            font-size: 1.5rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #a0a0a0;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-content input:focus {
+            outline: none;
+            border-color: #22c55e;
+        }
+        
+        .modal-content .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #a0a0a0;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .social-login {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-btn:hover {
+            border-color: #22c55e;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .pricing-card.featured { transform: none; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .demo-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">{ }</div>
+            CodeReview AI
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Try Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="openModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">⚡ AI-Powered Code Analysis</div>
+            <h1>Ship Better Code, <span class="gradient-text">Faster</span></h1>
+            <p>Automated code reviews powered by AI. Catch bugs, security vulnerabilities, and improve code quality before they reach production.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary btn-large" onclick="openModal('signup')">Start Free Trial</button>
+                <button class="btn btn-outline btn-large">View Documentation</button>
+            </div>
+            <div class="code-preview">
+                <div class="code-header">
+                    <span class="code-dot" style="background: #ef4444;"></span>
+                    <span class="code-dot" style="background: #f59e0b;"></span>
+                    <span class="code-dot" style="background: #22c55e;"></span>
+                    <span style="margin-left: auto; color: #666; font-size: 0.8rem;">user.service.ts</span>
+                </div>
+                <div class="code-body">
+                    <div class="code-line">
+                        <span class="line-number">1</span>
+                        <span class="code-content"><span class="keyword">async function</span> <span class="function">getUser</span>(<span class="variable">id</span>) {</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">2</span>
+                        <span class="code-content">  <span class="keyword">const</span> query = <span class="string">`SELECT * FROM users WHERE id = ${id}`</span>;</span>
+                        <span class="review-badge error">SQL Injection ⚠️</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">3</span>
+                        <span class="code-content">  <span class="keyword">return</span> db.<span class="function">execute</span>(query);</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">4</span>
+                        <span class="code-content">}</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">5</span>
+                        <span class="code-content"><span class="comment">// ⚠️ Fix: Use parameterized queries</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="demo">
+        <h2 class="section-title">Try <span class="gradient-text">Code Review</span></h2>
+        <p class="section-subtitle">Paste your code and get instant AI-powered feedback</p>
+        
+        <div class="demo-section">
+            <div class="demo-grid">
+                <div class="code-input">
+                    <div class="demo-header">
+                        <span>📝</span> Code Input
+                    </div>
+                    <textarea class="code-editor" placeholder="Paste your code here...">function processData(data) {
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+        if (data[i] != null) {
+            result.push(data[i].value);
+        }
+    }
+    return result;
+}</textarea>
+                </div>
+                <div class="review-output">
+                    <div class="demo-header">
+                        <span>🔍</span> AI Review
+                    </div>
+                    <div class="review-panel">
+                        <div class="review-item warning">
+                            <div class="review-icon">⚠️</div>
+                            <div class="review-content">
+                                <h4>Use const instead of var</h4>
+                                <p>Modern JavaScript prefers const for immutable references</p>
+                            </div>
+                        </div>
+                        <div class="review-item info">
+                            <div class="review-icon">💡</div>
+                            <div class="review-content">
+                                <h4>Consider using filter/map</h4>
+                                <p>More functional approach: data.filter(Boolean).map(x => x.value)</p>
+                            </div>
+                        </div>
+                        <div class="review-item success">
+                            <div class="review-icon">✓</div>
+                            <div class="review-content">
+                                <h4>Null check is good</h4>
+                                <p>Properly handles potential null/undefined values</p>
+                            </div>
+                        </div>
+                        <div class="review-item info">
+                            <div class="review-icon">📊</div>
+                            <div class="review-content">
+                                <h4>Complexity: O(n)</h4>
+                                <p>Linear time complexity - efficient for this use case</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="features">
+        <h2 class="section-title">Comprehensive <span class="gradient-text">Code Analysis</span></h2>
+        <p class="section-subtitle">Everything you need to maintain high-quality code</p>
+        
+        <div class="languages-bar">
+            <span class="lang-tag">JavaScript</span>
+            <span class="lang-tag">TypeScript</span>
+            <span class="lang-tag">Python</span>
+            <span class="lang-tag">Java</span>
+            <span class="lang-tag">C++</span>
+            <span class="lang-tag">Go</span>
+            <span class="lang-tag">Rust</span>
+            <span class="lang-tag">Ruby</span>
+            <span class="lang-tag">PHP</span>
+            <span class="lang-tag">Swift</span>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(245,158,11,0.2));">🛡️</div>
+                <h3>Security Scanning</h3>
+                <p>Detect SQL injection, XSS, CSRF, and 100+ security vulnerabilities before they reach production.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(6,182,212,0.2));">⚡</div>
+                <h3>Performance Analysis</h3>
+                <p>Identify performance bottlenecks, memory leaks, and optimization opportunities in your code.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2));">📐</div>
+                <h3>Code Standards</h3>
+                <p>Enforce consistent coding style across your team. Integrates with ESLint, Prettier, and custom rules.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(239,68,68,0.2));">🔄</div>
+                <h3>CI/CD Integration</h3>
+                <p>Seamlessly integrates with GitHub Actions, GitLab CI, Jenkins, and other CI/CD pipelines.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(6,182,212,0.2));">📊</div>
+                <h3>Code Metrics</h3>
+                <p>Track code complexity, coverage, technical debt, and maintainability scores over time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(236,72,153,0.2));">🤖</div>
+                <h3>Auto-Fix</h3>
+                <p>Automatically fix common issues with one click. Let AI handle the tedious corrections.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="pricing">
+        <h2 class="section-title">Simple <span class="gradient-text">Pricing</span></h2>
+        <p class="section-subtitle">Start free, scale as you grow</p>
+        
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Developer</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>100 reviews/month</li>
+                    <li>5 supported languages</li>
+                    <li>Basic security checks</li>
+                    <li>Community support</li>
+                    <li>Web interface only</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;" onclick="openModal('signup')">Get Started</button>
+            </div>
+            
+            <div class="pricing-card featured">
+                <div class="popular-badge">Most Popular</div>
+                <h3>Team</h3>
+                <div class="price">$29<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited reviews</li>
+                    <li>15+ languages</li>
+                    <li>Advanced security scans</li>
+                    <li>CI/CD integration</li>
+                    <li>Auto-fix suggestions</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="openModal('signup')">Start Free Trial</button>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">$99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Team</li>
+                    <li>Custom rule sets</li>
+                    <li>SSO/SAML support</li>
+                    <li>Dedicated account manager</li>
+                    <li>On-premise option</li>
+                    <li>SLA guarantee</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;" onclick="openModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+    
+    <section id="testimonials">
+        <h2 class="section-title">Trusted by <span class="gradient-text">Developers</span></h2>
+        <p class="section-subtitle">Join 50,000+ developers shipping better code</p>
+        
+        <div class="testimonials">
+            <div class="testimonial-card">
+                <p>"CodeReview AI caught a critical SQL injection vulnerability that we missed in our regular review process. It paid for itself in the first week."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JT</div>
+                    <div class="author-info">
+                        <h4>James Thompson</h4>
+                        <span>CTO at TechFlow</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The CI/CD integration is seamless. Every pull request gets automatically reviewed, saving our team hours every week."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SR</div>
+                    <div class="author-info">
+                        <h4>Sarah Rodriguez</h4>
+                        <span>Lead Developer at ScaleUp</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The auto-fix feature is a game changer. One click and my code follows best practices. It's like having a senior developer reviewing every line."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MK</div>
+                    <div class="author-info">
+                        <h4>Mike Kim</h4>
+                        <span>Full Stack Developer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section>
+        <div class="cta-section">
+            <h2>Ready to Ship <span class="gradient-text">Better Code</span>?</h2>
+            <p>Start your free trial today. No credit card required.</p>
+            <button class="btn btn-primary btn-large" onclick="openModal('signup')">Start Free Trial</button>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom: 1rem;">
+                    <div class="logo-icon">{ }</div>
+                    CodeReview AI
+                </div>
+                <p style="color: #a0a0a0; font-size: 0.9rem;">AI-powered code reviews for modern development teams.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">Languages</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Developers</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">CLI Tool</a></li>
+                    <li><a href="#">Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CodeReview AI. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary">Log In</button>
+            <div class="divider">or</div>
+            <div class="social-login">
+                <button class="social-btn">G</button>
+                <button class="social-btn">A</button>
+                <button class="social-btn">in</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Account</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <input type="text" placeholder="Full name">
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Create password">
+            <button class="btn btn-primary">Start Free Trial</button>
+            <div class="divider">or</div>
+            <div class="social-login">
+                <button class="social-btn">G</button>
+                <button class="social-btn">A</button>
+                <button class="social-btn">in</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openModal(type) {
+            document.getElementById(type + 'Modal').classList.add('active');
+        }
+        
+        function closeModal(type) {
+            document.getElementById(type + 'Modal').classList.remove('active');
+        }
+        
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
