@@ -1,0 +1,331 @@
+<![CDATA[<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRPro - Professional QR Code Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--darker); color: var(--light); line-height: 1.6; }
+        nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(16, 185, 129, 0.2); }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--gray); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--light); }
+        .nav-cta { display: flex; gap: 1rem; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; border: none; font-size: 0.9rem; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4); }
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%); }
+        .hero-content { text-align: center; max-width: 1000px; position: relative; z-index: 1; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: 1.25rem; color: var(--gray); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .hero-cta { display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem; }
+        .btn-large { padding: 1rem 2rem; font-size: 1rem; }
+        
+        /* QR Generator Demo */
+        .qr-demo { background: var(--dark); border-radius: 20px; padding: 2rem; border: 1px solid rgba(16, 185, 129, 0.2); max-width: 800px; margin: 0 auto; }
+        .qr-demo-header { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .qr-type-btn { padding: 0.75rem 1.25rem; background: var(--darker); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; color: var(--light); cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
+        .qr-type-btn.active, .qr-type-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .qr-demo-body { display: grid; grid-template-columns: 1fr 280px; gap: 2rem; }
+        .qr-input-section { text-align: left; }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; font-size: 0.85rem; color: var(--gray); margin-bottom: 0.5rem; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 1rem; background: var(--darker); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; color: var(--light); font-size: 1rem; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { outline: none; border-color: var(--primary); }
+        .style-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1rem; }
+        .style-option { padding: 0.75rem; background: var(--darker); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .style-option:hover, .style-option.active { border-color: var(--primary); }
+        .style-option span { display: block; font-size: 0.75rem; color: var(--gray); margin-top: 0.25rem; }
+        .qr-preview-section { text-align: center; }
+        .qr-code-display { width: 200px; height: 200px; background: white; border-radius: 12px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+        .qr-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+        .qr-actions .btn { font-size: 0.85rem; padding: 0.75rem; }
+
+        .features { padding: 6rem 2rem; background: var(--dark); }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .section-header p { color: var(--gray); font-size: 1.1rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: var(--darker); border-radius: 16px; padding: 2rem; border: 1px solid rgba(16, 185, 129, 0.2); transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .feature-card p { color: var(--gray); }
+
+        /* QR Types */
+        .qr-types { padding: 6rem 2rem; }
+        .qr-types-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+        .qr-type-card { background: var(--dark); border-radius: 16px; padding: 1.5rem; text-align: center; border: 1px solid rgba(16, 185, 129, 0.2); transition: all 0.3s; cursor: pointer; }
+        .qr-type-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .qr-type-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .qr-type-card h4 { font-size: 1rem; font-weight: 600; }
+
+        /* Stats Section */
+        .stats-section { padding: 6rem 2rem; background: var(--dark); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; max-width: 1000px; margin: 0 auto; text-align: center; }
+        .stat-item .stat-value { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-item .stat-label { color: var(--gray); margin-top: 0.5rem; }
+
+        /* Pricing */
+        .pricing { padding: 6rem 2rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: var(--dark); border-radius: 20px; padding: 2.5rem; border: 1px solid rgba(16, 185, 129, 0.2); text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: var(--primary); transform: scale(1.05); position: relative; }
+        .popular-badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 0.5rem 1.5rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3); }
+        .pricing-card.popular:hover { transform: scale(1.05) translateY(-10px); }
+        .plan-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .plan-price { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .plan-price span { font-size: 1rem; color: var(--gray); font-weight: 400; }
+        .plan-desc { color: var(--gray); margin-bottom: 1.5rem; }
+        .plan-features { list-style: none; text-align: left; margin-bottom: 2rem; }
+        .plan-features li { padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; }
+        .plan-features li::before { content: "✓"; color: var(--success); font-weight: bold; }
+
+        .testimonials { padding: 6rem 2rem; background: var(--dark); }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial { background: var(--darker); border-radius: 16px; padding: 2rem; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .testimonial-text { font-style: italic; margin-bottom: 1.5rem; color: var(--gray); }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .author-info h4 { font-weight: 600; }
+        .author-info p { color: var(--gray); font-size: 0.875rem; }
+
+        .cta-section { padding: 6rem 2rem; text-align: center; }
+        .cta-box { max-width: 700px; margin: 0 auto; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2)); border-radius: 24px; padding: 4rem; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .cta-box h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .cta-box p { color: var(--gray); margin-bottom: 2rem; }
+
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; color: var(--gray); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--dark); border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .modal h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .modal p { color: var(--gray); margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group input { width: 100%; padding: 1rem; background: var(--darker); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; color: var(--light); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .qr-demo-body { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">QRPro</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#types">QR Types</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-cta">
+            <a href="#" class="btn btn-outline" onclick="openModal('login')">Log In</a>
+            <a href="#" class="btn btn-primary" onclick="openModal('signup')">Start Free</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Create <span>Professional QR Codes</span> in Seconds</h1>
+            <p>Generate custom, trackable QR codes for your business. Add logos, colors, and analytics to engage your audience.</p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary btn-large" onclick="openModal('signup')">Generate Free QR Code</a>
+                <a href="#demo" class="btn btn-outline btn-large">Try Demo</a>
+            </div>
+            
+            <div class="qr-demo" id="demo">
+                <div class="qr-demo-header">
+                    <button class="qr-type-btn active">🔗 URL</button>
+                    <button class="qr-type-btn">📱 vCard</button>
+                    <button class="qr-type-btn">📧 Email</button>
+                    <button class="qr-type-btn">📱 WiFi</button>
+                    <button class="qr-type-btn">📄 PDF</button>
+                    <button class="qr-type-btn">📍 Location</button>
+                </div>
+                <div class="qr-demo-body">
+                    <div class="qr-input-section">
+                        <div class="input-group">
+                            <label>Enter URL</label>
+                            <input type="url" placeholder="https://yourwebsite.com" value="https://example.com">
+                        </div>
+                        <div class="input-group">
+                            <label>QR Code Name</label>
+                            <input type="text" placeholder="My QR Code" value="Marketing Campaign">
+                        </div>
+                        <div class="input-group">
+                            <label>Style & Color</label>
+                            <div class="style-options">
+                                <div class="style-option active">
+                                    <div style="width: 30px; height: 30px; background: #000; margin: 0 auto;"></div>
+                                    <span>Classic</span>
+                                </div>
+                                <div class="style-option">
+                                    <div style="width: 30px; height: 30px; background: linear-gradient(135deg, #10b981, #3b82f6); margin: 0 auto;"></div>
+                                    <span>Gradient</span>
+                                </div>
+                                <div class="style-option">
+                                    <div style="width: 30px; height: 30px; background: #10b981; border-radius: 50%; margin: 0 auto;"></div>
+                                    <span>Rounded</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="qr-preview-section">
+                        <div class="qr-code-display">📱</div>
+                        <div class="qr-actions">
+                            <button class="btn btn-primary">Download PNG</button>
+                            <button class="btn btn-outline">Download SVG</button>
+                            <button class="btn btn-outline">Share Link</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Everything You Need for QR Codes</h2>
+            <p>Powerful features to create, customize, and track your QR codes</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon">🎨</div><h3>Custom Design</h3><p>Add your brand colors, logo, and custom patterns to make QR codes uniquely yours.</p></div>
+            <div class="feature-card"><div class="feature-icon">📊</div><h3>Analytics & Tracking</h3><p>Track scans, locations, devices, and time to understand your audience better.</p></div>
+            <div class="feature-card"><div class="feature-icon">✏️</div><h3>Editable Content</h3><p>Change the destination URL anytime without regenerating your QR code.</p></div>
+            <div class="feature-card"><div class="feature-icon">📱</div><h3>Multiple Formats</h3><p>Download in PNG, SVG, PDF, or EPS formats for any use case.</p></div>
+            <div class="feature-card"><div class="feature-icon">🔄</div><h3>Dynamic QR Codes</h3><p>Update content on the fly. Your printed QR code stays the same.</p></div>
+            <div class="feature-card"><div class="feature-icon">🔒</div><h3>Password Protection</h3><p>Secure your QR codes with passwords for sensitive content.</p></div>
+        </div>
+    </section>
+
+    <section class="qr-types" id="types">
+        <div class="section-header">
+            <h2>15+ QR Code Types</h2>
+            <p>Create the perfect QR code for any purpose</p>
+        </div>
+        <div class="qr-types-grid">
+            <div class="qr-type-card"><div class="qr-type-icon">🔗</div><h4>URL</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📱</div><h4>vCard</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📧</div><h4>Email</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📞</div><h4>Phone</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">💬</div><h4>SMS</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📶</div><h4>WiFi</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📍</div><h4>Location</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📄</div><h4>PDF</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">🎵</div><h4>MP3</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">	App</div><h4>App Store</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">💳</div><h4>Payment</h4></div>
+            <div class="qr-type-card"><div class="qr-type-icon">📅</div><h4>Event</h4></div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item"><div class="stat-value">50M+</div><div class="stat-label">QR Codes Created</div></div>
+            <div class="stat-item"><div class="stat-value">1B+</div><div class="stat-label">Total Scans</div></div>
+            <div class="stat-item"><div class="stat-value">190+</div><div class="stat-label">Countries</div></div>
+            <div class="stat-item"><div class="stat-value">99.9%</div><div class="stat-label">Uptime</div></div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Start free, upgrade when you need more</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan-name">Free</div>
+                <div class="plan-price">$0<span>/mo</span></div>
+                <div class="plan-desc">Perfect for personal use</div>
+                <ul class="plan-features"><li>5 Dynamic QR codes</li><li>Basic customization</li><li>PNG downloads</li><li>100 scans/month</li><li>Email support</li></ul>
+                <a href="#" class="btn btn-outline" onclick="selectPlan('free')" style="width: 100%; display: block;">Get Started</a>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">$9<span>/mo</span></div>
+                <div class="plan-desc">For professionals</div>
+                <ul class="plan-features"><li>50 Dynamic QR codes</li><li>Custom colors & logos</li><li>All formats (PNG, SVG, PDF)</li><li>10,000 scans/month</li><li>Analytics dashboard</li><li>Priority support</li></ul>
+                <a href="#" class="btn btn-primary" onclick="selectPlan('pro')" style="width: 100%; display: block;">Start Free Trial</a>
+            </div>
+            <div class="pricing-card">
+                <div class="plan-name">Business</div>
+                <div class="plan-price">$29<span>/mo</span></div>
+                <div class="plan-desc">For teams & agencies</div>
+                <ul class="plan-features"><li>Unlimited QR codes</li><li>White-label option</li><li>API access</li><li>Unlimited scans</li><li>Advanced analytics</li><li>Team collaboration</li><li>Custom domains</li></ul>
+                <a href="#" class="btn btn-outline" onclick="selectPlan('business')" style="width: 100%; display: block;">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Trusted by 500,000+ Users</h2>
+            <p>See what our customers are saying</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial"><div class="testimonial-text">"QRPro helped us track our print campaigns for the first time. The analytics are incredible and the custom designs match our brand perfectly."</div><div class="testimonial-author"><div class="author-avatar">LM</div><div class="author-info"><h4>Lisa Mitchell</h4><p>Marketing Manager</p></div></div></div>
+            <div class="testimonial"><div class="testimonial-text">"We use QRPro for all our product packaging. Being able to update the destination URL without changing the QR code is a game-changer."</div><div class="testimonial-author"><div class="author-avatar">RC</div><div class="author-info"><h4>Robert Chen</h4><p>E-commerce Owner</p></div></div></div>
+            <div class="testimonial"><div class="testimonial-text">"The API integration was seamless. We now automatically generate QR codes for every order confirmation."</div><div class="testimonial-author"><div class="author-avatar">AP</div><div class="author-info"><h4>Amanda Price</h4><p>Software Developer</p></div></div></div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to Create Your QR Code?</h2>
+            <p>Start free with 5 dynamic QR codes. No credit card required.</p>
+            <a href="#" class="btn btn-primary btn-large" onclick="openModal('signup')">Generate Free QR Code</a>
+        </div>
+    </section>
+
+    <footer><p>&copy; 2024 QRPro. All rights reserved.</p></footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-title">Create Your Free Account</h3>
+            <p id="modal-subtitle">Start creating professional QR codes today</p>
+            <form id="signup-form">
+                <div class="form-group"><input type="text" placeholder="Full Name" required></div>
+                <div class="form-group"><input type="email" placeholder="Email Address" required></div>
+                <div class="form-group"><input type="password" placeholder="Create Password" required></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+            <p style="margin-top: 1rem; text-align: center; font-size: 0.875rem; color: var(--gray);">Already have an account? <a href="#" style="color: var(--primary);">Log in</a></p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { event.preventDefault(); const modal = document.getElementById('modal'); const title = document.getElementById('modal-title'); const subtitle = document.getElementById('modal-subtitle'); if (type === 'login') { title.textContent = 'Welcome Back'; subtitle.textContent = 'Log in to your QRPro account'; } else { title.textContent = 'Create Your Free Account'; subtitle.textContent = 'Start creating professional QR codes today'; } modal.classList.add('active'); }
+        document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) { this.classList.remove('active'); } });
+        function selectPlan(plan) { event.preventDefault(); openModal('signup'); console.log('Selected plan:', plan); }
+        document.getElementById('signup-form').addEventListener('submit', function(e) { e.preventDefault(); alert('🎉 Account created! Start creating your QR codes.'); document.getElementById('modal').classList.remove('active'); });
+        document.querySelectorAll('.qr-type-btn').forEach(btn => { btn.addEventListener('click', function() { document.querySelectorAll('.qr-type-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); }); });
+        document.querySelectorAll('.style-option').forEach(opt => { opt.addEventListener('click', function() { document.querySelectorAll('.style-option').forEach(o => o.classList.remove('active')); this.classList.add('active'); }); });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { const href = this.getAttribute('href'); if (href !== '#') { e.preventDefault(); const target = document.querySelector(href); if (target) { target.scrollIntoView({ behavior: 'smooth' }); } } }); });
+    </script>
+</body>
+</html>]]>
