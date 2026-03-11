@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeGenius AI - Build Perfect Resumes in Minutes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            line-height: 1.6;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #10b981;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #10b981;
+            color: #10b981;
+        }
+        .btn-outline:hover {
+            background: #10b981;
+            color: #fff;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat h3 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat p {
+            color: #a0a0a0;
+        }
+        .features {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .section-title p {
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #10b981;
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.1);
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            color: #a0a0a0;
+        }
+        .templates {
+            padding: 6rem 2rem;
+        }
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .template-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .template-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .template-preview {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 0.8rem;
+            padding: 1rem;
+        }
+        .template-info {
+            padding: 1rem;
+            background: #fff;
+            color: #333;
+        }
+        .template-info h4 {
+            margin-bottom: 0.25rem;
+        }
+        .template-info p {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        .pricing {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .pricing-card.popular {
+            border-color: #10b981;
+            transform: scale(1.05);
+        }
+        .pricing-card:hover {
+            border-color: #10b981;
+        }
+        .popular-tag {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #fff;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .price span {
+            font-size: 1rem;
+            color: #a0a0a0;
+        }
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-features li::before {
+            content: '✓';
+            color: #10b981;
+        }
+        .testimonials {
+            padding: 6rem 2rem;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: #a0a0a0;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .author-info h4 {
+            font-size: 1rem;
+        }
+        .author-info p {
+            font-size: 0.875rem;
+            color: #666;
+            font-style: normal;
+        }
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+        }
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .cta p {
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover {
+            color: #10b981;
+        }
+        footer p {
+            color: #666;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-header h3 {
+            font-size: 1.5rem;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #a0a0a0;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .stats {
+                gap: 2rem;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">ResumeGenius AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#templates">Templates</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Get Started Free</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Build Your <span>Perfect Resume</span> in Minutes with AI</h1>
+            <p>Let our AI analyze job descriptions and craft tailored resumes that get you interviews. Join 500,000+ job seekers who landed their dream jobs.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Create My Resume Free</button>
+                <button class="btn btn-outline">See Templates</button>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <h3>500K+</h3>
+                    <p>Resumes Created</p>
+                </div>
+                <div class="stat">
+                    <h3>89%</h3>
+                    <p>Interview Rate</p>
+                </div>
+                <div class="stat">
+                    <h3>40+</h3>
+                    <p>Pro Templates</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>AI-Powered Resume Building</h2>
+            <p>Everything you need to create a standout resume that gets noticed by recruiters and ATS systems.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>AI Resume Writer</h3>
+                <p>Our AI analyzes your experience and writes compelling bullet points that highlight your achievements.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Job Match Score</h3>
+                <p>See how well your resume matches any job description and get suggestions to improve it.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>ATS Optimization</h3>
+                <p>Ensure your resume passes Applicant Tracking Systems with our ATS-friendly formatting.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Professional Templates</h3>
+                <p>Choose from 40+ stunning templates designed by HR professionals and recruiters.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Cover Letter Builder</h3>
+                <p>Generate matching cover letters tailored to each job application automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Resume Analysis</h3>
+                <p>Get instant feedback on your resume with actionable improvement suggestions.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="templates" id="templates">
+        <div class="section-title">
+            <h2>Professional Resume Templates</h2>
+            <p>Choose from our collection of ATS-friendly templates designed to impress recruiters.</p>
+        </div>
+        <div class="template-grid">
+            <div class="template-card">
+                <div class="template-preview">
+                    <div style="text-align: left; width: 100%;">
+                        <div style="background: #10b981; height: 60px; margin: -1rem -1rem 1rem -1rem;"></div>
+                        <div style="font-weight: bold; font-size: 1rem; margin-bottom: 0.5rem;">John Smith</div>
+                        <div style="font-size: 0.6rem; color: #666;">Software Engineer</div>
+                        <div style="margin-top: 1rem; font-size: 0.5rem; color: #999;">
+                            <p>Experience</p>
+                            <p>Skills</p>
+                            <p>Education</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Professional</h4>
+                    <p>Clean and modern design</p>
+                </div>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">
+                    <div style="text-align: center; width: 100%;">
+                        <div style="font-weight: bold; font-size: 1rem; margin-bottom: 0.25rem;">Sarah Johnson</div>
+                        <div style="font-size: 0.6rem; color: #10b981;">Product Manager</div>
+                        <div style="border-top: 2px solid #10b981; margin: 1rem 0; padding-top: 1rem; font-size: 0.5rem; color: #999;">
+                            <p>Experience • Skills • Education</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Minimalist</h4>
+                    <p>Simple and elegant</p>
+                </div>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">
+                    <div style="display: flex; width: 100%;">
+                        <div style="background: #1a1a2e; width: 30%; margin: -1rem 0 -1rem -1rem; padding: 1rem; color: #fff; font-size: 0.5rem;">
+                            <div style="font-weight: bold; margin-bottom: 1rem;">Contact</div>
+                            <div style="margin-bottom: 1rem;">Skills</div>
+                            <div>Languages</div>
+                        </div>
+                        <div style="flex: 1; padding-left: 1rem; font-size: 0.5rem;">
+                            <div style="font-weight: bold;">Mike Chen</div>
+                            <div style="color: #10b981;">Designer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Creative</h4>
+                    <p>Stand out from the crowd</p>
+                </div>
+            </div>
+            <div class="template-card">
+                <div class="template-preview">
+                    <div style="text-align: left; width: 100%; font-size: 0.5rem;">
+                        <div style="border-bottom: 3px solid #0a0a0f; padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                            <div style="font-weight: bold; font-size: 1rem;">Emily Davis</div>
+                            <div style="color: #666;">Marketing Director</div>
+                        </div>
+                        <div style="color: #999;">
+                            <p style="margin-bottom: 0.5rem;">■ SUMMARY</p>
+                            <p style="margin-bottom: 0.5rem;">■ EXPERIENCE</p>
+                            <p>■ EDUCATION</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Executive</h4>
+                    <p>For senior professionals</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Start free and upgrade when you need more features.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>1 resume</li>
+                    <li>5 templates</li>
+                    <li>Basic AI suggestions</li>
+                    <li>PDF download</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Pro</h3>
+                <div class="price">$12<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited resumes</li>
+                    <li>40+ premium templates</li>
+                    <li>Advanced AI writing</li>
+                    <li>Job match scoring</li>
+                    <li>Cover letter builder</li>
+                    <li>ATS optimization</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Start Pro Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Business</h3>
+                <div class="price">$49<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>Team management</li>
+                    <li>Custom branding</li>
+                    <li>API access</li>
+                    <li>Dedicated support</li>
+                    <li>Analytics dashboard</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>Loved by Job Seekers</h2>
+            <p>See what our users have to say about ResumeGenius AI.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"I was struggling to get interviews for months. After using ResumeGenius AI, I landed 5 interviews in just 2 weeks. The AI suggestions were game-changing!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JK</div>
+                    <div class="author-info">
+                        <h4>James Kim</h4>
+                        <p>Software Engineer at Google</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The job match feature is incredible. It helped me tailor my resume for each application and I got my dream job at a Fortune 500 company."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SM</div>
+                    <div class="author-info">
+                        <h4>Sarah Mitchell</h4>
+                        <p>Product Manager at Meta</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"As a career changer, I had no idea how to present my skills. ResumeGenius AI helped me create a resume that highlighted my transferable skills perfectly."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AP</div>
+                    <div class="author-info">
+                        <h4>Alex Peterson</h4>
+                        <p>Data Analyst at Amazon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Land Your Dream Job?</h2>
+        <p>Join over 500,000 professionals who've transformed their careers with ResumeGenius AI.</p>
+        <button class="btn btn-primary" onclick="openModal('signup')">Create Your Resume Free</button>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a>
+            <a href="#">Templates</a>
+            <a href="#">Pricing</a>
+            <a href="#">Blog</a>
+            <a href="#">Careers</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+        <p>&copy; 2024 ResumeGenius AI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">LinkedIn</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Account</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Smith">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Start Building Free</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">LinkedIn</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) {
+            document.getElementById(type + 'Modal').classList.add('active');
+        }
+        function closeModal(type) {
+            document.getElementById(type + 'Modal').classList.remove('active');
+        }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
