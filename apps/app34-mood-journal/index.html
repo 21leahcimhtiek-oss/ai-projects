@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodJournal AI - Track Your Emotional Wellness with AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f472b6, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f472b6, #c084fc, #818cf8);
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #f472b6;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .btn-outline:hover {
+            border-color: #f472b6;
+            color: #f472b6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(244, 114, 182, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(192, 132, 252, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .mood-display {
+            margin-top: 4rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .mood-emoji {
+            font-size: 3rem;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mood-emoji:hover {
+            transform: scale(1.1);
+            border-color: #f472b6;
+            background: rgba(244, 114, 182, 0.1);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(244, 114, 182, 0.02));
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: #f472b6;
+            transform: translateY(-5px);
+            background: rgba(244, 114, 182, 0.05);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        
+        /* Mood Tracker Section */
+        .mood-tracker {
+            padding: 6rem 2rem;
+        }
+        
+        .tracker-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .tracker-visual {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+        }
+        
+        .mood-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 200px;
+            margin-bottom: 1rem;
+        }
+        
+        .mood-bar {
+            width: 12%;
+            background: linear-gradient(180deg, #f472b6, #c084fc);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+        }
+        
+        .mood-bar:hover {
+            opacity: 0.8;
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        
+        .tracker-info h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tracker-info p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tracker-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f472b6;
+        }
+        
+        .stat-box .label {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        /* Journal Section */
+        .journal-section {
+            padding: 6rem 2rem;
+            background: rgba(244, 114, 182, 0.02);
+        }
+        
+        .journal-demo {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        
+        .journal-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .journal-title {
+            font-weight: 600;
+        }
+        
+        .journal-date {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .journal-content {
+            padding: 2rem;
+        }
+        
+        .journal-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.8;
+            resize: none;
+            min-height: 150px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .journal-input::placeholder {
+            color: #4b5563;
+        }
+        
+        .journal-input:focus {
+            outline: none;
+        }
+        
+        .ai-prompt {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(192, 132, 252, 0.1));
+            border-radius: 12px;
+            border: 1px solid rgba(244, 114, 182, 0.2);
+        }
+        
+        .ai-prompt-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #f472b6;
+            font-weight: 600;
+        }
+        
+        .ai-prompt-text {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: #f472b6;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card:hover {
+            border-color: #f472b6;
+        }
+        
+        .pricing-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: #f472b6;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: rgba(244, 114, 182, 0.02);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-stars {
+            color: #f472b6;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-text {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .author-name {
+            font-weight: 600;
+        }
+        
+        .author-title {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(192, 132, 252, 0.1));
+            border: 1px solid rgba(244, 114, 182, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #f472b6;
+        }
+        
+        .copyright {
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #0a0a0f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .modal p {
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: #f472b6;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .divider {
+            text-align: center;
+            color: #4b5563;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider::before {
+            left: 0;
+        }
+        
+        .divider::after {
+            right: 0;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        
+        .social-btn:hover {
+            border-color: #f472b6;
+            background: rgba(244, 114, 182, 0.1);
+        }
+        
+        .modal-switch {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .modal-switch a {
+            color: #f472b6;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .tracker-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo gradient-text">MoodJournal AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#tracker">Mood Tracker</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="showLogin()">Login</button>
+            <button class="btn btn-primary" onclick="showSignup()">Start Free</button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Understand Your <span class="gradient-text">Emotional World</span></h1>
+            <p>AI-powered mood tracking and journaling that helps you understand patterns, reduce anxiety, and improve your mental wellness one day at a time.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="showSignup()">Start Journaling Free</button>
+                <button class="btn btn-outline btn-large">See How It Works</button>
+            </div>
+            <div class="mood-display">
+                <div class="mood-emoji">😊</div>
+                <div class="mood-emoji">😌</div>
+                <div class="mood-emoji">🥰</div>
+                <div class="mood-emoji">💪</div>
+                <div class="mood-emoji">🧘</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Features That <span class="gradient-text">Transform Your Wellness</span></h2>
+            <p>Discover how MoodJournal AI helps you build emotional intelligence and lasting mental health habits.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>AI Mood Analysis</h3>
+                <p>Our AI analyzes your journal entries to identify emotional patterns, triggers, and growth opportunities you might miss.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Visual Mood Charts</h3>
+                <p>Beautiful, interactive charts that show your emotional journey over time with insights and trends.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Guided Prompts</h3>
+                <p>Never face a blank page again. AI-generated prompts tailored to your mood and goals help you reflect deeper.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Wellness Goals</h3>
+                <p>Set and track mental wellness goals with AI coaching to keep you motivated and on track.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Private & Secure</h3>
+                <p>Your thoughts are sacred. End-to-end encryption ensures only you can read your journal.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌙</div>
+                <h3>Evening Reflections</h3>
+                <p>Personalized evening prompts help you process your day and prepare for restful sleep.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Mood Tracker Section -->
+    <section class="mood-tracker" id="tracker">
+        <div class="tracker-container">
+            <div class="tracker-visual">
+                <div class="mood-chart">
+                    <div class="mood-bar" style="height: 60%;"></div>
+                    <div class="mood-bar" style="height: 75%;"></div>
+                    <div class="mood-bar" style="height: 45%;"></div>
+                    <div class="mood-bar" style="height: 80%;"></div>
+                    <div class="mood-bar" style="height: 70%;"></div>
+                    <div class="mood-bar" style="height: 90%;"></div>
+                    <div class="mood-bar" style="height: 65%;"></div>
+                </div>
+                <div class="chart-labels">
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                    <span>Sun</span>
+                </div>
+            </div>
+            <div class="tracker-info">
+                <h3>Track Your <span class="gradient-text">Emotional Journey</span></h3>
+                <p>Our intuitive mood tracker makes it easy to log how you're feeling. Over time, patterns emerge that help you understand yourself better.</p>
+                <div class="tracker-stats">
+                    <div class="stat-box">
+                        <div class="number">89%</div>
+                        <div class="label">Better Self-Awareness</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">67%</div>
+                        <div class="label">Reduced Anxiety</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">2.5x</div>
+                        <div class="label">More Gratitude</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">94%</div>
+                        <div class="label">User Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Journal Section -->
+    <section class="journal-section">
+        <div class="section-header">
+            <h2>Journal with <span class="gradient-text">AI Guidance</span></h2>
+            <p>Our smart journal adapts to your mood and provides thoughtful prompts to deepen your reflection.</p>
+        </div>
+        <div class="journal-demo">
+            <div class="journal-header">
+                <span class="journal-title">📝 Today's Entry</span>
+                <span class="journal-date">Thursday, January 9, 2025</span>
+            </div>
+            <div class="journal-content">
+                <textarea class="journal-input" placeholder="Start writing about your day... How are you feeling right now?"></textarea>
+                <div class="ai-prompt">
+                    <div class="ai-prompt-header">
+                        <span>✨ AI Prompt</span>
+                    </div>
+                    <div class="ai-prompt-text">What moment today made you smile? Describe it in detail and how it affected your mood.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Choose Your <span class="gradient-text">Wellness Journey</span></h2>
+            <p>Start free and upgrade as your practice grows. No credit card required.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-icon">🌱</div>
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Basic mood tracking</li>
+                    <li>30 journal entries/month</li>
+                    <li>Daily mood check-ins</li>
+                    <li>Basic mood charts</li>
+                    <li>Mobile app access</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-icon">🌸</div>
+                <h3>Premium</h3>
+                <div class="price">$5.99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited journal entries</li>
+                    <li>AI mood analysis</li>
+                    <li>Advanced insights & trends</li>
+                    <li>Custom prompts</li>
+                    <li>Goal tracking</li>
+                    <li>Export & backup</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-icon">🧘‍♀️</div>
+                <h3>Wellness</h3>
+                <div class="price">$12.99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Premium</li>
+                    <li>Therapist sharing tools</li>
+                    <li>Meditation library</li>
+                    <li>Crisis resources</li>
+                    <li>Priority support</li>
+                    <li>Family sharing (2 members)</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Learn More</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Stories of <span class="gradient-text">Transformation</span></h2>
+            <p>Join thousands who have improved their mental wellness with MoodJournal AI.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"This app helped me understand my anxiety triggers. After 3 months, I feel more in control of my emotions than ever before."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SM</div>
+                    <div>
+                        <div class="author-name">Sarah M.</div>
+                        <div class="author-title">Marketing Manager</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"The AI prompts are incredible. They ask exactly the right questions to help me process difficult emotions. Life-changing!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JK</div>
+                    <div>
+                        <div class="author-name">James K.</div>
+                        <div class="author-title">Software Engineer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"I've tried many journaling apps, but this one actually helps me stay consistent. The mood tracking keeps me accountable."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AL</div>
+                    <div>
+                        <div class="author-name">Amanda L.</div>
+                        <div class="author-title">Teacher</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-box">
+            <h2>Start Your <span class="gradient-text">Healing Journey</span> Today</h2>
+            <p>Join over 100,000 people who have transformed their mental wellness with MoodJournal AI.</p>
+            <button class="btn btn-primary btn-large" onclick="showSignup()">Start Free - No Credit Card</button>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo gradient-text">MoodJournal AI</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="copyright">© 2025 MoodJournal AI. All rights reserved.</div>
+        </div>
+    </footer>
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h3>Welcome Back</h3>
+            <p>Continue your wellness journey</p>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary">Login</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+        </div>
+    </div>
+    
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <h3>Start Your Journey</h3>
+            <p>Create your free account</p>
+            <input type="text" placeholder="Full name">
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Create password">
+            <button class="btn btn-primary">Create Account</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function showLogin() {
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        function showSignup() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('signupModal').classList.add('active');
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.mood-emoji').forEach(emoji => {
+            emoji.addEventListener('click', function() {
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
