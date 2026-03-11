@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.expo/
+*.apk
+*.ipa
+*.aab
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.lnk
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+*.egg
+venv/
+env/
+.Python
+
+# Sensitive files
+*.pem
+*.key
+stripe_backup_code.txt
+Google\ Chrome\ -\ Default.txt
+
+# Large binary files
+*.exe
+*.msi
+*.zip
+*.tar.gz
+*.mp4
+
+# Temporary files
+*.tmp
+*.temp
