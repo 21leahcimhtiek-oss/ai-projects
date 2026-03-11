@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureVault AI - AI-Powered Password Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #ef4444, #f97316, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg { background: linear-gradient(135deg, #ef4444, #f97316); }
+        
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo { font-size: 1.5rem; font-weight: 800; }
+        
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: #9ca3af; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #ef4444; }
+        
+        .nav-buttons { display: flex; gap: 1rem; }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .btn-outline:hover { border-color: #ef4444; color: #ef4444; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .hero-content { text-align: center; max-width: 900px; position: relative; z-index: 1; }
+        .hero h1 { font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero p { font-size: 1.25rem; color: #9ca3af; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-large { padding: 1rem 2rem; font-size: 1rem; }
+        
+        .vault-demo {
+            margin-top: 4rem;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .vault-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .vault-title { font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        
+        .vault-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .vault-item:hover { background: rgba(239, 68, 68, 0.05); }
+        .vault-item:last-child { border-bottom: none; }
+        
+        .vault-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .vault-info { flex: 1; }
+        .vault-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+        .vault-info p { font-size: 0.8rem; color: #6b7280; }
+        
+        .vault-actions { display: flex; gap: 0.5rem; }
+        .vault-action {
+            width: 32px; height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .vault-action:hover { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(239, 68, 68, 0.02));
+        }
+        
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .section-header p { color: #9ca3af; max-width: 600px; margin: 0 auto; }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: #ef4444;
+            transform: translateY(-5px);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        
+        .feature-icon {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: #9ca3af; font-size: 0.95rem; }
+        
+        .security {
+            padding: 6rem 2rem;
+        }
+        
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .security-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+        
+        .security-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .security-item h4 { margin-bottom: 0.5rem; }
+        .security-item p { color: #6b7280; font-size: 0.9rem; }
+        
+        .pricing { padding: 6rem 2rem; }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured { border-color: #ef4444; transform: scale(1.05); }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px; left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card:hover { border-color: #ef4444; }
+        .pricing-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: 800; margin: 1rem 0; }
+        .price span { font-size: 1rem; font-weight: 400; color: #6b7280; }
+        
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+        }
+        .pricing-features li::before { content: '✓'; color: #ef4444; }
+        
+        .testimonials {
+            padding: 6rem 2rem;
+            background: rgba(239, 68, 68, 0.02);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .testimonial-stars { color: #ef4444; margin-bottom: 1rem; }
+        .testimonial-text { color: #9ca3af; margin-bottom: 1.5rem; font-style: italic; }
+        
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .author-name { font-weight: 600; }
+        .author-title { color: #6b7280; font-size: 0.85rem; }
+        
+        .cta { padding: 6rem 2rem; text-align: center; }
+        
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(249, 115, 22, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+        }
+        
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #9ca3af; margin-bottom: 2rem; }
+        
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-links { display: flex; gap: 2rem; }
+        .footer-links a { color: #6b7280; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #ef4444; }
+        .copyright { color: #4b5563; font-size: 0.9rem; }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: #0a0a0f;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal h3 { font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; }
+        .modal p { color: #6b7280; text-align: center; margin-bottom: 2rem; }
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .modal input:focus { outline: none; border-color: #ef4444; }
+        .modal .btn { width: 100%; margin-bottom: 1rem; }
+        
+        .divider {
+            text-align: center;
+            color: #4b5563;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        
+        .social-buttons { display: flex; gap: 1rem; }
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        .social-btn:hover { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        
+        .modal-switch { text-align: center; color: #6b7280; font-size: 0.9rem; }
+        .modal-switch a { color: #ef4444; text-decoration: none; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .security-grid { grid-template-columns: 1fr; }
+            .pricing-card.featured { transform: scale(1); }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo gradient-text">SecureVault AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="showLogin()">Login</button>
+            <button class="btn btn-primary" onclick="showSignup()">Get Secure</button>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Passwords, <span class="gradient-text">Fort Knox Secure</span></h1>
+            <p>AI-powered password security with military-grade encryption. Never forget a password again. Auto-fill everywhere. One master password.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="showSignup()">Start Protecting Free</button>
+                <button class="btn btn-outline btn-large">See How It Works</button>
+            </div>
+            <div class="vault-demo">
+                <div class="vault-header">
+                    <span class="vault-title">🔐 My Vault</span>
+                    <span style="color: #6b7280; font-size: 0.8rem;">4 items</span>
+                </div>
+                <div class="vault-item">
+                    <div class="vault-icon">G</div>
+                    <div class="vault-info">
+                        <h4>Google Account</h4>
+                        <p>user@gmail.com</p>
+                    </div>
+                    <div class="vault-actions">
+                        <div class="vault-action">📋</div>
+                        <div class="vault-icon" style="width:32px;height:32px;font-size:0.9rem;">🔑</div>
+                    </div>
+                </div>
+                <div class="vault-item">
+                    <div class="vault-icon" style="background: linear-gradient(135deg, #1DA1F2, #0d8bd9);">t</div>
+                    <div class="vault-info">
+                        <h4>Twitter</h4>
+                        <p>@username</p>
+                    </div>
+                    <div class="vault-actions">
+                        <div class="vault-action">📋</div>
+                    </div>
+                </div>
+                <div class="vault-item">
+                    <div class="vault-icon" style="background: linear-gradient(135deg, #333, #24292e);">⌘</div>
+                    <div class="vault-info">
+                        <h4>GitHub</h4>
+                        <p>developer</p>
+                    </div>
+                    <div class="vault-actions">
+                        <div class="vault-action">📋</div>
+                    </div>
+                </div>
+                <div class="vault-item">
+                    <div class="vault-icon" style="background: linear-gradient(135deg, #FF0000, #cc0000);">▶</div>
+                    <div class="vault-info">
+                        <h4>Netflix</h4>
+                        <p>user@email.com</p>
+                    </div>
+                    <div class="vault-actions">
+                        <div class="vault-action">📋</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Features That <span class="gradient-text">Protect You</span></h2>
+            <p>Advanced security features designed to keep your digital life safe.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Zero-Knowledge Encryption</h3>
+                <p>Your data is encrypted before it leaves your device. Not even we can see your passwords.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Password Generator</h3>
+                <p>Generate uncrackable passwords with AI that learns your preferences and requirements.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Auto-Fill Everywhere</h3>
+                <p>One-click login on any website or app. Works on desktop, mobile, and browser extensions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚨</div>
+                <h3>Breach Monitoring</h3>
+                <p>AI monitors the dark web 24/7 and alerts you instantly if your credentials are compromised.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Secure Sharing</h3>
+                <p>Share passwords securely with family or team members without revealing the actual password.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Cross-Device Sync</h3>
+                <p>Access your vault from any device. Real-time sync keeps everything up to date.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="security" id="security">
+        <div class="section-header">
+            <h2>Military-Grade <span class="gradient-text">Security</span></h2>
+            <p>We use the same encryption standards as governments and security agencies.</p>
+        </div>
+        <div class="security-grid">
+            <div class="security-item">
+                <div class="security-icon">🔒</div>
+                <h4>AES-256 Encryption</h4>
+                <p>Same encryption used by banks and militaries worldwide</p>
+            </div>
+            <div class="security-item">
+                <div class="security-icon">🔑</div>
+                <h4>Zero-Knowledge</h4>
+                <p>We never see or store your master password</p>
+            </div>
+            <div class="security-item">
+                <div class="security-icon">✅</div>
+                <h4>SOC 2 Certified</h4>
+                <p>Audited and certified for security compliance</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple <span class="gradient-text">Pricing</span></h2>
+            <p>Start free, upgrade when you need more.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-icon">🆓</div>
+                <h3>Free</h3>
+                <div class="price">$0</div>
+                <ul class="pricing-features">
+                    <li>Unlimited passwords</li>
+                    <li>1 device</li>
+                    <li>Password generator</li>
+                    <li>Auto-fill</li>
+                    <li>Browser extension</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-icon">⭐</div>
+                <h3>Premium</h3>
+                <div class="price">$2.99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited devices</li>
+                    <li>Dark web monitoring</li>
+                    <li>Secure sharing</li>
+                    <li>Priority support</li>
+                    <li>1GB secure storage</li>
+                    <li>Emergency access</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-icon">👨‍👩‍👧‍👦</div>
+                <h3>Family</h3>
+                <div class="price">$4.99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Premium</li>
+                    <li>6 family members</li>
+                    <li>Family dashboard</li>
+                    <li>Shared folders</li>
+                    <li>Parental controls</li>
+                    <li>Family recovery</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Start Family Plan</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>Trusted by <span class="gradient-text">Millions</span></h2>
+            <p>See why users choose SecureVault AI for their password security.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"The breach monitoring saved me twice already. Got an alert within minutes of a data breach and could change my password instantly."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DP</div>
+                    <div>
+                        <div class="author-name">David P.</div>
+                        <div class="author-title">Security Consultant</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"I have 200+ passwords and SecureVault makes it effortless. The auto-fill works perfectly everywhere. Worth every penny."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">LW</div>
+                    <div>
+                        <div class="author-name">Laura W.</div>
+                        <div class="author-title">Digital Marketer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"The family plan is perfect. I can share Netflix with my kids without them ever knowing the actual password. Genius!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MJ</div>
+                    <div>
+                        <div class="author-name">Mike J.</div>
+                        <div class="author-title">Parent of 3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <div class="cta-box">
+            <h2>Start <span class="gradient-text">Securing</span> Your Digital Life</h2>
+            <p>Join 10 million+ users who trust SecureVault AI with their passwords.</p>
+            <button class="btn btn-primary btn-large" onclick="showSignup()">Get SecureVault Free</button>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="logo gradient-text">SecureVault AI</div>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Security</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+            </div>
+            <div class="copyright">© 2025 SecureVault AI. All rights reserved.</div>
+        </div>
+    </footer>
+    
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h3>Welcome Back</h3>
+            <p>Access your secure vault</p>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Master password">
+            <button class="btn btn-primary">Unlock Vault</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <h3>Create Your Vault</h3>
+            <p>Start protecting your passwords</p>
+            <input type="email" placeholder="Email address">
+            <input type="password" placeholder="Create master password">
+            <input type="password" placeholder="Confirm master password">
+            <button class="btn btn-primary">Create Vault</button>
+            <div class="divider">or</div>
+            <div class="social-buttons">
+                <button class="social-btn">G</button>
+                <button class="social-btn"></button>
+                <button class="social-btn">f</button>
+            </div>
+            <p class="modal-switch">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function showLogin() {
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        function showSignup() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('signupModal').classList.add('active');
+        }
+        
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
