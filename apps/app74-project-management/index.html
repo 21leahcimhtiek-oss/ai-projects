@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow AI - Intelligent Project Management & Team Productivity</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#f43f5e;--secondary:#fb923c;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f43f5e,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#f43f5e;color:#f43f5e}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#f43f5e,#fb923c);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(244,63,94,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.3);border-radius:50px;font-size:0.85rem;color:#fb7185;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#f43f5e,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#f43f5e,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#fb7185;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+/* Kanban Board */
+.board-demo{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1100px;margin:0 auto;overflow-x:auto}
+.board-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.board-title{font-size:1rem;font-weight:700}
+.board-actions{display:flex;gap:0.5rem}
+.board-action{padding:0.35rem 0.8rem;border-radius:6px;font-size:0.8rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
+.board-action.active{background:rgba(244,63,94,0.1);border-color:#f43f5e;color:#fb7185}
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;min-width:800px}
+.kanban-col{background:var(--bg);border-radius:12px;padding:0.8rem}
+.col-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem}
+.col-title{font-size:0.82rem;font-weight:700;display:flex;align-items:center;gap:0.4rem}
+.col-count{background:rgba(244,63,94,0.1);color:#fb7185;font-size:0.7rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:10px}
+.task-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.8rem;margin-bottom:0.6rem;cursor:pointer;transition:all 0.2s}
+.task-card:hover{border-color:#f43f5e;transform:translateY(-2px)}
+.task-priority{font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;display:inline-block;margin-bottom:0.4rem}
+.priority-high{background:rgba(239,68,68,0.1);color:#f87171}
+.priority-med{background:rgba(245,158,11,0.1);color:#fbbf24}
+.priority-low{background:rgba(16,185,129,0.1);color:#34d399}
+.task-title{font-size:0.82rem;font-weight:600;margin-bottom:0.5rem;line-height:1.4}
+.task-meta{display:flex;justify-content:space-between;align-items:center}
+.task-assignees{display:flex}
+.assignee-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:#fff;border:2px solid var(--card);margin-left:-4px}
+.task-due{font-size:0.7rem;color:var(--muted)}
+.task-due.overdue{color:#f87171}
+.task-tags{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.4rem}
+.task-tag{font-size:0.65rem;padding:0.1rem 0.4rem;border-radius:4px;background:rgba(99,102,241,0.1);color:#a5b4fc}
+.ai-suggest{background:linear-gradient(135deg,rgba(244,63,94,0.08),rgba(251,146,60,0.08));border:1px solid rgba(244,63,94,0.2);border-radius:8px;padding:0.6rem 0.8rem;margin-top:0.8rem;font-size:0.75rem;color:#fb7185;display:flex;align-items:center;gap:0.4rem}
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#f43f5e;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(244,63,94,0.2),rgba(251,146,60,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#f43f5e;background:linear-gradient(135deg,rgba(244,63,94,0.05),rgba(251,146,60,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f43f5e,#fb923c);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#f43f5e;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#f43f5e,#fb923c);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(244,63,94,0.06),rgba(251,146,60,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f43f5e,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#f43f5e}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#f43f5e}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#f43f5e}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚡ TaskFlow AI</div>
+  <ul class="nav-links">
+    <li><a href="#board">Board</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#">Integrations</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Get Started Free</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🏆 Voted #1 Project Management Tool by Product Hunt 2025</div>
+  <h1>Ship Projects <span class="gradient-text">Faster Than Ever</span><br>with AI Teammates</h1>
+  <p class="hero-sub">TaskFlow AI auto-prioritizes work, predicts blockers before they happen, writes task descriptions, and keeps your entire team in perfect sync — effortlessly.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">⚡ Start Free — No Credit Card</button>
+    <button class="btn-large btn-outline">▶ See It In Action</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">120K+</div><div class="stat-label">Teams Using TaskFlow</div></div>
+    <div class="stat-item"><div class="stat-num">40%</div><div class="stat-label">Faster Project Delivery</div></div>
+    <div class="stat-item"><div class="stat-num">3.2M+</div><div class="stat-label">Tasks Completed</div></div>
+    <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-label">User Rating</div></div>
+  </div>
+</hero>
+
+<section id="board" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Live Board Demo</div>
+    <h2>Your AI-Powered <span class="gradient-text">Project Command Center</span></h2>
+  </div>
+  <div class="board-demo">
+    <div class="board-header">
+      <div class="board-title">🚀 Q3 Product Launch — Sprint 4</div>
+      <div class="board-actions">
+        <button class="board-action active">Kanban</button>
+        <button class="board-action">Timeline</button>
+        <button class="board-action">List</button>
+        <button class="board-action btn-primary" style="background:linear-gradient(135deg,#f43f5e,#fb923c);border:none;color:#fff;font-weight:600" onclick="document.getElementById('authModal').classList.add('active')">+ Add Task</button>
+      </div>
+    </div>
+    <div class="kanban-board">
+      <!-- Backlog -->
+      <div class="kanban-col">
+        <div class="col-header">
+          <div class="col-title">📋 Backlog <span class="col-count">4</span></div>
+        </div>
+        <div class="task-card">
+          <div class="task-priority priority-med">MEDIUM</div>
+          <div class="task-title">Set up A/B testing framework for onboarding flow</div>
+          <div class="task-tags"><span class="task-tag">Engineering</span><span class="task-tag">Growth</span></div>
+          <div class="task-meta">
+            <div class="task-assignees"><div class="assignee-dot" style="background:#8b5cf6">JL</div></div>
+            <div class="task-due">Due Aug 20</div>
+          </div>
+        </div>
+        <div class="task-card">
+          <div class="task-priority priority-low">LOW</div>
+          <div class="task-title">Write help center articles for new billing system</div>
+          <div class="task-tags"><span class="task-tag">Content</span></div>
+          <div class="task-meta">
+            <div class="task-assignees"><div class="assignee-dot" style="background:#10b981">MR</div></div>
+            <div class="task-due">Due Aug 25</div>
+          </div>
+        </div>
+        <div class="ai-suggest">🤖 AI suggests: Add mobile responsive testing task</div>
+      </div>
+      <!-- In Progress -->
+      <div class="kanban-col">
+        <div class="col-header">
+          <div class="col-title">🔄 In Progress <span class="col-count">3</span></div>
+        </div>
+        <div class="task-card" style="border-color:rgba(244,63,94,0.3)">
+          <div class="task-priority priority-high">HIGH</div>
+          <div class="task-title">Redesign checkout page — reduce friction by 30%</div>
+          <div class="task-tags"><span class="task-tag">Design</span><span class="task-tag">Conversion</span></div>
+          <div class="task-meta">
+            <div class="task-assignees">
+              <div class="assignee-dot" style="background:#f43f5e">SA</div>
+              <div class="assignee-dot" style="background:#3b82f6">DK</div>
+            </div>
+            <div class="task-due overdue">⚠️ Overdue</div>
+          </div>
+        </div>
+        <div class="task-card">
+          <div class="task-priority priority-high">HIGH</div>
+          <div class="task-title">Integrate Stripe payment processing API v3</div>
+          <div class="task-tags"><span class="task-tag">Engineering</span></div>
+          <div class="task-meta">
+            <div class="task-assignees"><div class="assignee-dot" style="background:#6366f1">TW</div></div>
+            <div class="task-due">Due Jul 18</div>
+          </div>
+        </div>
+      </div>
+      <!-- Review -->
+      <div class="kanban-col">
+        <div class="col-header">
+          <div class="col-title">👀 In Review <span class="col-count">2</span></div>
+        </div>
+        <div class="task-card">
+          <div class="task-priority priority-high">HIGH</div>
+          <div class="task-title">Launch email campaign for beta user invites</div>
+          <div class="task-tags"><span class="task-tag">Marketing</span></div>
+          <div class="task-meta">
+            <div class="task-assignees">
+              <div class="assignee-dot" style="background:#f59e0b">AL</div>
+              <div class="assignee-dot" style="background:#ec4899">NP</div>
+            </div>
+            <div class="task-due">Due Jul 15</div>
+          </div>
+        </div>
+        <div class="task-card">
+          <div class="task-priority priority-med">MEDIUM</div>
+          <div class="task-title">Performance audit — optimize Core Web Vitals</div>
+          <div class="task-tags"><span class="task-tag">SEO</span><span class="task-tag">Perf</span></div>
+          <div class="task-meta">
+            <div class="task-assignees"><div class="assignee-dot" style="background:#14b8a6">KS</div></div>
+            <div class="task-due">Due Jul 16</div>
+          </div>
+        </div>
+      </div>
+      <!-- Done -->
+      <div class="kanban-col">
+        <div class="col-header">
+          <div class="col-title">✅ Done <span class="col-count" style="background:rgba(16,185,129,0.1);color:#34d399">5</span></div>
+        </div>
+        <div class="task-card" style="opacity:0.7">
+          <div class="task-priority" style="background:rgba(16,185,129,0.1);color:#34d399;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;display:inline-block;margin-bottom:0.4rem">DONE</div>
+          <div class="task-title">User research interviews — 20 participants</div>
+          <div class="task-meta">
+            <div class="task-assignees"><div class="assignee-dot" style="background:#8b5cf6">JL</div></div>
+            <div class="task-due" style="color:#34d399">✓ Completed</div>
+          </div>
+        </div>
+        <div class="task-card" style="opacity:0.7">
+          <div class="task-priority" style="background:rgba(16,185,129,0.1);color:#34d399;font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:4px;display:inline-block;margin-bottom:0.4rem">DONE</div>
+          <div class="task-title">Set up CI/CD pipeline with GitHub Actions</div>
+          <div class="task-meta">
+            <div class="task-assignees"><div class="assignee-dot" style="background:#6366f1">TW</div></div>
+            <div class="task-due" style="color:#34d399">✓ Completed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">AI Features</div>
+    <h2>The AI That Makes Your <span class="gradient-text">Team Unstoppable</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Task Generation</h3>
+      <p>Describe your project in plain English and AI creates a full task breakdown with estimates, dependencies, and assignee suggestions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚠️</div>
+      <h3>Blocker Prediction</h3>
+      <p>AI analyzes your team's velocity and flags tasks at risk of being blocked or delayed — before they derail your sprint.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Smart Scheduling</h3>
+      <p>AI auto-schedules tasks based on team capacity, priorities, and deadlines. One-click sprint planning that actually works.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>Meeting Summaries</h3>
+      <p>Connect your calendar and AI auto-generates meeting notes, action items, and creates tasks directly from your discussions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Team Analytics</h3>
+      <p>Velocity charts, burndown graphs, and workload balance reports — know exactly where your team stands at any moment.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Universal Integrations</h3>
+      <p>Connects with Slack, GitHub, Figma, Notion, Jira, Google Workspace, and 100+ tools your team already uses.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Pricing That <span class="gradient-text">Scales With You</span></h2>
+    <p class="section-sub">Free forever for small teams. Upgrade when you need more power.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">FREE</div>
+      <div class="plan-price">$0 <span>/ month</span></div>
+      <div class="plan-desc">For small teams getting started</div>
+      <ul class="plan-features">
+        <li>Up to 10 team members</li>
+        <li>Unlimited tasks & projects</li>
+        <li>Kanban & list views</li>
+        <li>Basic AI task suggestions</li>
+        <li>5 integrations</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">⚡ Most Popular</div>
+      <div class="plan-name">PRO TEAM</div>
+      <div class="plan-price">$12 <span>/ user/mo</span></div>
+      <div class="plan-desc">For high-performance teams</div>
+      <ul class="plan-features">
+        <li>Unlimited team members</li>
+        <li>Full AI suite</li>
+        <li>Timeline & Gantt charts</li>
+        <li>Sprint planning tools</li>
+        <li>Advanced analytics</li>
+        <li>Priority support</li>
+        <li>100+ integrations</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">ENTERPRISE</div>
+      <div class="plan-price">$25 <span>/ user/mo</span></div>
+      <div class="plan-desc">For large organizations</div>
+      <ul class="plan-features">
+        <li>Everything in Pro</li>
+        <li>Custom AI workflows</li>
+        <li>SSO & SAML</li>
+        <li>Advanced permissions</li>
+        <li>Dedicated CSM</li>
+        <li>SLA guarantee</li>
+        <li>On-prem deployment</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Your Team's Best Work <span class="gradient-text">Starts Here</span></h2>
+  <p>Join 120,000+ teams shipping faster with TaskFlow AI.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">⚡ Get Started Free Today</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">⚡ TaskFlow AI</div>
+      <p class="footer-desc">The AI-powered project management platform that helps teams plan smarter, work faster, and ship more — without the chaos.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul class="footer-links">
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Integrations</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Use Cases</h4>
+      <ul class="footer-links">
+        <li><a href="#">Engineering</a></li>
+        <li><a href="#">Marketing</a></li>
+        <li><a href="#">Design</a></li>
+        <li><a href="#">Operations</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 TaskFlow AI. All rights reserved.</span>
+    <span>Built for teams that ship ⚡</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Get Started Free</h3>
+    <p>Join 120,000+ teams shipping faster with AI</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">💼 Continue with Microsoft</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Work Email</label>
+      <input type="email" placeholder="you@company.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Create Free Account</button>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.board-action:not(.btn-primary)').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.board-action:not(.btn-primary)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
