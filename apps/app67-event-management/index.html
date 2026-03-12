@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EventFlow AI - Intelligent Event Management Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#8b5cf6;--secondary:#ec4899;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#8b5cf6;color:#8b5cf6}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,0.15) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:50px;font-size:0.85rem;color:#a78bfa;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#a78bfa;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#8b5cf6;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(236,72,153,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.demo-section{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:1100px;margin:0 auto}
+.demo-tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;background:var(--bg);border-radius:10px;padding:0.3rem}
+.demo-tab{padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--muted);transition:all 0.2s;border:none;background:transparent}
+.demo-tab.active{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-weight:600}
+.event-dashboard{display:grid;grid-template-columns:250px 1fr;gap:1rem;height:380px}
+.event-sidebar{background:var(--bg);border-radius:12px;padding:1rem;overflow-y:auto}
+.sidebar-section{margin-bottom:1.2rem}
+.sidebar-title{font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem}
+.event-item{padding:0.6rem 0.8rem;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-bottom:0.3rem;display:flex;align-items:center;gap:0.6rem;font-size:0.85rem}
+.event-item:hover,.event-item.active{background:rgba(139,92,246,0.1)}
+.event-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.event-dot.purple{background:#8b5cf6}
+.event-dot.pink{background:#ec4899}
+.event-dot.blue{background:#3b82f6}
+.event-dot.green{background:#10b981}
+.event-main{background:var(--bg);border-radius:12px;padding:1rem;overflow-y:auto}
+.event-header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.event-title-area h3{font-size:1rem;font-weight:700}
+.event-title-area p{font-size:0.8rem;color:var(--muted)}
+.event-actions{display:flex;gap:0.5rem}
+.action-btn{padding:0.35rem 0.8rem;border-radius:6px;font-size:0.8rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text)}
+.action-btn.primary{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;color:#fff;font-weight:600}
+.event-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:1rem}
+.metric-card{background:var(--card);border-radius:8px;padding:0.8rem;text-align:center}
+.metric-num{font-size:1.3rem;font-weight:800;color:#8b5cf6}
+.metric-label{font-size:0.7rem;color:var(--muted)}
+.attendee-list{background:var(--card);border-radius:8px;overflow:hidden}
+.list-header{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:0.6rem 1rem;background:rgba(139,92,246,0.05);font-size:0.75rem;font-weight:600;color:var(--muted)}
+.list-row{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:0.6rem 1rem;border-top:1px solid var(--border);font-size:0.8rem;align-items:center}
+.list-row:hover{background:rgba(139,92,246,0.03)}
+.attendee-name{display:flex;align-items:center;gap:0.6rem}
+.avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff}
+.status-badge{padding:0.2rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:600}
+.status-badge.confirmed{background:rgba(16,185,129,0.1);color:#10b981}
+.status-badge.pending{background:rgba(245,158,11,0.1);color:#f59e0b}
+.status-badge.vip{background:rgba(139,92,246,0.1);color:#8b5cf6}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#8b5cf6;background:linear-gradient(135deg,rgba(139,92,246,0.05),rgba(236,72,153,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#8b5cf6;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;color:#fff}
+.integrations{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:2rem}
+.integration-badge{padding:0.6rem 1.2rem;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:0.9rem;display:flex;align-items:center;gap:0.5rem;transition:all 0.2s}
+.integration-badge:hover{border-color:#8b5cf6}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(236,72,153,0.08));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cta-section h2{font-size:clamp(2rem,4vw,3rem);font-weight:900;margin-bottom:1rem}
+.cta-section p{color:var(--muted);font-size:1.1rem;margin-bottom:2rem}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#8b5cf6}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#8b5cf6;background:rgba(139,92,246,0.05)}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#8b5cf6}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+.modal{position:relative}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚡ EventFlow AI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#integrations">Integrations</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Start Free</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🎉 Trusted by 15,000+ event organizers worldwide</div>
+  <h1>Run <span class="gradient-text">Flawless Events</span><br>with AI Superpowers</h1>
+  <p class="hero-sub">From intimate gatherings to massive conferences — EventFlow AI handles ticketing, attendees, scheduling, and analytics so you can focus on creating unforgettable experiences.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🚀 Create Your Event Free</button>
+    <button class="btn-large btn-outline">▶ Watch Demo</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">2.4M+</div><div class="stat-label">Tickets Sold</div></div>
+    <div class="stat-item"><div class="stat-num">15K+</div><div class="stat-label">Events Hosted</div></div>
+    <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Organizer Satisfaction</div></div>
+    <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-label">Average Rating</div></div>
+  </div>
+</hero>
+
+<section id="features">
+  <div class="section-header">
+    <div class="section-label">Everything You Need</div>
+    <h2>AI-Powered Event Management<br><span class="gradient-text">at Every Scale</span></h2>
+    <p class="section-sub">Powerful tools that make planning, executing, and analyzing events effortless.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎟️</div>
+      <h3>Smart Ticketing</h3>
+      <p>AI-optimized pricing, tiered tickets, discount codes, group rates, and waitlist management — all in one system.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Event Assistant</h3>
+      <p>Get real-time recommendations on pricing, scheduling, and marketing based on your event type and audience.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Attendee Management</h3>
+      <p>Check-in with QR codes, manage VIPs, send personalized communications, and track attendance in real time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Agenda Builder</h3>
+      <p>Drag-and-drop agenda planner with speaker management, room assignment, and conflict detection.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Revenue Analytics</h3>
+      <p>Real-time revenue tracking, ticket sales trends, attendee demographics, and post-event ROI reports.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>Hybrid Event Support</h3>
+      <p>Seamlessly run in-person and virtual events simultaneously with live streaming, chat, and virtual networking.</p>
+    </div>
+  </div>
+</section>
+
+<section id="demo" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Live Demo</div>
+    <h2>Your Event Command <span class="gradient-text">Center</span></h2>
+  </div>
+  <div class="demo-section">
+    <div class="demo-tabs">
+      <button class="demo-tab active">📊 Dashboard</button>
+      <button class="demo-tab">🎟️ Tickets</button>
+      <button class="demo-tab">👥 Attendees</button>
+      <button class="demo-tab">📅 Schedule</button>
+    </div>
+    <div class="event-dashboard">
+      <div class="event-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">My Events</div>
+          <div class="event-item active"><div class="event-dot purple"></div>TechConf 2025</div>
+          <div class="event-item"><div class="event-dot pink"></div>Marketing Summit</div>
+          <div class="event-item"><div class="event-dot blue"></div>Product Launch</div>
+          <div class="event-item"><div class="event-dot green"></div>Annual Gala</div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Quick Stats</div>
+          <div style="font-size:0.8rem;color:var(--muted);line-height:2">
+            <div>🎟️ 847 tickets sold</div>
+            <div>💰 $42,350 revenue</div>
+            <div>📧 94% open rate</div>
+            <div>⏱️ 3 days to event</div>
+          </div>
+        </div>
+        <div style="margin-top:auto">
+          <button class="btn-primary" style="width:100%;padding:0.6rem;font-size:0.85rem;border-radius:8px" onclick="document.getElementById('authModal').classList.add('active')">+ New Event</button>
+        </div>
+      </div>
+      <div class="event-main">
+        <div class="event-header-row">
+          <div class="event-title-area">
+            <h3>TechConf 2025 — San Francisco</h3>
+            <p>June 15-17, 2025 · Moscone Center · 1,200 capacity</p>
+          </div>
+          <div class="event-actions">
+            <button class="action-btn">✏️ Edit</button>
+            <button class="action-btn">📧 Email</button>
+            <button class="action-btn primary">Go Live</button>
+          </div>
+        </div>
+        <div class="event-metrics">
+          <div class="metric-card">
+            <div class="metric-num">847</div>
+            <div class="metric-label">Registered</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-num" style="color:#10b981">$42.3K</div>
+            <div class="metric-label">Revenue</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-num" style="color:#ec4899">353</div>
+            <div class="metric-label">Spots Left</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-num" style="color:#f59e0b">94%</div>
+            <div class="metric-label">Confirmed</div>
+          </div>
+        </div>
+        <div class="attendee-list">
+          <div class="list-header">
+            <span>Attendee</span>
+            <span>Ticket Type</span>
+            <span>Status</span>
+            <span>Paid</span>
+          </div>
+          <div class="list-row">
+            <div class="attendee-name"><div class="avatar" style="background:#8b5cf6">SJ</div>Sarah Johnson</div>
+            <span style="color:var(--muted);font-size:0.8rem">VIP All-Access</span>
+            <span class="status-badge vip">VIP</span>
+            <span style="color:#10b981">$599</span>
+          </div>
+          <div class="list-row">
+            <div class="attendee-name"><div class="avatar" style="background:#3b82f6">MC</div>Marcus Chen</div>
+            <span style="color:var(--muted);font-size:0.8rem">General Admission</span>
+            <span class="status-badge confirmed">Confirmed</span>
+            <span style="color:#10b981">$199</span>
+          </div>
+          <div class="list-row">
+            <div class="attendee-name"><div class="avatar" style="background:#ec4899">AR</div>Aisha Rahman</div>
+            <span style="color:var(--muted);font-size:0.8rem">Speaker Pass</span>
+            <span class="status-badge confirmed">Confirmed</span>
+            <span style="color:var(--muted)">Comp</span>
+          </div>
+          <div class="list-row">
+            <div class="attendee-name"><div class="avatar" style="background:#f59e0b">TK</div>Tom Kozlov</div>
+            <span style="color:var(--muted);font-size:0.8rem">Early Bird</span>
+            <span class="status-badge pending">Pending</span>
+            <span style="color:#f59e0b">$149</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="integrations">
+  <div class="section-header">
+    <div class="section-label">Integrations</div>
+    <h2>Connects With Your <span class="gradient-text">Favorite Tools</span></h2>
+  </div>
+  <div class="integrations">
+    <div class="integration-badge">💳 Stripe</div>
+    <div class="integration-badge">📅 Google Calendar</div>
+    <div class="integration-badge">💬 Slack</div>
+    <div class="integration-badge">📹 Zoom</div>
+    <div class="integration-badge">📨 Mailchimp</div>
+    <div class="integration-badge">🔵 HubSpot</div>
+    <div class="integration-badge">📊 Salesforce</div>
+    <div class="integration-badge">🎥 YouTube Live</div>
+    <div class="integration-badge">📱 Eventbrite Import</div>
+    <div class="integration-badge">🔗 Zapier</div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Simple Pricing, <span class="gradient-text">Big Results</span></h2>
+    <p class="section-sub">No hidden fees. Cancel anytime.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">STARTER</div>
+      <div class="plan-price">$0 <span>/ month</span></div>
+      <div class="plan-desc">Perfect for small, occasional events</div>
+      <ul class="plan-features">
+        <li>Up to 100 attendees/event</li>
+        <li>3 events per month</li>
+        <li>Basic ticketing</li>
+        <li>Email confirmations</li>
+        <li>Event page builder</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Get Started Free</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-name">PROFESSIONAL</div>
+      <div class="plan-price">$39 <span>/ month</span></div>
+      <div class="plan-desc">For growing event organizers</div>
+      <ul class="plan-features">
+        <li>Up to 1,000 attendees/event</li>
+        <li>Unlimited events</li>
+        <li>AI-powered insights</li>
+        <li>Custom branding</li>
+        <li>Advanced analytics</li>
+        <li>QR check-in app</li>
+        <li>Email marketing tools</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">ENTERPRISE</div>
+      <div class="plan-price">$149 <span>/ month</span></div>
+      <div class="plan-desc">For large-scale event organizations</div>
+      <ul class="plan-features">
+        <li>Unlimited attendees</li>
+        <li>White-label solution</li>
+        <li>Dedicated support</li>
+        <li>Custom integrations</li>
+        <li>Hybrid event tools</li>
+        <li>Multi-event dashboard</li>
+        <li>Revenue sharing control</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Ready to Host Your <span class="gradient-text">Best Event Yet?</span></h2>
+  <p>Join 15,000+ event organizers who run flawless events with EventFlow AI.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🎉 Create Your First Event Free</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">⚡ EventFlow AI</div>
+      <p class="footer-desc">The AI-powered event management platform for organizers who want to create unforgettable experiences at any scale.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul class="footer-links">
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Integrations</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul class="footer-links">
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">Help Center</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 EventFlow AI. All rights reserved.</span>
+    <span>Made with ⚡ for event makers</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Get Started Free</h3>
+    <p>Join 15,000+ event organizers using EventFlow AI</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">⬛ Continue with Microsoft</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Work Email</label>
+      <input type="email" placeholder="you@company.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Create Free Account</button>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.demo-tab').forEach((tab,i)=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.demo-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
