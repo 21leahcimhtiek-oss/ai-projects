@@ -1,14 +1,14 @@
 // ─── API Server Entry Point ───────────────────────────────────────────────────
-import "./env.ts"; // Validate env vars first — fail fast before any imports
+import "./env"; // Validate env vars first — fail fast before any imports
 
 import express from "express";
 import cors from "cors";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 
-import { env } from "./env.ts";
-import { initDb } from "./database/connection.ts";
-import { appRouter } from "./routers/index.ts";
-import { createContext } from "./middleware/context.ts";
+import { env } from "./env";
+import { initDb } from "./database/connection";
+import { appRouter } from "./routers/index";
+import { createContext } from "./middleware/context";
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
@@ -32,7 +32,7 @@ app.use(
 
 // ─── Stripe webhook (raw body — must come before json parser) ─────────────────
 // TODO: Migrate from my-projects/src/server/api/stripe-webhooks.ts
-// import stripeWebhook from "./api/stripe-webhooks.ts";
+// import stripeWebhook from "./api/stripe-webhooks";
 // app.use("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 
 // ─── Body parser ──────────────────────────────────────────────────────────────
@@ -75,4 +75,4 @@ start().catch((err) => {
   process.exit(1);
 });
 
-export type { AppRouter } from "./routers/index.ts";
+export type { AppRouter } from "./routers/index";

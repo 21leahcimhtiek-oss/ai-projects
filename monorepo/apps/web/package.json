@@ -13,6 +13,7 @@
     "clean":     "rm -rf dist .turbo"
   },
   "dependencies": {
+    "@storyforge/api":        "workspace:*",
     "@storyforge/api-client": "workspace:*",
     "@storyforge/types":      "workspace:*",
     "@storyforge/ui":         "workspace:*",

@@ -1,17 +1,13 @@
-// ─── AppRouter Type Stub ──────────────────────────────────────────────────────
+// AppRouter Type Stub
 // This file re-exports the AppRouter TYPE ONLY from the API package.
 // It contains zero runtime code — it's purely for TypeScript inference.
-//
-// When the monorepo is fully wired up, this will be:
-//   export type { AppRouter } from "@storyforge/api/router";
-//
-// For now it provides the type shape so the client compiles independently.
 
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 
-// Placeholder — will be replaced with the real AppRouter once apps/api is scaffolded
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AppRouter = any;
+// Use AnyRouter as the placeholder type for tRPC v11
+// Will be replaced with real AppRouter once apps/api is wired
+export type AppRouter = AnyRouter;
 
 /** Inferred input types for all tRPC procedures */
 export type RouterInputs = inferRouterInputs<AppRouter>;

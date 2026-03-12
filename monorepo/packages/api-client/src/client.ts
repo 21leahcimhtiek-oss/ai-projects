@@ -4,7 +4,7 @@
 
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
 
-import type { AppRouter } from "./router-type.ts";
+import type { AppRouter } from "./router-type";
 
 export { type AppRouter };
 

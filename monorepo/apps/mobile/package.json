@@ -15,6 +15,7 @@
     "clean":     "rm -rf .expo .turbo"
   },
   "dependencies": {
+    "@storyforge/api":                       "workspace:*",
     "@storyforge/api-client":                "workspace:*",
     "@storyforge/types":                     "workspace:*",
     "@storyforge/utils":                     "workspace:*",

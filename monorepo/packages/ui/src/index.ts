@@ -8,6 +8,6 @@ export * from "./components/Badge.tsx";
 export * from "./components/Spinner.tsx";
 
 // Hooks
-export * from "./hooks/useLocalStorage.ts";
-export * from "./hooks/useDebounce.ts";
-export * from "./hooks/useDisclosure.ts";
+export * from "./hooks/useLocalStorage";
+export * from "./hooks/useDebounce";
+export * from "./hooks/useDisclosure";

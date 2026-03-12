@@ -1,16 +1,16 @@
-// ─── tRPC client for apps/mobile ─────────────────────────────────────────────
+// tRPC client for apps/mobile
 // Uses AsyncStorage to persist the session token across app restarts.
 
 import { createTRPCReact } from "@trpc/react-query";
 import { httpBatchLink } from "@trpc/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// TODO: Replace `any` with real AppRouter once apps/api is wired:
-//   import type { AppRouter } from "@storyforge/api/router";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const trpc = createTRPCReact<any>();
+// Import the actual AppRouter type from the API
+import type { AppRouter } from "@storyforge/api/routers";
 
-const API_URL = process.env["EXPO_PUBLIC_API_URL"] ?? "http://localhost:3000";
+export const trpc = createTRPCReact<AppRouter>();
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000";
 
 export const trpcClient = trpc.createClient({
   links: [
@@ -24,7 +24,7 @@ export const trpcClient = trpc.createClient({
   ],
 });
 
-// ─── Token helpers ────────────────────────────────────────────────────────────
+// Token helpers
 
 export const SESSION_KEY = "session_token";
 

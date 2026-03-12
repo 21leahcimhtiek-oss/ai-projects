@@ -1,10 +1,10 @@
 // ─── App Router ───────────────────────────────────────────────────────────────
 // TODO: Migrate routers from my-projects/src/server/routers/
 
-import { router } from "../lib/trpc.ts";
-import { authRouter }         from "./auth.ts";
-import { booksRouter }        from "./books.ts";
-import { subscriptionRouter } from "./subscription.ts";
+import { router } from "../lib/trpc";
+import { authRouter }         from "./auth";
+import { booksRouter }        from "./books";
+import { subscriptionRouter } from "./subscription";
 
 export const appRouter = router({
   auth:         authRouter,

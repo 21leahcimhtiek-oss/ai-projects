@@ -1,22 +1,23 @@
-// ─── tRPC Request Context ─────────────────────────────────────────────────────
-// TODO: Migrate from my-projects/src/server/middleware/context.ts
+// tRPC Request Context
 
 import type { Request, Response } from "express";
 
-import { db } from "../database/connection.ts";
-import { getSessionByToken } from "../database/queries.ts";
-import { getUserById } from "../database/queries.ts";
+import { db } from "../database/connection";
+import { getSessionByToken, getUserById } from "../database/queries";
+
+// User type for context
+export interface ContextUser {
+  id: string;
+  name: string;
+  email: string;
+  subscriptionStatus: string;
+}
 
 export interface Context {
-  req:  Request;
-  res:  Response;
-  db:   typeof db;
-  user: {
-    id:                 string;
-    name:               string;
-    email:              string;
-    subscriptionStatus: string;
-  } | null;
+  req: Request;
+  res: Response;
+  db: typeof db;
+  user: ContextUser | null;
 }
 
 function getTokenFromRequest(req: Request): string | null {
@@ -40,20 +41,24 @@ export async function createContext({ req, res }: { req: Request; res: Response 
   if (!token) return { req, res, db, user: null };
 
   try {
+    // TODO: Implement actual session/user lookup with Drizzle
+    // For now, return null user (placeholder implementation)
     const session = await getSessionByToken(token);
     if (!session) return { req, res, db, user: null };
 
-    const user = await getUserById(session.userId);
+    // Type assertion for placeholder until Drizzle is implemented
+    const sessionData = session as { userId: string } | null;
+    if (!sessionData) return { req, res, db, user: null };
+
+    const user = await getUserById(sessionData.userId);
     if (!user) return { req, res, db, user: null };
 
+    // Type assertion for placeholder until Drizzle is implemented
+    const userData = user as ContextUser;
+    
     return {
       req, res, db,
-      user: {
-        id:                 user.id,
-        name:               user.name,
-        email:              user.email,
-        subscriptionStatus: user.subscriptionStatus,
-      },
+      user: userData,
     };
   } catch (err) {
     console.error("[Context] Session lookup failed:", err);

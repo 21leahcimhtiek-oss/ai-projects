@@ -16,6 +16,10 @@
     "./hooks": {
       "import": "./src/hooks.ts",
       "types": "./src/hooks.ts"
+    },
+    "./router-type": {
+      "import": "./src/router-type.ts",
+      "types": "./src/router-type.ts"
     }
   },
   "files": ["src"],

@@ -3,6 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./routers": {
+      "import": "./src/routers/index.ts",
+      "types": "./src/routers/index.ts"
+    }
+  },
   "scripts": {
     "dev":       "tsx watch src/index.ts",
     "build":     "esbuild src/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --sourcemap",

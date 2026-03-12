@@ -2,20 +2,20 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { trpc, trpcClient } from "./lib/trpc.ts";
-import { AuthProvider, useAuth } from "./providers/AuthProvider.tsx";
+import { trpc, trpcClient } from "./lib/trpc";
+import { AuthProvider, useAuth } from "./providers/AuthProvider";
 
 // ─── Pages (shells — migrate content from my-projects/src/pages/) ────────────
-import Home       from "./pages/Home.tsx";
-import Login      from "./pages/Login.tsx";
-import Register   from "./pages/Register.tsx";
-import Library    from "./pages/Library.tsx";
-import BookDetail from "./pages/BookDetail.tsx";
-import Pricing    from "./pages/Pricing.tsx";
-import Account    from "./pages/Account.tsx";
+import Home       from "./pages/Home";
+import Login      from "./pages/Login";
+import Register   from "./pages/Register";
+import Library    from "./pages/Library";
+import BookDetail from "./pages/BookDetail";
+import Pricing    from "./pages/Pricing";
+import Account    from "./pages/Account";
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
-import NavBar from "./components/NavBar.tsx";
+import NavBar from "./components/NavBar";
 
 // ─── Query client ─────────────────────────────────────────────────────────────
 

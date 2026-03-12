@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 
-import type { AppRouter } from "./router-type.ts";
+import type { AppRouter } from "./router-type";
 
 // ─── tRPC React instance ──────────────────────────────────────────────────────
 

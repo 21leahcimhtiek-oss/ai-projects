@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-import { trpc, trpcClient } from "../src/lib/trpc.ts";
+import { trpc, trpcClient } from "../src/lib/trpc";
 
 const queryClient = new QueryClient({
   defaultOptions: {

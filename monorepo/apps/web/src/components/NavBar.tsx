@@ -3,7 +3,7 @@
 
 import { Link } from "react-router-dom";
 
-import { useAuth } from "../providers/AuthProvider.tsx";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function NavBar() {
   const { user, logout } = useAuth();

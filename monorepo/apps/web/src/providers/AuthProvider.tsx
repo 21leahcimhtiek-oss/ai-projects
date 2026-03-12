@@ -5,7 +5,7 @@
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
-import { trpc } from "../lib/trpc.ts";
+import { trpc } from "../lib/trpc";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
