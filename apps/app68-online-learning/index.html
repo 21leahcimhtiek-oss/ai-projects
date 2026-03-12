@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnPath AI - Personalized Online Learning Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#06b6d4;--secondary:#3b82f6;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#06b6d4;color:#06b6d4}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(6,182,212,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);border-radius:50px;font-size:0.85rem;color:#22d3ee;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#06b6d4,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#22d3ee;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#06b6d4;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(59,130,246,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Course Cards */
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto}
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;cursor:pointer}
+.course-card:hover{border-color:#06b6d4;transform:translateY(-4px)}
+.course-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative}
+.course-badge{position:absolute;top:0.8rem;right:0.8rem;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:700}
+.badge-new{background:rgba(6,182,212,0.2);color:#22d3ee}
+.badge-hot{background:rgba(239,68,68,0.2);color:#f87171}
+.badge-top{background:rgba(245,158,11,0.2);color:#fbbf24}
+.course-body{padding:1.2rem}
+.course-category{font-size:0.75rem;color:#22d3ee;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem}
+.course-title{font-size:1rem;font-weight:700;margin-bottom:0.5rem;line-height:1.4}
+.course-meta{display:flex;gap:1rem;font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem}
+.course-progress{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:0.6rem}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#06b6d4,#3b82f6)}
+.course-footer{display:flex;justify-content:space-between;align-items:center}
+.course-rating{font-size:0.85rem;color:#fbbf24}
+.course-price{font-size:0.95rem;font-weight:700;color:#06b6d4}
+/* Learning Dashboard */
+.learn-dashboard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1000px;margin:0 auto}
+.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.dash-header h3{font-size:1.1rem;font-weight:700}
+.dash-grid{display:grid;grid-template-columns:1fr 300px;gap:1.5rem}
+.current-course{background:var(--bg);border-radius:12px;padding:1.2rem}
+.video-player{height:180px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:1rem;position:relative;cursor:pointer}
+.play-btn{width:60px;height:60px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;backdrop-filter:blur(4px);border:2px solid rgba(255,255,255,0.3)}
+.video-progress{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem}
+.video-bar{flex:1;height:4px;background:var(--border);border-radius:2px;cursor:pointer}
+.video-fill{width:42%;height:100%;background:linear-gradient(90deg,#06b6d4,#3b82f6);border-radius:2px}
+.video-time{font-size:0.8rem;color:var(--muted)}
+.lesson-title{font-size:0.95rem;font-weight:700;margin-bottom:0.3rem}
+.lesson-meta{font-size:0.8rem;color:var(--muted)}
+.sidebar-panel{display:flex;flex-direction:column;gap:1rem}
+.ai-insight{background:linear-gradient(135deg,rgba(6,182,212,0.1),rgba(59,130,246,0.1));border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:1rem}
+.ai-insight-title{font-size:0.8rem;font-weight:600;color:#22d3ee;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.4rem}
+.ai-insight p{font-size:0.82rem;color:var(--muted);line-height:1.5}
+.next-lessons{background:var(--bg);border-radius:10px;padding:1rem}
+.next-title{font-size:0.85rem;font-weight:700;margin-bottom:0.8rem}
+.lesson-item{display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+.lesson-item:last-child{border-bottom:none}
+.lesson-num{width:24px;height:24px;background:var(--card);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--muted);flex-shrink:0}
+.lesson-num.done{background:rgba(6,182,212,0.2);color:#22d3ee}
+.lesson-info{flex:1}
+.lesson-name{font-size:0.82rem;font-weight:600}
+.lesson-dur{font-size:0.75rem;color:var(--muted)}
+.streak-card{background:var(--bg);border-radius:10px;padding:1rem;text-align:center}
+.streak-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.streak-label{font-size:0.8rem;color:var(--muted)}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#06b6d4;background:linear-gradient(135deg,rgba(6,182,212,0.05),rgba(59,130,246,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#06b6d4;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#06b6d4,#3b82f6);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(59,130,246,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#06b6d4}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#06b6d4}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#06b6d4}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🎓 LearnPath AI</div>
+  <ul class="nav-links">
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Dashboard</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Start Learning Free</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🏆 #1 AI-Personalized Learning Platform of 2025</div>
+  <h1>Learn Anything <span class="gradient-text">10x Faster</span><br>with AI Guidance</h1>
+  <p class="hero-sub">LearnPath AI builds a personalized curriculum just for you — adapting in real-time to your pace, style, and goals. From beginner to expert, faster than ever.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🚀 Start Free — No Credit Card</button>
+    <button class="btn-large btn-outline">🎬 See How It Works</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">500K+</div><div class="stat-label">Active Learners</div></div>
+    <div class="stat-item"><div class="stat-num">8,000+</div><div class="stat-label">Courses Available</div></div>
+    <div class="stat-item"><div class="stat-num">94%</div><div class="stat-label">Completion Rate</div></div>
+    <div class="stat-item"><div class="stat-num">4.8★</div><div class="stat-label">Learner Rating</div></div>
+  </div>
+</hero>
+
+<section id="courses">
+  <div class="section-header">
+    <div class="section-label">Top Courses</div>
+    <h2>AI-Curated Learning <span class="gradient-text">Just For You</span></h2>
+    <p class="section-sub">Thousands of expert-led courses across tech, business, design, and more.</p>
+  </div>
+  <div class="courses-grid">
+    <div class="course-card">
+      <div class="course-thumb" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">
+        🐍
+        <div class="course-badge badge-hot">🔥 Hot</div>
+      </div>
+      <div class="course-body">
+        <div class="course-category">Programming</div>
+        <div class="course-title">Python & AI/ML Mastery: Zero to Expert</div>
+        <div class="course-meta"><span>⏱ 42 hours</span><span>👥 84K enrolled</span></div>
+        <div class="course-progress"><div class="progress-fill" style="width:65%"></div></div>
+        <div class="course-footer">
+          <div class="course-rating">⭐ 4.9 (12.4K)</div>
+          <div class="course-price">$49</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card">
+      <div class="course-thumb" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">
+        🎨
+        <div class="course-badge badge-new">✨ New</div>
+      </div>
+      <div class="course-body">
+        <div class="course-category">Design</div>
+        <div class="course-title">UI/UX Design with Figma & AI Tools</div>
+        <div class="course-meta"><span>⏱ 28 hours</span><span>👥 31K enrolled</span></div>
+        <div class="course-progress"><div class="progress-fill" style="width:30%"></div></div>
+        <div class="course-footer">
+          <div class="course-rating">⭐ 4.8 (5.1K)</div>
+          <div class="course-price">$39</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card">
+      <div class="course-thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">
+        📈
+        <div class="course-badge badge-top">👑 Top</div>
+      </div>
+      <div class="course-body">
+        <div class="course-category">Business</div>
+        <div class="course-title">Growth Marketing & AI-Powered Analytics</div>
+        <div class="course-meta"><span>⏱ 35 hours</span><span>👥 52K enrolled</span></div>
+        <div class="course-progress"><div class="progress-fill" style="width:80%"></div></div>
+        <div class="course-footer">
+          <div class="course-rating">⭐ 4.9 (8.7K)</div>
+          <div class="course-price">$59</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card">
+      <div class="course-thumb" style="background:linear-gradient(135deg,#10b981,#06b6d4)">
+        ☁️
+        <div class="course-badge badge-hot">🔥 Hot</div>
+      </div>
+      <div class="course-body">
+        <div class="course-category">Cloud & DevOps</div>
+        <div class="course-title">AWS + Kubernetes: Cloud Architecture Pro</div>
+        <div class="course-meta"><span>⏱ 58 hours</span><span>👥 27K enrolled</span></div>
+        <div class="course-progress"><div class="progress-fill" style="width:15%"></div></div>
+        <div class="course-footer">
+          <div class="course-rating">⭐ 4.7 (3.9K)</div>
+          <div class="course-price">$79</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">AI Features</div>
+    <h2>The Smarter Way <span class="gradient-text">to Learn</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h3>Adaptive AI Curriculum</h3>
+      <p>Our AI analyzes your learning patterns and adjusts lesson difficulty, pacing, and content recommendations in real time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Skill Gap Analysis</h3>
+      <p>Get a detailed map of your current skills vs. your target role. AI fills the gaps with targeted micro-lessons and projects.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>AI Tutor Chat</h3>
+      <p>Ask questions anytime, get instant explanations, code reviews, and personalized feedback from your AI learning assistant.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <h3>Gamified Progress</h3>
+      <p>Earn XP, badges, and streaks that keep you motivated. Compete on leaderboards and celebrate every milestone.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📜</div>
+      <h3>Verified Certificates</h3>
+      <p>Earn industry-recognized certificates shareable on LinkedIn. Our certificates are trusted by 5,000+ hiring companies.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Learn Anywhere</h3>
+      <p>Seamless experience on mobile, tablet, and desktop. Download lessons for offline learning on any device.</p>
+    </div>
+  </div>
+</section>
+
+<section id="demo" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Your Dashboard</div>
+    <h2>Everything in One <span class="gradient-text">Learning Hub</span></h2>
+  </div>
+  <div class="learn-dashboard">
+    <div class="dash-header">
+      <h3>👋 Welcome back, Alex! Continue your journey</h3>
+      <div style="display:flex;gap:0.5rem">
+        <span style="padding:0.3rem 0.8rem;background:rgba(6,182,212,0.1);border-radius:6px;font-size:0.8rem;color:#22d3ee">🔥 14-day streak</span>
+        <span style="padding:0.3rem 0.8rem;background:rgba(245,158,11,0.1);border-radius:6px;font-size:0.8rem;color:#fbbf24">⭐ 2,450 XP</span>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="current-course">
+        <div class="video-player" onclick="this.querySelector('.play-btn').style.display='none'">
+          <div class="play-btn">▶</div>
+        </div>
+        <div class="video-progress">
+          <div class="video-bar"><div class="video-fill"></div></div>
+          <span class="video-time">18:24 / 43:15</span>
+        </div>
+        <div class="lesson-title">Chapter 8: Neural Networks & Deep Learning Fundamentals</div>
+        <div class="lesson-meta">Python & AI/ML Mastery · Lesson 8 of 12 · 42% complete</div>
+      </div>
+      <div class="sidebar-panel">
+        <div class="streak-card">
+          <div class="streak-num">🔥 14</div>
+          <div class="streak-label">Day Learning Streak</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">Next milestone: 21 days</div>
+        </div>
+        <div class="ai-insight">
+          <div class="ai-insight-title">🤖 AI Insight</div>
+          <p>You learn best in the morning! Schedule your deep work sessions between 9–11am for maximum retention based on your patterns.</p>
+        </div>
+        <div class="next-lessons">
+          <div class="next-title">Up Next in This Course</div>
+          <div class="lesson-item">
+            <div class="lesson-num done">✓</div>
+            <div class="lesson-info"><div class="lesson-name">Intro to ML Concepts</div><div class="lesson-dur">22 min</div></div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num" style="background:rgba(6,182,212,0.2);color:#22d3ee">▶</div>
+            <div class="lesson-info"><div class="lesson-name">Neural Networks</div><div class="lesson-dur">43 min · Now</div></div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num">9</div>
+            <div class="lesson-info"><div class="lesson-name">Training & Optimization</div><div class="lesson-dur">38 min</div></div>
+          </div>
+          <div class="lesson-item">
+            <div class="lesson-num">10</div>
+            <div class="lesson-info"><div class="lesson-name">Convolutional Networks</div><div class="lesson-dur">51 min</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Invest in Your <span class="gradient-text">Future Self</span></h2>
+    <p class="section-sub">All plans include a 14-day free trial. No credit card required.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">FREE</div>
+      <div class="plan-price">$0 <span>/ month</span></div>
+      <div class="plan-desc">Start learning today, no strings attached</div>
+      <ul class="plan-features">
+        <li>5 free courses</li>
+        <li>Basic AI recommendations</li>
+        <li>Community access</li>
+        <li>Progress tracking</li>
+        <li>Mobile app access</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Get Started Free</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-name">PRO LEARNER</div>
+      <div class="plan-price">$19 <span>/ month</span></div>
+      <div class="plan-desc">Unlimited learning with AI superpowers</div>
+      <ul class="plan-features">
+        <li>Unlimited courses</li>
+        <li>Full AI tutor access</li>
+        <li>Adaptive learning paths</li>
+        <li>Verified certificates</li>
+        <li>Offline downloads</li>
+        <li>Skill assessments</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">TEAMS</div>
+      <div class="plan-price">$15 <span>/ user/mo</span></div>
+      <div class="plan-desc">Upskill your entire organization</div>
+      <ul class="plan-features">
+        <li>Everything in Pro</li>
+        <li>Team analytics dashboard</li>
+        <li>Custom learning paths</li>
+        <li>SCORM/LMS integration</li>
+        <li>SSO & advanced security</li>
+        <li>Dedicated success manager</li>
+        <li>Custom certificates</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Team Trial</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Your Next <span class="gradient-text">Career Breakthrough</span> Starts Today</h2>
+  <p>Join 500,000+ learners who are building their future with LearnPath AI.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🎓 Start Learning Free Today</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">🎓 LearnPath AI</div>
+      <p class="footer-desc">AI-powered personalized learning that adapts to you. Master new skills faster than ever before with the world's smartest learning platform.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <ul class="footer-links">
+        <li><a href="#">All Courses</a></li>
+        <li><a href="#">Learning Paths</a></li>
+        <li><a href="#">Certificates</a></li>
+        <li><a href="#">For Teams</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Topics</h4>
+      <ul class="footer-links">
+        <li><a href="#">Programming</a></li>
+        <li><a href="#">Design</a></li>
+        <li><a href="#">Business</a></li>
+        <li><a href="#">Data Science</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Teach on LearnPath</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 LearnPath AI. All rights reserved.</span>
+    <span>Built for lifelong learners 🎓</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Start Learning Free</h3>
+    <p>Join 500,000+ learners building their future</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">🍎 Continue with Apple</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Create Free Account</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
