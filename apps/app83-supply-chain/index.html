@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupplyChainAI - Intelligent Supply Chain Management</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #f59e0b;
+    --secondary: #fbbf24;
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --card2: #1a1a2e;
+    --border: rgba(245,158,11,0.2);
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color 0.3s; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-cta { display: flex; gap: 1rem; align-items: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(245,158,11,0.4); }
+  .btn-large { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 12px; }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(245,158,11,0.12) 0%, transparent 70%); }
+  .hero-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(245,158,11,0.1) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(245,158,11,0.1); border: 1px solid var(--border); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 620px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--secondary); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+
+  .section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.7; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(245,158,11,0.1); }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .demo-section { padding: 6rem 2rem; background: linear-gradient(180deg, transparent, rgba(245,158,11,0.03), transparent); }
+  .demo-container { max-width: 1200px; margin: 0 auto; }
+  .demo-app { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .demo-header { background: var(--card2); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
+  .demo-dots { display: flex; gap: 0.4rem; }
+  .demo-dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .demo-dots span:nth-child(1) { background: #ef4444; }
+  .demo-dots span:nth-child(2) { background: #f59e0b; }
+  .demo-dots span:nth-child(3) { background: #22c55e; }
+  .demo-title { font-size: 0.85rem; color: var(--muted); }
+  .demo-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .kpi-card { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
+  .kpi-value { font-size: 1.6rem; font-weight: 800; color: var(--secondary); }
+  .kpi-change { font-size: 0.72rem; margin-top: 0.2rem; }
+  .kpi-change.up { color: #22c55e; }
+  .kpi-change.down { color: #ef4444; }
+  .kpi-change.warn { color: #f59e0b; }
+
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 1.5rem; }
+
+  .map-panel { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .map-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
+  .supply-map { background: rgba(245,158,11,0.03); border: 1px solid rgba(245,158,11,0.1); border-radius: 8px; height: 200px; position: relative; overflow: hidden; }
+  .map-node { position: absolute; width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+  .node-factory { background: rgba(245,158,11,0.8); border-color: #f59e0b; }
+  .node-warehouse { background: rgba(14,165,233,0.8); border-color: #0ea5e9; }
+  .node-retail { background: rgba(34,197,94,0.8); border-color: #22c55e; }
+  .map-line { position: absolute; height: 1px; background: rgba(245,158,11,0.3); transform-origin: left center; }
+  .map-pulse { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: movePulse 3s linear infinite; }
+  @keyframes movePulse { 0% { left: 15%; top: 30%; } 50% { left: 50%; top: 50%; } 100% { left: 75%; top: 25%; } }
+  .map-legend { display: flex; gap: 1rem; margin-top: 0.8rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .inventory-panel { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .inventory-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
+  .inv-table { width: 100%; font-size: 0.78rem; }
+  .inv-table th { color: var(--muted); font-weight: 600; text-align: left; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+  .inv-table td { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .inv-status { display: inline-flex; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 600; }
+  .status-ok { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .status-low { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .status-critical { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+  .ai-panel { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .ai-panel h4 { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+  .alert-item { padding: 0.7rem; border-radius: 8px; font-size: 0.76rem; line-height: 1.5; }
+  .alert-critical { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
+  .alert-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); }
+  .alert-info { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); }
+  .alert-icon { font-size: 0.9rem; margin-right: 0.3rem; }
+  .forecast-chart { margin-top: 0.5rem; }
+  .forecast-chart h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .bar-group { display: flex; align-items: flex-end; gap: 0.3rem; height: 60px; }
+  .bar-item { flex: 1; border-radius: 4px 4px 0 0; position: relative; }
+  .bar-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: var(--muted); white-space: nowrap; }
+
+  .pricing-section { padding: 6rem 2rem; }
+  .pricing-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; }
+  .price-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(251,191,36,0.05)); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .price-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--muted); }
+  .price-amount { font-size: 3rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .price-amount span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .price-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .price-btn { width: 100%; padding: 0.8rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .price-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .price-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .price-btn-fill { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+  .price-btn-fill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(245,158,11,0.4); }
+
+  footer { background: var(--card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer .footer-logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; position: relative; }
+  .modal h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .social-btn { width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; }
+  .social-btn:hover { border-color: var(--primary); background: rgba(245,158,11,0.05); }
+  .divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; position: relative; }
+  .divider::before,.divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .divider::before{left:0;}.divider::after{right:0;}
+  .form-input { width: 100%; padding: 0.75rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem; outline: none; }
+  .form-input:focus { border-color: var(--primary); }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">📦 SupplyChainAI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-ghost" onclick="document.getElementById('modal').classList.add('active')">Log In</button>
+    <button class="btn btn-primary" onclick="document.getElementById('modal').classList.add('active')">Get Demo</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">📦 Trusted by 3,000+ Supply Chain Teams</div>
+    <h1>Supply Chain Intelligence<br><span>Powered by AI</span></h1>
+    <p>Predict demand disruptions, optimize inventory levels, automate procurement, and gain real-time visibility across your entire global supply network.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-large" onclick="document.getElementById('modal').classList.add('active')">Get a Demo →</button>
+      <button class="btn btn-ghost btn-large">See Case Studies</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">32%</div><div class="stat-label">Inventory Cost Reduction</div></div>
+      <div class="stat"><div class="stat-num">99.4%</div><div class="stat-label">Order Accuracy</div></div>
+      <div class="stat"><div class="stat-num">18%</div><div class="stat-label">Faster Fulfillment</div></div>
+      <div class="stat"><div class="stat-num">$4.2B</div><div class="stat-label">Goods Tracked</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">Platform</div>
+  <h2 class="section-title">End-to-End Supply Chain <span style="background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Visibility</span></h2>
+  <p class="section-sub">From raw materials to last-mile delivery — AI-powered intelligence for every node in your supply network.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>Demand Forecasting AI</h3>
+      <p>ML models analyze 200+ signals — weather, social trends, economic indicators, and historical data — for 95%+ accurate demand forecasts up to 12 months out.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Inventory Optimization</h3>
+      <p>AI dynamically sets reorder points, safety stock levels, and order quantities across thousands of SKUs to minimize carrying costs while preventing stockouts.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>Supplier Risk Intelligence</h3>
+      <p>Monitor supplier financial health, geopolitical risks, weather disruptions, and capacity constraints across your entire supplier base in real time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚚</div>
+      <h3>Logistics Orchestration</h3>
+      <p>AI selects optimal carriers, routes, and shipping modes in real time. Predict delivery delays before they happen and reroute automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤝</div>
+      <h3>Automated Procurement</h3>
+      <p>AI-generated purchase orders, supplier negotiation recommendations, contract compliance monitoring, and spend analytics in one unified platform.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">♻️</div>
+      <h3>Sustainability Tracking</h3>
+      <p>Track Scope 3 emissions, carbon footprint by supplier, ethical sourcing compliance, and ESG reporting across your full supply chain.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-container">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div class="section-label">Live Preview</div>
+      <h2 class="section-title">Supply Chain Command Center</h2>
+    </div>
+    <div class="demo-app">
+      <div class="demo-header">
+        <div class="demo-dots"><span></span><span></span><span></span></div>
+        <div class="demo-title">SupplyChainAI — GlobalMfg Corp · Operations Dashboard · Live</div>
+      </div>
+      <div class="demo-body">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">On-Time Delivery</div>
+            <div class="kpi-value">97.3%</div>
+            <div class="kpi-change up">↑ +2.1% vs last month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Inventory Turnover</div>
+            <div class="kpi-value">8.4x</div>
+            <div class="kpi-change up">↑ +0.6x vs target</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Supplier Risk Score</div>
+            <div class="kpi-value" style="color:#f59e0b;">72/100</div>
+            <div class="kpi-change warn">⚠ 3 suppliers at risk</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Forecast Accuracy</div>
+            <div class="kpi-value">94.8%</div>
+            <div class="kpi-change up">↑ Best this quarter</div>
+          </div>
+        </div>
+        <div class="main-grid">
+          <div class="map-panel">
+            <h4>🌐 Global Supply Network — Live Tracking</h4>
+            <div class="supply-map">
+              <!-- Factory nodes -->
+              <div class="map-node node-factory" style="left:15%;top:30%;"></div>
+              <div class="map-node node-factory" style="left:25%;top:60%;"></div>
+              <div class="map-node node-factory" style="left:65%;top:20%;"></div>
+              <!-- Warehouse nodes -->
+              <div class="map-node node-warehouse" style="left:40%;top:45%;"></div>
+              <div class="map-node node-warehouse" style="left:55%;top:65%;"></div>
+              <!-- Retail nodes -->
+              <div class="map-node node-retail" style="left:75%;top:40%;"></div>
+              <div class="map-node node-retail" style="left:85%;top:60%;"></div>
+              <div class="map-node node-retail" style="left:80%;top:25%;"></div>
+              <!-- Animated pulse -->
+              <div class="map-pulse"></div>
+              <!-- SVG lines -->
+              <svg style="position:absolute;inset:0;width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+                <line x1="15%" y1="30%" x2="40%" y2="45%" stroke="rgba(245,158,11,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="25%" y1="60%" x2="40%" y2="45%" stroke="rgba(245,158,11,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="65%" y1="20%" x2="55%" y2="65%" stroke="rgba(245,158,11,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40%" y1="45%" x2="75%" y2="40%" stroke="rgba(14,165,233,0.4)" stroke-width="1.5"/>
+                <line x1="55%" y1="65%" x2="85%" y2="60%" stroke="rgba(14,165,233,0.4)" stroke-width="1.5"/>
+                <line x1="40%" y1="45%" x2="80%" y2="25%" stroke="rgba(34,197,94,0.4)" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="map-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>Factory (8)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#0ea5e9;"></div>Warehouse (12)</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div>Retail (47)</div>
+            </div>
+          </div>
+          <div class="inventory-panel">
+            <h4>📊 Inventory Status — Top SKUs</h4>
+            <table class="inv-table">
+              <thead>
+                <tr><th>SKU / Product</th><th>Stock</th><th>Days Left</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PRD-1042 · Widget A</td>
+                  <td>12,400</td>
+                  <td>47d</td>
+                  <td><span class="inv-status status-ok">Healthy</span></td>
+                </tr>
+                <tr>
+                  <td>PRD-2218 · Component X</td>
+                  <td>1,820</td>
+                  <td>12d</td>
+                  <td><span class="inv-status status-low">Low Stock</span></td>
+                </tr>
+                <tr>
+                  <td>PRD-3301 · Assembly B</td>
+                  <td>320</td>
+                  <td>3d</td>
+                  <td><span class="inv-status status-critical">Critical</span></td>
+                </tr>
+                <tr>
+                  <td>PRD-4455 · Module Z</td>
+                  <td>8,100</td>
+                  <td>31d</td>
+                  <td><span class="inv-status status-ok">Healthy</span></td>
+                </tr>
+                <tr>
+                  <td>PRD-5512 · Part K</td>
+                  <td>2,900</td>
+                  <td>18d</td>
+                  <td><span class="inv-status status-low">Low Stock</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top:1rem;">
+              <div class="forecast-chart">
+                <h4>Demand Forecast — Next 6 Weeks</h4>
+                <div class="bar-group">
+                  <div class="bar-item" style="height:45%;background:rgba(245,158,11,0.6);"><span class="bar-label">W1</span></div>
+                  <div class="bar-item" style="height:60%;background:rgba(245,158,11,0.6);"><span class="bar-label">W2</span></div>
+                  <div class="bar-item" style="height:80%;background:rgba(245,158,11,0.8);"><span class="bar-label">W3</span></div>
+                  <div class="bar-item" style="height:70%;background:rgba(245,158,11,0.7);"><span class="bar-label">W4</span></div>
+                  <div class="bar-item" style="height:90%;background:rgba(251,191,36,0.8);border:1px dashed #fbbf24;"><span class="bar-label">W5</span></div>
+                  <div class="bar-item" style="height:85%;background:rgba(251,191,36,0.6);border:1px dashed #fbbf24;"><span class="bar-label">W6</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-panel">
+            <h4><div class="ai-dot"></div> AI Alerts</h4>
+            <div class="alert-item alert-critical"><span class="alert-icon">🚨</span>PRD-3301 will stockout in 3 days. Auto-PO recommended: 5,000 units from Supplier B.</div>
+            <div class="alert-item alert-warn"><span class="alert-icon">⚠️</span>Taiwan supplier (SUP-14) showing 23% capacity reduction. Qualify backup supplier.</div>
+            <div class="alert-item alert-info"><span class="alert-icon">📈</span>Demand spike predicted (+34%) for W5 due to seasonal trends. Adjust safety stock.</div>
+            <div class="alert-item alert-info"><span class="alert-icon">✅</span>Route optimization saved $18,400 in freight costs this week.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div style="text-align:center;max-width:600px;margin:0 auto 3rem;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Supply Chain <span style="background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">ROI</span> at Scale</h2>
+    <p style="color:var(--muted);">Average customer saves $2.4M annually in supply chain costs. ROI in under 90 days.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Essentials</div>
+      <div class="price-amount">$299<span>/mo</span></div>
+      <div class="price-desc">For SMB supply chains</div>
+      <ul class="price-features">
+        <li>Up to 1,000 SKUs</li>
+        <li>Demand forecasting</li>
+        <li>Inventory optimization</li>
+        <li>Supplier risk monitoring</li>
+        <li>Standard integrations</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Start Essentials</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-name">Professional</div>
+      <div class="price-amount">$999<span>/mo</span></div>
+      <div class="price-desc">For mid-market operations</div>
+      <ul class="price-features">
+        <li>Up to 50,000 SKUs</li>
+        <li>Advanced AI forecasting</li>
+        <li>Logistics orchestration</li>
+        <li>Automated procurement</li>
+        <li>Sustainability tracking</li>
+        <li>ERP integrations (SAP, Oracle)</li>
+      </ul>
+      <button class="price-btn price-btn-fill" onclick="document.getElementById('modal').classList.add('active')">Start Professional</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For global supply chains</div>
+      <ul class="price-features">
+        <li>Unlimited SKUs & locations</li>
+        <li>Custom AI model training</li>
+        <li>Dedicated implementation team</li>
+        <li>24/7 SLA support</li>
+        <li>Private cloud deployment</li>
+        <li>Executive analytics suite</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">📦 SupplyChainAI</div>
+  <p>© 2025 SupplyChainAI · Intelligent supply chain management for the modern enterprise.</p>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕</button>
+    <h2>Request a Demo</h2>
+    <p>See how SupplyChainAI can transform your operations</p>
+    <button class="social-btn">🔵 Continue with Google</button>
+    <button class="social-btn">🏢 Continue with Microsoft</button>
+    <div class="divider">or use email</div>
+    <input type="email" class="form-input" placeholder="Work email">
+    <input type="text" class="form-input" placeholder="Company name">
+    <button class="btn btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;">Book Demo</button>
+  </div>
+</div>
+
+</body>
+</html>
