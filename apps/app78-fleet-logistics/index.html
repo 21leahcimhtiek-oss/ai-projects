@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FleetAI - AI-Powered Fleet & Logistics Management Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#14b8a6;--secondary:#0ea5e9;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#14b8a6,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#14b8a6;color:#14b8a6}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#14b8a6,#0ea5e9);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(20,184,166,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.3);border-radius:50px;font-size:0.85rem;color:#2dd4bf;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#14b8a6,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#14b8a6,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#2dd4bf;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+/* Fleet Dashboard */
+.fleet-dashboard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1100px;margin:0 auto}
+.fleet-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.fleet-kpi{background:var(--bg);border-radius:12px;padding:1rem;border-left:3px solid}
+.kpi-teal{border-color:#14b8a6}
+.kpi-blue{border-color:#0ea5e9}
+.kpi-green{border-color:#10b981}
+.kpi-orange{border-color:#f97316}
+.kpi-icon{font-size:1.3rem;margin-bottom:0.3rem}
+.kpi-val{font-size:1.5rem;font-weight:800}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-top:0.2rem}
+.kpi-change{font-size:0.7rem;margin-top:0.2rem}
+.change-pos{color:#10b981}
+.change-neg{color:#ef4444}
+.fleet-main{display:grid;grid-template-columns:1fr 300px;gap:1rem}
+/* Map Panel */
+.map-panel{background:var(--bg);border-radius:12px;overflow:hidden}
+.map-header{padding:0.8rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.map-title{font-size:0.85rem;font-weight:700}
+.map-body{height:240px;background:linear-gradient(135deg,rgba(20,184,166,0.05),rgba(14,165,233,0.05));position:relative;display:flex;align-items:center;justify-content:center}
+.map-grid{position:absolute;inset:0;opacity:0.1;background-image:linear-gradient(rgba(20,184,166,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.5) 1px,transparent 1px);background-size:30px 30px}
+.vehicle-pin{position:absolute;font-size:1.2rem;cursor:pointer;animation:drift 3s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(3px,-3px)}}
+.route-line{position:absolute;border-top:2px dashed rgba(20,184,166,0.4);transform-origin:left center}
+.map-legend{position:absolute;bottom:0.8rem;left:0.8rem;display:flex;gap:0.8rem;background:rgba(10,10,15,0.8);padding:0.4rem 0.8rem;border-radius:6px;font-size:0.7rem}
+.legend-item{display:flex;align-items:center;gap:0.3rem;color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+/* Vehicle List */
+.vehicle-list{background:var(--bg);border-radius:12px;padding:1rem;overflow-y:auto}
+.vlist-title{font-size:0.82rem;font-weight:700;margin-bottom:0.8rem;color:#2dd4bf}
+.vehicle-item{display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.5rem;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-bottom:0.3rem}
+.vehicle-item:hover,.vehicle-item.active{background:rgba(20,184,166,0.08)}
+.vehicle-icon{font-size:1.2rem}
+.vehicle-info{flex:1}
+.vehicle-id{font-size:0.82rem;font-weight:700}
+.vehicle-location{font-size:0.72rem;color:var(--muted)}
+.vehicle-status{font-size:0.7rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:10px}
+.status-on-route{background:rgba(20,184,166,0.1);color:#2dd4bf}
+.status-idle{background:rgba(245,158,11,0.1);color:#fbbf24}
+.status-maintenance{background:rgba(239,68,68,0.1);color:#f87171}
+/* AI Insights */
+.ai-fleet-insight{background:linear-gradient(135deg,rgba(20,184,166,0.08),rgba(14,165,233,0.08));border:1px solid rgba(20,184,166,0.2);border-radius:12px;padding:1.2rem;margin-top:1rem}
+.ai-fleet-title{font-size:0.82rem;font-weight:700;color:#2dd4bf;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.4rem}
+.fleet-insights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem}
+.fleet-insight-item{background:var(--card);border-radius:8px;padding:0.8rem;font-size:0.8rem}
+.fi-icon{font-size:1.1rem;margin-bottom:0.3rem}
+.fi-title{font-weight:700;margin-bottom:0.2rem}
+.fi-desc{color:var(--muted);font-size:0.75rem;line-height:1.4}
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#14b8a6;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(20,184,166,0.2),rgba(14,165,233,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#14b8a6;background:linear-gradient(135deg,rgba(20,184,166,0.05),rgba(14,165,233,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#14b8a6,#0ea5e9);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#14b8a6;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#14b8a6,#0ea5e9);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(20,184,166,0.06),rgba(14,165,233,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#14b8a6,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#14b8a6}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#14b8a6}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#14b8a6}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🚛 FleetAI</div>
+  <ul class="nav-links">
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#">Integrations</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🚛 Trusted by 3,500+ logistics companies worldwide</div>
+  <h1>Manage Every Vehicle,<br><span class="gradient-text">Route & Driver with AI</span></h1>
+  <p class="hero-sub">FleetAI gives you real-time GPS tracking, AI route optimization, predictive maintenance, and driver safety scoring — cutting costs by up to 35% from day one.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🚛 Start Free 14-Day Trial</button>
+    <button class="btn-large btn-outline">📊 See Live Demo</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">3,500+</div><div class="stat-label">Companies Using FleetAI</div></div>
+    <div class="stat-item"><div class="stat-num">280K+</div><div class="stat-label">Vehicles Tracked</div></div>
+    <div class="stat-item"><div class="stat-num">35%</div><div class="stat-label">Average Cost Reduction</div></div>
+    <div class="stat-item"><div class="stat-num">4.8★</div><div class="stat-label">Fleet Manager Rating</div></div>
+  </div>
+</hero>
+
+<section id="dashboard" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Fleet Operations Center</div>
+    <h2>Your Entire Fleet <span class="gradient-text">at a Glance</span></h2>
+  </div>
+  <div class="fleet-dashboard">
+    <div class="fleet-kpis">
+      <div class="fleet-kpi kpi-teal">
+        <div class="kpi-icon">🚛</div>
+        <div class="kpi-val" style="color:#14b8a6">247</div>
+        <div class="kpi-label">Active Vehicles</div>
+        <div class="kpi-change change-pos">↑ 12 more than yesterday</div>
+      </div>
+      <div class="fleet-kpi kpi-blue">
+        <div class="kpi-icon">📍</div>
+        <div class="kpi-val" style="color:#0ea5e9">1,842</div>
+        <div class="kpi-label">Deliveries Today</div>
+        <div class="kpi-change change-pos">↑ 98.4% on-time rate</div>
+      </div>
+      <div class="fleet-kpi kpi-green">
+        <div class="kpi-icon">⛽</div>
+        <div class="kpi-val" style="color:#10b981">$4,280</div>
+        <div class="kpi-label">Fuel Saved Today</div>
+        <div class="kpi-change change-pos">↑ AI route optimization</div>
+      </div>
+      <div class="fleet-kpi kpi-orange">
+        <div class="kpi-icon">🔧</div>
+        <div class="kpi-val" style="color:#f97316">8</div>
+        <div class="kpi-label">Maintenance Alerts</div>
+        <div class="kpi-change change-neg">↓ 3 vehicles need service</div>
+      </div>
+    </div>
+    <div class="fleet-main">
+      <div class="map-panel">
+        <div class="map-header">
+          <div class="map-title">🗺️ Live Fleet Tracking — 247 vehicles</div>
+          <div style="font-size:0.75rem;color:#2dd4bf;display:flex;align-items:center;gap:0.4rem"><div style="width:6px;height:6px;border-radius:50%;background:#14b8a6;animation:pulse 1s infinite"></div>Live</div>
+        </div>
+        <div class="map-body">
+          <div class="map-grid"></div>
+          <div class="vehicle-pin" style="top:30%;left:25%;animation-delay:0s">🚛</div>
+          <div class="vehicle-pin" style="top:50%;left:45%;animation-delay:0.5s">🚚</div>
+          <div class="vehicle-pin" style="top:40%;left:65%;animation-delay:1s">🚛</div>
+          <div class="vehicle-pin" style="top:65%;left:35%;animation-delay:0.3s">🚐</div>
+          <div class="vehicle-pin" style="top:25%;left:55%;animation-delay:0.8s">🚛</div>
+          <div class="vehicle-pin" style="top:60%;left:70%;animation-delay:1.2s">🚚</div>
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div>On Route</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Idle</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Alert</div>
+          </div>
+        </div>
+      </div>
+      <div class="vehicle-list">
+        <div class="vlist-title">🚛 Active Vehicles</div>
+        <div class="vehicle-item active">
+          <div class="vehicle-icon">🚛</div>
+          <div class="vehicle-info"><div class="vehicle-id">TRK-0042</div><div class="vehicle-location">I-95 N · Miami, FL</div></div>
+          <div class="vehicle-status status-on-route">On Route</div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-icon">🚚</div>
+          <div class="vehicle-info"><div class="vehicle-id">VAN-0118</div><div class="vehicle-location">Downtown · Atlanta, GA</div></div>
+          <div class="vehicle-status status-on-route">On Route</div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-icon">🚐</div>
+          <div class="vehicle-info"><div class="vehicle-id">VAN-0054</div><div class="vehicle-location">Rest Stop · I-75</div></div>
+          <div class="vehicle-status status-idle">Idle</div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-icon">🚛</div>
+          <div class="vehicle-info"><div class="vehicle-id">TRK-0089</div><div class="vehicle-location">Depot · Jacksonville</div></div>
+          <div class="vehicle-status status-maintenance">Maintenance</div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-icon">🚚</div>
+          <div class="vehicle-info"><div class="vehicle-id">VAN-0201</div><div class="vehicle-location">Hwy 441 · Orlando, FL</div></div>
+          <div class="vehicle-status status-on-route">On Route</div>
+        </div>
+      </div>
+    </div>
+    <div class="ai-fleet-insight">
+      <div class="ai-fleet-title">🤖 AI Fleet Insights</div>
+      <div class="fleet-insights-grid">
+        <div class="fleet-insight-item">
+          <div class="fi-icon">⛽</div>
+          <div class="fi-title">Fuel Anomaly</div>
+          <div class="fi-desc">TRK-0042 consuming 18% more fuel than normal. Possible tire pressure issue.</div>
+        </div>
+        <div class="fleet-insight-item">
+          <div class="fi-icon">🔧</div>
+          <div class="fi-title">Predictive Maintenance</div>
+          <div class="fi-desc">VAN-0054 oil change due in 340 miles. Schedule before next long haul.</div>
+        </div>
+        <div class="fleet-insight-item">
+          <div class="fi-icon">🗺️</div>
+          <div class="fi-title">Route Optimization</div>
+          <div class="fi-desc">Rerouting 12 vehicles avoids I-95 accident. Saves 47 min total delay.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Platform Features</div>
+    <h2>Complete Fleet Intelligence <span class="gradient-text">at Your Fingertips</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📍</div>
+      <h3>Real-Time GPS Tracking</h3>
+      <p>Track every vehicle, asset, and driver with 10-second GPS updates. Full route history, geofencing, and live ETA calculations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>AI Route Optimization</h3>
+      <p>AI calculates the most efficient routes in real time, considering traffic, weather, delivery windows, and driver hours of service.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <h3>Predictive Maintenance</h3>
+      <p>AI analyzes vehicle telemetry to predict failures 2-4 weeks before they happen — preventing costly breakdowns and downtime.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <h3>Driver Safety Scoring</h3>
+      <p>Score every driver on speeding, harsh braking, cornering, and phone use. Gamify safety with leaderboards and rewards.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⛽</div>
+      <h3>Fuel Management AI</h3>
+      <p>Monitor fuel consumption, detect waste and theft, optimize fuel card spend, and reduce fuel costs by up to 20%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Operations Analytics</h3>
+      <p>Comprehensive dashboards for fleet utilization, delivery performance, costs per mile, and driver productivity metrics.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>ROI from <span class="gradient-text">Day One</span></h2>
+    <p class="section-sub">Most customers save 10x their subscription cost in the first month.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">STARTER</div>
+      <div class="plan-price">$15 <span>/ vehicle/mo</span></div>
+      <div class="plan-desc">For small fleets getting started</div>
+      <ul class="plan-features">
+        <li>Real-time GPS tracking</li>
+        <li>Basic route history</li>
+        <li>Driver behavior scoring</li>
+        <li>Maintenance reminders</li>
+        <li>Mobile app</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">🚛 Most Popular</div>
+      <div class="plan-name">PROFESSIONAL</div>
+      <div class="plan-price">$29 <span>/ vehicle/mo</span></div>
+      <div class="plan-desc">For growing logistics operations</div>
+      <ul class="plan-features">
+        <li>AI route optimization</li>
+        <li>Predictive maintenance</li>
+        <li>Fuel management AI</li>
+        <li>Geofencing & alerts</li>
+        <li>ELD/HOS compliance</li>
+        <li>Customer delivery portal</li>
+        <li>Advanced analytics</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">ENTERPRISE</div>
+      <div class="plan-price">Custom <span>pricing</span></div>
+      <div class="plan-desc">For large fleet operators</div>
+      <ul class="plan-features">
+        <li>Everything in Pro</li>
+        <li>Custom AI models</li>
+        <li>Multi-depot management</li>
+        <li>TMS integration</li>
+        <li>Dedicated success team</li>
+        <li>API & white-label</li>
+        <li>SLA guarantee</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Cut Costs. Deliver Faster. <span class="gradient-text">Drive Smarter.</span></h2>
+  <p>Join 3,500+ logistics companies running leaner operations with FleetAI.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🚛 Start Your Free 14-Day Trial</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">🚛 FleetAI</div>
+      <p class="footer-desc">AI-powered fleet and logistics management that reduces costs, improves delivery performance, and keeps every driver safe.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Features</h4>
+      <ul class="footer-links">
+        <li><a href="#">GPS Tracking</a></li>
+        <li><a href="#">Route Optimization</a></li>
+        <li><a href="#">Maintenance AI</a></li>
+        <li><a href="#">Driver Safety</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Industries</h4>
+      <ul class="footer-links">
+        <li><a href="#">Trucking</a></li>
+        <li><a href="#">Last Mile Delivery</a></li>
+        <li><a href="#">Field Service</a></li>
+        <li><a href="#">Construction</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 FleetAI. All rights reserved.</span>
+    <span>Every mile optimized 🚛</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Start Free Trial</h3>
+    <p>14 days free · Full access · No credit card</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">💼 Continue with Microsoft</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Work Email</label>
+      <input type="email" placeholder="you@company.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Start Free Trial</button>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.vehicle-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.vehicle-item').forEach(v=>v.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
