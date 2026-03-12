@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropAI - AI-Powered Real Estate Search & Investment Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #fff; line-height: 1.6; }
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 1rem 2rem;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #f59e0b; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(245,158,11,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #f59e0b; color: #f59e0b; }
+        .btn-outline:hover { background: #f59e0b; color: #fff; }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-content { position: relative; z-index: 1; max-width: 850px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero h1 span { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: #a0a0a0; margin-bottom: 2rem; }
+        .search-bar { display: flex; gap: 0.5rem; max-width: 600px; margin: 0 auto 2rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 0.5rem; }
+        .search-bar input { flex: 1; background: none; border: none; color: #fff; padding: 0.5rem 1rem; font-size: 1rem; outline: none; }
+        .search-bar input::placeholder { color: #666; }
+        .stats { display: flex; justify-content: center; gap: 4rem; margin-top: 3rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 2.5rem; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat p { color: #a0a0a0; }
+        .features { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: #a0a0a0; max-width: 600px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: #f59e0b; box-shadow: 0 20px 40px rgba(245,158,11,0.1); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: #a0a0a0; }
+        .listings { padding: 6rem 2rem; }
+        .listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .listing-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; transition: all 0.3s; }
+        .listing-card:hover { transform: translateY(-5px); border-color: #f59e0b; box-shadow: 0 20px 40px rgba(245,158,11,0.1); }
+        .listing-image { height: 220px; display: flex; align-items: center; justify-content: center; font-size: 5rem; position: relative; }
+        .listing-img-1 { background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(239,68,68,0.2)); }
+        .listing-img-2 { background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(139,92,246,0.2)); }
+        .listing-img-3 { background: linear-gradient(135deg, rgba(34,197,94,0.3), rgba(16,185,129,0.2)); }
+        .listing-badge { position: absolute; top: 1rem; left: 1rem; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .ai-score { position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; color: #f59e0b; }
+        .listing-info { padding: 1.5rem; }
+        .listing-price { font-size: 1.75rem; font-weight: 700; color: #f59e0b; margin-bottom: 0.25rem; }
+        .listing-address { color: #a0a0a0; font-size: 0.9rem; margin-bottom: 1rem; }
+        .listing-specs { display: flex; gap: 1rem; font-size: 0.875rem; color: #a0a0a0; margin-bottom: 1rem; }
+        .listing-specs span { display: flex; align-items: center; gap: 0.25rem; }
+        .listing-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .days-on-market { font-size: 0.8rem; color: #666; }
+        .pricing { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: #f59e0b; transform: scale(1.05); }
+        .popular-tag { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.875rem; margin-bottom: 1rem; display: inline-block; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+        .price span { font-size: 1rem; color: #a0a0a0; }
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #f59e0b; }
+        .testimonials { padding: 6rem 2rem; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; }
+        .testimonial-card p { font-style: italic; margin-bottom: 1rem; color: #a0a0a0; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .author-info h4 { font-size: 1rem; }
+        .author-info p { font-size: 0.875rem; color: #666; font-style: normal; }
+        .cta { padding: 6rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.1)); }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #a0a0a0; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #f59e0b; }
+        footer p { color: #666; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a2e; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header h3 { font-size: 1.5rem; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #f59e0b; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .stats { gap: 2rem; } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">PropAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#listings">Listings</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div style="display:flex;gap:1rem;">
+            <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Find Your <span>Dream Property</span> with AI Precision</h1>
+            <p>PropAI analyzes millions of listings, predicts property values, and matches you with homes that perfectly fit your lifestyle and investment goals.</p>
+            <div class="search-bar">
+                <span style="padding:0.5rem;color:#666;">🔍</span>
+                <input placeholder="Search by city, neighborhood, zip code...">
+                <button class="btn btn-primary">Search with AI</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><h3>5M+</h3><p>Properties Listed</p></div>
+                <div class="stat"><h3>98%</h3><p>Price Accuracy</p></div>
+                <div class="stat"><h3>150K+</h3><p>Homes Sold</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>AI-Powered Real Estate Intelligence</h2>
+            <p>Make smarter property decisions with data-driven insights and AI predictions.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🏠</div>
+                <h3>AI Property Matching</h3>
+                <p>Tell us your lifestyle and goals. AI finds properties that match your unique needs — not just your filters.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Value Prediction</h3>
+                <p>AI predicts property values 12 months out with 94% accuracy using market trends, school ratings, and development plans.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🗺️</div>
+                <h3>Neighborhood Intelligence</h3>
+                <p>Deep insights on schools, crime rates, walkability, commute times, and neighborhood growth trends.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Investment Analysis</h3>
+                <p>Calculate ROI, cap rates, cash flow, and appreciation potential for any investment property instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Agent Matching</h3>
+                <p>Get matched with the top-performing agent in your target neighborhood based on recent sales data.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3>Deal Alerts</h3>
+                <p>Be the first to know when properties matching your criteria hit the market or drop in price.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="listings" id="listings">
+        <div class="section-title">
+            <h2>Featured AI-Matched Listings</h2>
+            <p>Properties our AI has identified as exceptional value in their markets.</p>
+        </div>
+        <div class="listings-grid">
+            <div class="listing-card">
+                <div class="listing-image listing-img-1">
+                    🏡
+                    <span class="listing-badge">Hot Deal</span>
+                    <span class="ai-score">🤖 94/100</span>
+                </div>
+                <div class="listing-info">
+                    <div class="listing-price">$485,000</div>
+                    <div class="listing-address">📍 2847 Maple St, Austin, TX 78701</div>
+                    <div class="listing-specs">
+                        <span>🛏 4 beds</span>
+                        <span>🚿 3 baths</span>
+                        <span>📐 2,240 sqft</span>
+                    </div>
+                    <div class="listing-footer">
+                        <span class="days-on-market">3 days on market</span>
+                        <button class="btn btn-primary" style="padding:0.5rem 1rem;font-size:0.875rem;">View Details</button>
+                    </div>
+                </div>
+            </div>
+            <div class="listing-card">
+                <div class="listing-image listing-img-2">
+                    🏢
+                    <span class="listing-badge">New</span>
+                    <span class="ai-score">🤖 91/100</span>
+                </div>
+                <div class="listing-info">
+                    <div class="listing-price">$1,250,000</div>
+                    <div class="listing-address">📍 142 Ocean Blvd, Miami, FL 33101</div>
+                    <div class="listing-specs">
+                        <span>🛏 3 beds</span>
+                        <span>🚿 2 baths</span>
+                        <span>📐 1,850 sqft</span>
+                    </div>
+                    <div class="listing-footer">
+                        <span class="days-on-market">1 day on market</span>
+                        <button class="btn btn-primary" style="padding:0.5rem 1rem;font-size:0.875rem;">View Details</button>
+                    </div>
+                </div>
+            </div>
+            <div class="listing-card">
+                <div class="listing-image listing-img-3">
+                    🏘
+                    <span class="listing-badge">Price Drop</span>
+                    <span class="ai-score">🤖 88/100</span>
+                </div>
+                <div class="listing-info">
+                    <div class="listing-price">$325,000</div>
+                    <div class="listing-address">📍 891 Pine Ave, Denver, CO 80201</div>
+                    <div class="listing-specs">
+                        <span>🛏 3 beds</span>
+                        <span>🚿 2 baths</span>
+                        <span>📐 1,620 sqft</span>
+                    </div>
+                    <div class="listing-footer">
+                        <span class="days-on-market">7 days on market</span>
+                        <button class="btn btn-primary" style="padding:0.5rem 1rem;font-size:0.875rem;">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Pricing for Buyers, Sellers & Investors</h2>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Explorer</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Browse all listings</li>
+                    <li>Basic search filters</li>
+                    <li>Save 10 favorites</li>
+                    <li>Mortgage calculator</li>
+                    <li>Email alerts</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Browse Free</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Buyer/Seller</h3>
+                <div class="price">$19<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>AI property matching</li>
+                    <li>Value predictions</li>
+                    <li>Neighborhood insights</li>
+                    <li>Deal alerts</li>
+                    <li>Agent matching</li>
+                    <li>Instant notifications</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Investor Pro</h3>
+                <div class="price">$79<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Buyer</li>
+                    <li>Investment analysis</li>
+                    <li>Portfolio tracking</li>
+                    <li>Market reports</li>
+                    <li>Off-market deals</li>
+                    <li>API access</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Start Investing</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>Trusted by 150,000+ Home Buyers & Investors</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"PropAI predicted our neighborhood would appreciate 18% in 12 months. It actually went up 22%. We bought based on that prediction and made $110K in equity."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">RH</div>
+                    <div class="author-info"><h4>Robert Hayes</h4><p>Real Estate Investor</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"As a first-time buyer, I was overwhelmed. PropAI's matching feature found my perfect home in 2 weeks. It understood what I needed better than I did."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SL</div>
+                    <div class="author-info"><h4>Sophie Laurent</h4><p>First-Time Homebuyer</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The deal alerts are insane. I got notified about a distressed property 4 minutes after it was listed. Bought it at 30% below market. PropAI paid for itself 1000x over."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">TJ</div>
+                    <div class="author-info"><h4>Tony Jackson</h4><p>Real Estate Flipper</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Find Your Perfect Property Today</h2>
+        <p>Join 150,000+ buyers and investors using PropAI to make smarter real estate decisions.</p>
+        <button class="btn btn-primary" onclick="openModal('signup')">Start Searching Free</button>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a><a href="#">Buy</a><a href="#">Sell</a><a href="#">Invest</a>
+            <a href="#">Agents</a><a href="#">Blog</a><a href="#">Privacy</a><a href="#">Terms</a>
+        </div>
+        <p>&copy; 2024 PropAI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Login</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Facebook</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Start Your Search</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your Name"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>I'm looking to...</label><input type="text" placeholder="Buy / Sell / Invest"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Find My Property</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Facebook</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { document.getElementById(type + 'Modal').classList.add('active'); }
+        function closeModal(type) { document.getElementById(type + 'Modal').classList.remove('active'); }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>
