@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustPulse AI - Social Proof & Testimonial Management Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #fff; line-height: 1.6; }
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 1rem 2rem;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #a855f7; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(168,85,247,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #a855f7; color: #a855f7; }
+        .btn-outline:hover { background: #a855f7; color: #fff; }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-content { position: relative; z-index: 1; max-width: 850px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero h1 span { background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: #a0a0a0; margin-bottom: 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .stats { display: flex; justify-content: center; gap: 4rem; margin-top: 4rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 2.5rem; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat p { color: #a0a0a0; }
+        .features { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: #a0a0a0; max-width: 600px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: #a855f7; box-shadow: 0 20px 40px rgba(168,85,247,0.1); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: #a0a0a0; }
+        .wall-of-love { padding: 6rem 2rem; }
+        .testimonial-wall { max-width: 1200px; margin: 0 auto; columns: 3; gap: 1.5rem; }
+        .wall-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; break-inside: avoid; transition: all 0.3s; }
+        .wall-card:hover { border-color: #a855f7; transform: translateY(-3px); }
+        .wall-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .wall-avatar { width: 44px; height: 44px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; flex-shrink: 0; }
+        .wall-name h4 { font-size: 0.95rem; }
+        .wall-name p { font-size: 0.8rem; color: #666; }
+        .wall-stars { color: #f59e0b; font-size: 0.875rem; margin-bottom: 0.75rem; }
+        .wall-card p { font-size: 0.9rem; color: #a0a0a0; }
+        .wall-source { font-size: 0.75rem; color: #555; margin-top: 0.75rem; }
+        .notification-demo { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .notif-container { max-width: 400px; margin: 0 auto; position: relative; }
+        .notif-popup { background: #fff; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-bottom: 1rem; transform: translateX(0); animation: slideIn 0.5s ease; color: #333; }
+        @keyframes slideIn { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notif-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .notif-text { flex: 1; }
+        .notif-text strong { font-size: 0.875rem; display: block; }
+        .notif-text span { font-size: 0.8rem; color: #666; }
+        .notif-time { font-size: 0.75rem; color: #999; }
+        .pricing { padding: 6rem 2rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: #a855f7; transform: scale(1.05); }
+        .popular-tag { background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.875rem; margin-bottom: 1rem; display: inline-block; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+        .price span { font-size: 1rem; color: #a0a0a0; }
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #a855f7; }
+        .cta { padding: 6rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(236,72,153,0.1)); }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #a0a0a0; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #a855f7; }
+        footer p { color: #666; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a2e; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header h3 { font-size: 1.5rem; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #a855f7; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .stats { gap: 2rem; } .testimonial-wall { columns: 1; } }
+        @media (max-width: 1024px) { .testimonial-wall { columns: 2; } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">TrustPulse AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#wall">Wall of Love</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div style="display:flex;gap:1rem;">
+            <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Turn Customer Love into <span>Sales-Driving Social Proof</span></h1>
+            <p>Collect, manage, and display testimonials and reviews automatically. Show real-time social proof notifications that boost conversions by up to 300%.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Free Trial</button>
+                <button class="btn btn-outline">See Examples</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><h3>300%</h3><p>More Conversions</p></div>
+                <div class="stat"><h3>50K+</h3><p>Businesses</p></div>
+                <div class="stat"><h3>10M+</h3><p>Testimonials</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>AI-Powered Social Proof Engine</h2>
+            <p>Collect, curate, and display testimonials that convert visitors into customers.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📥</div>
+                <h3>Auto-Collect Reviews</h3>
+                <p>Automatically request testimonials from happy customers via email at the perfect moment in their journey.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Curation</h3>
+                <p>AI automatically identifies and highlights your best testimonials based on specificity, sentiment, and impact.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3>Live Notifications</h3>
+                <p>Show real-time pop-ups like "John from NY just purchased" to create urgency and social proof.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Beautiful Widgets</h3>
+                <p>Embed gorgeous testimonial carousels, grids, and walls on any website with one line of code.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Review Aggregation</h3>
+                <p>Import reviews from Google, Trustpilot, G2, Capterra, and 20+ platforms into one dashboard.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Conversion Analytics</h3>
+                <p>Track exactly how much revenue your social proof is generating with attribution analytics.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="wall-of-love" id="wall">
+        <div class="section-title">
+            <h2>Your Wall of Love</h2>
+            <p>Beautifully display all your customer testimonials in one stunning page.</p>
+        </div>
+        <div class="testimonial-wall">
+            <div class="wall-card">
+                <div class="wall-card-header">
+                    <div class="wall-avatar">JD</div>
+                    <div class="wall-name"><h4>James Davidson</h4><p>CEO at GrowthHQ</p></div>
+                </div>
+                <div class="wall-stars">★★★★★</div>
+                <p>"TrustPulse completely changed our conversion game. We went from 2% to 6% conversion rate in just 3 weeks."</p>
+                <div class="wall-source">via Google Reviews</div>
+            </div>
+            <div class="wall-card">
+                <div class="wall-card-header">
+                    <div class="wall-avatar">SM</div>
+                    <div class="wall-name"><h4>Sarah Miller</h4><p>Founder at StyleBox</p></div>
+                </div>
+                <div class="wall-stars">★★★★★</div>
+                <p>"The live notification popups are genius. Customers see others buying and it creates instant FOMO."</p>
+                <div class="wall-source">via Trustpilot</div>
+            </div>
+            <div class="wall-card">
+                <div class="wall-card-header">
+                    <div class="wall-avatar">RK</div>
+                    <div class="wall-name"><h4>Raj Kumar</h4><p>Product Manager</p></div>
+                </div>
+                <div class="wall-stars">★★★★★</div>
+                <p>"Setup took 10 minutes and immediately started collecting testimonials. The AI picks the best ones automatically."</p>
+                <div class="wall-source">via G2</div>
+            </div>
+            <div class="wall-card">
+                <div class="wall-card-header">
+                    <div class="wall-avatar">EP</div>
+                    <div class="wall-name"><h4>Emma Pearson</h4><p>Marketing Lead</p></div>
+                </div>
+                <div class="wall-stars">★★★★★</div>
+                <p>"We imported all our Google reviews in one click. Now they're beautifully displayed on our site. Incredible tool."</p>
+                <div class="wall-source">via Capterra</div>
+            </div>
+            <div class="wall-card">
+                <div class="wall-card-header">
+                    <div class="wall-avatar">TN</div>
+                    <div class="wall-name"><h4>Tom Nguyen</h4><p>E-commerce Owner</p></div>
+                </div>
+                <div class="wall-stars">★★★★★</div>
+                <p>"Revenue attribution analytics showed TrustPulse generated $47K in extra revenue last month. Best $29 I ever spent."</p>
+                <div class="wall-source">via Product Hunt</div>
+            </div>
+            <div class="wall-card">
+                <div class="wall-card-header">
+                    <div class="wall-avatar">AL</div>
+                    <div class="wall-name"><h4>Anna Li</h4><p>SaaS Founder</p></div>
+                </div>
+                <div class="wall-stars">★★★★★</div>
+                <p>"Our trial-to-paid conversion jumped 45% after adding TrustPulse testimonials to our pricing page."</p>
+                <div class="wall-source">via Twitter</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="notification-demo">
+        <div class="section-title">
+            <h2>Real-Time Social Proof Notifications</h2>
+            <p>Show visitors that others are buying, signing up, and loving your product.</p>
+        </div>
+        <div class="notif-container">
+            <div class="notif-popup">
+                <div class="notif-icon">🛒</div>
+                <div class="notif-text">
+                    <strong>Marcus from Chicago just purchased Pro Plan</strong>
+                    <span>Verified purchase • 2 min ago</span>
+                </div>
+            </div>
+            <div class="notif-popup" style="animation-delay:0.2s">
+                <div class="notif-icon">⭐</div>
+                <div class="notif-text">
+                    <strong>Sarah left a 5-star review</strong>
+                    <span>"Absolutely love this product!" • 5 min ago</span>
+                </div>
+            </div>
+            <div class="notif-popup" style="animation-delay:0.4s">
+                <div class="notif-icon">👤</div>
+                <div class="notif-text">
+                    <strong>47 people signed up today</strong>
+                    <span>Join them and get started free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Invest in Trust, Get Returns in Revenue</h2>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>1 website</li>
+                    <li>50 testimonials</li>
+                    <li>Basic widgets</li>
+                    <li>Email collection</li>
+                    <li>TrustPulse branding</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Get Started Free</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Growth</h3>
+                <div class="price">$29<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>5 websites</li>
+                    <li>Unlimited testimonials</li>
+                    <li>Live notifications</li>
+                    <li>AI curation</li>
+                    <li>Review import</li>
+                    <li>Custom branding</li>
+                    <li>Analytics</li>
+                </ul>
+                <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Agency</h3>
+                <div class="price">$99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited websites</li>
+                    <li>White-label</li>
+                    <li>Client management</li>
+                    <li>API access</li>
+                    <li>Advanced analytics</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Start Building Trust Today</h2>
+        <p>Join 50,000+ businesses using TrustPulse AI to turn social proof into revenue.</p>
+        <button class="btn btn-primary" onclick="openModal('signup')">Start Free — No Credit Card Needed</button>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a><a href="#">Features</a><a href="#">Pricing</a>
+            <a href="#">Integrations</a><a href="#">Blog</a><a href="#">Contact</a>
+            <a href="#">Privacy</a><a href="#">Terms</a>
+        </div>
+        <p>&copy; 2024 TrustPulse AI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Login</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Shopify</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Start Free Trial</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your Name"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>Website URL</label><input type="url" placeholder="https://yoursite.com"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Start Free Trial</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Shopify</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { document.getElementById(type + 'Modal').classList.add('active'); }
+        function closeModal(type) { document.getElementById(type + 'Modal').classList.remove('active'); }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>
