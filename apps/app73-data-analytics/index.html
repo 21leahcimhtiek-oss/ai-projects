@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataVault AI - Business Intelligence & Data Analytics Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#0ea5e9;--secondary:#6366f1;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#0ea5e9;color:#0ea5e9}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#0ea5e9,#6366f1);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(14,165,233,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.3);border-radius:50px;font-size:0.85rem;color:#38bdf8;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#38bdf8;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+/* BI Dashboard */
+.bi-dashboard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1100px;margin:0 auto}
+.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.dash-title{font-size:1rem;font-weight:700}
+.dash-controls{display:flex;gap:0.5rem}
+.dash-control{padding:0.3rem 0.8rem;border-radius:6px;font-size:0.8rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
+.dash-control.active{background:rgba(14,165,233,0.1);border-color:#0ea5e9;color:#38bdf8}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.kpi-card{background:var(--bg);border-radius:12px;padding:1.2rem;position:relative;overflow:hidden}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-revenue::after{background:linear-gradient(90deg,#0ea5e9,#6366f1)}
+.kpi-users::after{background:linear-gradient(90deg,#10b981,#06b6d4)}
+.kpi-conv::after{background:linear-gradient(90deg,#f59e0b,#ef4444)}
+.kpi-churn::after{background:linear-gradient(90deg,#8b5cf6,#ec4899)}
+.kpi-label{font-size:0.75rem;color:var(--muted);margin-bottom:0.4rem}
+.kpi-value{font-size:1.6rem;font-weight:800;margin-bottom:0.3rem}
+.kpi-change{font-size:0.75rem;display:flex;align-items:center;gap:0.3rem}
+.kpi-change.up{color:#10b981}
+.kpi-change.down{color:#ef4444}
+.charts-row{display:grid;grid-template-columns:1.6fr 1fr;gap:1rem;margin-bottom:1rem}
+.chart-card{background:var(--bg);border-radius:12px;padding:1.2rem}
+.chart-card-title{font-size:0.85rem;font-weight:700;margin-bottom:1rem;display:flex;justify-content:space-between;color:var(--text)}
+.chart-card-subtitle{font-size:0.75rem;color:var(--muted)}
+/* Line chart */
+.line-chart{height:130px;position:relative;display:flex;align-items:flex-end;gap:2px}
+.line-chart-svg{width:100%;height:100%}
+/* Bar chart */
+.mini-bars{display:flex;align-items:flex-end;gap:0.4rem;height:110px}
+.mini-bar-col{display:flex;flex-direction:column;align-items:center;gap:0.3rem;flex:1}
+.mini-bar{width:100%;border-radius:4px 4px 0 0}
+.mini-bar-label{font-size:0.65rem;color:var(--muted)}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.data-table{background:var(--bg);border-radius:12px;overflow:hidden}
+.data-table-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:0.6rem 1rem;background:rgba(14,165,233,0.05);font-size:0.72rem;font-weight:600;color:var(--muted)}
+.data-table-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:0.6rem 1rem;border-top:1px solid var(--border);font-size:0.8rem;align-items:center}
+.data-table-row:hover{background:rgba(14,165,233,0.03)}
+.source-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.ai-insight-box{background:linear-gradient(135deg,rgba(14,165,233,0.08),rgba(99,102,241,0.08));border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:1.2rem}
+.ai-insight-title{font-size:0.82rem;font-weight:700;color:#38bdf8;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem}
+.insight-item{display:flex;align-items:flex-start;gap:0.6rem;padding:0.5rem 0;border-bottom:1px solid rgba(14,165,233,0.1);font-size:0.8rem}
+.insight-item:last-child{border-bottom:none}
+.insight-icon{font-size:1rem;flex-shrink:0}
+.insight-text{color:var(--muted);line-height:1.5}
+.insight-text strong{color:var(--text)}
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#0ea5e9;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(99,102,241,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Integrations */
+.connectors{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:2rem}
+.connector{padding:0.6rem 1.2rem;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:0.9rem;display:flex;align-items:center;gap:0.5rem;transition:all 0.2s}
+.connector:hover{border-color:#0ea5e9}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#0ea5e9;background:linear-gradient(135deg,rgba(14,165,233,0.05),rgba(99,102,241,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#0ea5e9;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#0ea5e9,#6366f1);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(14,165,233,0.06),rgba(99,102,241,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#0ea5e9,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#0ea5e9}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#0ea5e9}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#0ea5e9}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">📊 DataVault AI</div>
+  <ul class="nav-links">
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#connectors">Connectors</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">📊 Gartner Cool Vendor 2025 — Business Intelligence</div>
+  <h1>Turn Raw Data Into<br><span class="gradient-text">Business Decisions</span></h1>
+  <p class="hero-sub">DataVault AI connects all your data sources, builds beautiful dashboards, and uses AI to surface insights that drive real business growth — no SQL required.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">📊 Start Free Trial — 14 Days</button>
+    <button class="btn-large btn-outline">🎬 See Live Dashboard</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">25K+</div><div class="stat-label">Companies Using DataVault</div></div>
+    <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Data Connectors</div></div>
+    <div class="stat-item"><div class="stat-num">2.4B+</div><div class="stat-label">Rows Analyzed Daily</div></div>
+    <div class="stat-item"><div class="stat-num">4.8★</div><div class="stat-label">G2 Rating</div></div>
+  </div>
+</hero>
+
+<section id="dashboard" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Live BI Dashboard</div>
+    <h2>Your Business at a <span class="gradient-text">Glance</span></h2>
+  </div>
+  <div class="bi-dashboard">
+    <div class="dash-header">
+      <div class="dash-title">📊 Executive Overview — Q2 2025</div>
+      <div class="dash-controls">
+        <button class="dash-control active">7D</button>
+        <button class="dash-control">30D</button>
+        <button class="dash-control">90D</button>
+        <button class="dash-control">YTD</button>
+      </div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card kpi-revenue">
+        <div class="kpi-label">Monthly Revenue</div>
+        <div class="kpi-value" style="color:#0ea5e9">$284,920</div>
+        <div class="kpi-change up">↑ +18.4% vs last month</div>
+      </div>
+      <div class="kpi-card kpi-users">
+        <div class="kpi-label">Active Users</div>
+        <div class="kpi-value" style="color:#10b981">14,832</div>
+        <div class="kpi-change up">↑ +12.1% vs last month</div>
+      </div>
+      <div class="kpi-card kpi-conv">
+        <div class="kpi-label">Conversion Rate</div>
+        <div class="kpi-value" style="color:#f59e0b">4.28%</div>
+        <div class="kpi-change up">↑ +0.6% vs last month</div>
+      </div>
+      <div class="kpi-card kpi-churn">
+        <div class="kpi-label">Churn Rate</div>
+        <div class="kpi-value" style="color:#8b5cf6">1.8%</div>
+        <div class="kpi-change down">↓ -0.3% improvement</div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-card-title">Revenue Trend <span class="chart-card-subtitle">Last 7 days</span></div>
+        <svg viewBox="0 0 400 120" style="width:100%;height:120px">
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,90 L57,75 L114,60 L171,50 L228,40 L285,25 L342,20 L400,10" stroke="#0ea5e9" stroke-width="2.5" fill="none"/>
+          <path d="M0,90 L57,75 L114,60 L171,50 L228,40 L285,25 L342,20 L400,10 L400,120 L0,120Z" fill="url(#lineGrad)"/>
+          <circle cx="57" cy="75" r="4" fill="#0ea5e9"/>
+          <circle cx="171" cy="50" r="4" fill="#0ea5e9"/>
+          <circle cx="285" cy="25" r="4" fill="#0ea5e9"/>
+          <circle cx="400" cy="10" r="4" fill="#6366f1"/>
+          <text x="390" y="8" fill="#38bdf8" font-size="10">$284K</text>
+        </svg>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Traffic by Channel</div>
+        <div class="mini-bars">
+          <div class="mini-bar-col"><div class="mini-bar" style="height:90px;background:linear-gradient(to top,#0ea5e9,#6366f1)"></div><div class="mini-bar-label">Organic</div></div>
+          <div class="mini-bar-col"><div class="mini-bar" style="height:65px;background:linear-gradient(to top,#10b981,#06b6d4)"></div><div class="mini-bar-label">Paid</div></div>
+          <div class="mini-bar-col"><div class="mini-bar" style="height:50px;background:linear-gradient(to top,#f59e0b,#ef4444)"></div><div class="mini-bar-label">Social</div></div>
+          <div class="mini-bar-col"><div class="mini-bar" style="height:40px;background:linear-gradient(to top,#8b5cf6,#ec4899)"></div><div class="mini-bar-label">Email</div></div>
+          <div class="mini-bar-col"><div class="mini-bar" style="height:25px;background:rgba(14,165,233,0.3)"></div><div class="mini-bar-label">Direct</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-row">
+      <div class="data-table">
+        <div class="data-table-header">
+          <span>Data Source</span><span>Records</span><span>Quality</span><span>Updated</span>
+        </div>
+        <div class="data-table-row">
+          <span><span class="source-dot" style="background:#0ea5e9"></span>Salesforce CRM</span>
+          <span style="color:#0ea5e9">284K</span>
+          <span style="color:#10b981">99.2%</span>
+          <span style="color:var(--muted)">2m ago</span>
+        </div>
+        <div class="data-table-row">
+          <span><span class="source-dot" style="background:#10b981"></span>Google Analytics</span>
+          <span style="color:#10b981">1.2M</span>
+          <span style="color:#10b981">98.7%</span>
+          <span style="color:var(--muted)">5m ago</span>
+        </div>
+        <div class="data-table-row">
+          <span><span class="source-dot" style="background:#f59e0b"></span>Stripe Payments</span>
+          <span style="color:#f59e0b">47K</span>
+          <span style="color:#10b981">100%</span>
+          <span style="color:var(--muted)">1m ago</span>
+        </div>
+        <div class="data-table-row">
+          <span><span class="source-dot" style="background:#8b5cf6"></span>HubSpot Marketing</span>
+          <span style="color:#8b5cf6">183K</span>
+          <span style="color:#f59e0b">96.4%</span>
+          <span style="color:var(--muted)">8m ago</span>
+        </div>
+      </div>
+      <div class="ai-insight-box">
+        <div class="ai-insight-title">🤖 AI Insights</div>
+        <div class="insight-item">
+          <span class="insight-icon">📈</span>
+          <span class="insight-text"><strong>Revenue up 18%</strong> — Driven by 34% increase in enterprise deals closing this week.</span>
+        </div>
+        <div class="insight-item">
+          <span class="insight-icon">⚠️</span>
+          <span class="insight-text"><strong>Churn risk detected</strong> — 127 accounts show low engagement. Recommend outreach.</span>
+        </div>
+        <div class="insight-item">
+          <span class="insight-icon">💡</span>
+          <span class="insight-text"><strong>Opportunity:</strong> Organic traffic converts 2.4x better than paid. Increase SEO budget.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Platform Features</div>
+    <h2>The Complete <span class="gradient-text">Data Intelligence Stack</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔌</div>
+      <h3>500+ Data Connectors</h3>
+      <p>Connect any data source in minutes — Salesforce, Shopify, MySQL, BigQuery, HubSpot, Stripe, and 490+ more with one click.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI-Powered Insights</h3>
+      <p>Ask questions in plain English. Our AI surfaces anomalies, trends, and opportunities you'd never find manually.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Drag & Drop Dashboards</h3>
+      <p>Build beautiful, interactive dashboards in minutes — no SQL or coding required. 100+ chart types and templates.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>Predictive Analytics</h3>
+      <p>AI forecasts revenue, churn, demand, and inventory with accuracy rates up to 94% — weeks before it happens.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📤</div>
+      <h3>Automated Reports</h3>
+      <p>Schedule reports to auto-generate and send to stakeholders via email, Slack, or PDF on any cadence you choose.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>Enterprise Security</h3>
+      <p>SOC 2 Type II certified, row-level security, SSO, audit logs, and data residency options for regulated industries.</p>
+    </div>
+  </div>
+</section>
+
+<section id="connectors" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Integrations</div>
+    <h2>Connects to <span class="gradient-text">Everything You Use</span></h2>
+  </div>
+  <div class="connectors">
+    <div class="connector">📊 Salesforce</div>
+    <div class="connector">🛒 Shopify</div>
+    <div class="connector">💳 Stripe</div>
+    <div class="connector">📈 Google Analytics</div>
+    <div class="connector">🔵 HubSpot</div>
+    <div class="connector">🗄️ PostgreSQL</div>
+    <div class="connector">☁️ BigQuery</div>
+    <div class="connector">❄️ Snowflake</div>
+    <div class="connector">🔴 MySQL</div>
+    <div class="connector">📧 Mailchimp</div>
+    <div class="connector">💬 Intercom</div>
+    <div class="connector">🎯 Facebook Ads</div>
+    <div class="connector">🔍 Google Ads</div>
+    <div class="connector">📱 Mixpanel</div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Data Intelligence for <span class="gradient-text">Every Team Size</span></h2>
+    <p class="section-sub">Start free, scale as you grow. No data limits on any plan.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">STARTER</div>
+      <div class="plan-price">$0 <span>/ month</span></div>
+      <div class="plan-desc">For individuals and small teams</div>
+      <ul class="plan-features">
+        <li>5 data connectors</li>
+        <li>3 dashboards</li>
+        <li>Basic AI insights</li>
+        <li>7-day data history</li>
+        <li>CSV export</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">📊 Most Popular</div>
+      <div class="plan-name">GROWTH</div>
+      <div class="plan-price">$49 <span>/ month</span></div>
+      <div class="plan-desc">For growing data-driven teams</div>
+      <ul class="plan-features">
+        <li>50 data connectors</li>
+        <li>Unlimited dashboards</li>
+        <li>Full AI insights engine</li>
+        <li>1-year data history</li>
+        <li>Predictive analytics</li>
+        <li>Automated reports</li>
+        <li>Team collaboration</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">ENTERPRISE</div>
+      <div class="plan-price">$199 <span>/ month</span></div>
+      <div class="plan-desc">For large organizations</div>
+      <ul class="plan-features">
+        <li>500+ connectors</li>
+        <li>Unlimited history</li>
+        <li>Custom AI models</li>
+        <li>SSO & audit logs</li>
+        <li>Data residency options</li>
+        <li>Dedicated engineer</li>
+        <li>SLA guarantee</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Make Every Decision <span class="gradient-text">Data-Driven</span></h2>
+  <p>Join 25,000+ companies that run on DataVault AI insights.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">📊 Start Free 14-Day Trial</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">📊 DataVault AI</div>
+      <p class="footer-desc">The AI-powered business intelligence platform that turns data chaos into clear insights and better decisions for teams of every size.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul class="footer-links">
+        <li><a href="#">Dashboards</a></li>
+        <li><a href="#">AI Insights</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Solutions</h4>
+      <ul class="footer-links">
+        <li><a href="#">Sales Analytics</a></li>
+        <li><a href="#">Marketing BI</a></li>
+        <li><a href="#">Finance Reports</a></li>
+        <li><a href="#">Product Analytics</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 DataVault AI. All rights reserved.</span>
+    <span>SOC 2 Type II Certified 🔐</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Start Free Trial</h3>
+    <p>14 days free · No credit card · Full access</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">💼 Continue with Microsoft</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Work Email</label>
+      <input type="email" placeholder="you@company.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Start Free Trial</button>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.dash-control').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.dash-control').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
