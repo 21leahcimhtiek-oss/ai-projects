@@ -1,0 +1,12 @@
+{
+  "extends": "@storyforge/tsconfig/react-native.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*":      ["./src/*"],
+      "@tabs/*":  ["./app/tabs/*"]
+    }
+  },
+  "include": ["app", "src", "app.config.ts"],
+  "exclude": ["node_modules", ".expo"]
+}

@@ -1,0 +1,14 @@
+{
+  "extends": "@storyforge/tsconfig/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*":      ["./src/*"],
+      "@ui/*":    ["../../packages/ui/src/*"],
+      "@utils/*": ["../../packages/utils/src/*"],
+      "@types/*": ["../../packages/types/src/*"]
+    }
+  },
+  "include": ["src", "index.html"],
+  "exclude": ["node_modules", "dist"]
+}

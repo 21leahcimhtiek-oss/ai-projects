@@ -1,0 +1,42 @@
+{
+  "name": "@storyforge/root",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build":           "turbo run build",
+    "dev":             "turbo run dev --parallel",
+    "lint":            "turbo run lint",
+    "lint:fix":        "turbo run lint:fix",
+    "test":            "turbo run test",
+    "test:watch":      "turbo run test:watch",
+    "typecheck":       "turbo run typecheck",
+    "clean":           "turbo run clean && rm -rf node_modules",
+    "format":          "prettier --write &quot;**/*.{ts,tsx,js,jsx,json,md,css,yaml}&quot; --ignore-path .gitignore",
+    "format:check":    "prettier --check &quot;**/*.{ts,tsx,js,jsx,json,md,css,yaml}&quot; --ignore-path .gitignore",
+    "changeset":       "changeset",
+    "version-packages":"changeset version",
+    "release":         "turbo run build --filter=./packages/* && changeset publish",
+    "db:push":         "turbo run db:push --filter=@storyforge/api",
+    "db:studio":       "turbo run db:studio --filter=@storyforge/api",
+    "db:seed":         "turbo run db:seed --filter=@storyforge/api"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@storyforge/prettier-config": "workspace:*",
+    "@types/node": "^22.0.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.3.3",
+    "typescript": "^5.8.3"
+  },
+  "prettier": "@storyforge/prettier-config",
+  "pnpm": {
+    "overrides": {
+      "typescript": "^5.8.3"
+    }
+  }
+}
