@@ -1,0 +1,15 @@
+{
+  "extends": "@storyforge/tsconfig/node.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir":  "dist",
+    "paths": {
+      "@/*":      ["./src/*"],
+      "@db/*":    ["./src/database/*"],
+      "@lib/*":   ["./src/lib/*"],
+      "@routers/*": ["./src/routers/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
