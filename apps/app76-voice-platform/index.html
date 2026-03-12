@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceAI - AI Voice Cloning, TTS & Speech Intelligence Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#06b6d4;--secondary:#8b5cf6;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#06b6d4;color:#06b6d4}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#06b6d4,#8b5cf6);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(6,182,212,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes soundwave{0%,100%{transform:scaleY(0.3)}50%{transform:scaleY(1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);border-radius:50px;font-size:0.85rem;color:#22d3ee;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+/* Sound wave visualizer */
+.soundwave-hero{display:flex;align-items:center;justify-content:center;gap:3px;height:60px;margin:2rem auto;max-width:300px}
+.wave-bar{width:4px;border-radius:2px;background:linear-gradient(to top,#06b6d4,#8b5cf6)}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#22d3ee;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+/* Voice Demo Studio */
+.voice-studio{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1000px;margin:0 auto}
+.studio-tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;background:var(--bg);border-radius:10px;padding:0.3rem}
+.studio-tab{padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--muted);transition:all 0.2s;border:none;background:transparent}
+.studio-tab.active{background:linear-gradient(135deg,#06b6d4,#8b5cf6);color:#fff;font-weight:600}
+.studio-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem}
+.tts-panel{background:var(--bg);border-radius:12px;padding:1.2rem}
+.panel-label{font-size:0.8rem;font-weight:600;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em}
+.tts-textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.8rem;color:var(--text);font-size:0.88rem;line-height:1.6;resize:none;height:100px;outline:none;font-family:inherit}
+.tts-textarea:focus{border-color:#06b6d4}
+.voice-controls{display:flex;flex-wrap:wrap;gap:0.5rem;margin:0.8rem 0}
+.control-group{display:flex;flex-direction:column;gap:0.3rem;flex:1;min-width:100px}
+.control-label{font-size:0.72rem;color:var(--muted)}
+.control-slider{width:100%;accent-color:#06b6d4}
+.voice-select{padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.85rem;width:100%;margin-bottom:0.8rem;outline:none}
+.generate-voice-btn{width:100%;padding:0.7rem;border-radius:10px;background:linear-gradient(135deg,#06b6d4,#8b5cf6);border:none;color:#fff;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+/* Waveform player */
+.waveform-player{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.8rem;margin-top:0.8rem}
+.player-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem}
+.player-title{font-size:0.82rem;font-weight:600}
+.player-duration{font-size:0.75rem;color:var(--muted)}
+.waveform{display:flex;align-items:center;gap:1.5px;height:36px;margin-bottom:0.5rem}
+.wf-bar{width:3px;border-radius:2px;background:rgba(6,182,212,0.4);cursor:pointer}
+.wf-bar.played{background:linear-gradient(to top,#06b6d4,#8b5cf6)}
+.player-controls{display:flex;align-items:center;gap:0.8rem}
+.play-pause{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#06b6d4,#8b5cf6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:#fff}
+.player-time{font-size:0.75rem;color:var(--muted)}
+/* Voices panel */
+.voices-panel{background:var(--bg);border-radius:12px;padding:1rem;overflow-y:auto;max-height:360px}
+.voice-list-title{font-size:0.8rem;font-weight:700;margin-bottom:0.8rem;color:#22d3ee}
+.voice-item{display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.7rem;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-bottom:0.3rem}
+.voice-item:hover,.voice-item.active{background:rgba(6,182,212,0.08)}
+.voice-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.voice-info{flex:1}
+.voice-name{font-size:0.85rem;font-weight:600}
+.voice-style{font-size:0.72rem;color:var(--muted)}
+.voice-lang{font-size:0.7rem;color:#22d3ee;background:rgba(6,182,212,0.1);padding:0.1rem 0.4rem;border-radius:4px}
+.voice-play-btn{width:24px;height:24px;border-radius:50%;background:rgba(6,182,212,0.1);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#22d3ee}
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#06b6d4;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(139,92,246,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#06b6d4;background:linear-gradient(135deg,rgba(6,182,212,0.05),rgba(139,92,246,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#06b6d4,#8b5cf6);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#06b6d4;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#06b6d4,#8b5cf6);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(139,92,246,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#06b6d4}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#06b6d4}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#06b6d4}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🎙️ VoiceAI</div>
+  <ul class="nav-links">
+    <li><a href="#studio">Studio</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#">API</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Try Free</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🎙️ Ultra-realistic AI voices in 29 languages</div>
+  <h1>The Most Human-Sounding<br><span class="gradient-text">AI Voice Platform</span></h1>
+  <p class="hero-sub">Clone any voice in 30 seconds, generate ultra-realistic speech, transcribe audio with 99% accuracy, and build voice-powered apps with our enterprise API.</p>
+  <div class="soundwave-hero" id="heroWave"></div>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🎙️ Start Free — 10,000 chars/mo</button>
+    <button class="btn-large btn-outline">▶ Hear Sample Voices</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">1,000+</div><div class="stat-label">AI Voice Models</div></div>
+    <div class="stat-item"><div class="stat-num">29</div><div class="stat-label">Languages Supported</div></div>
+    <div class="stat-item"><div class="stat-num">99.2%</div><div class="stat-label">Transcription Accuracy</div></div>
+    <div class="stat-item"><div class="stat-num">50K+</div><div class="stat-label">Developers Using API</div></div>
+  </div>
+</hero>
+
+<section id="studio" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Voice Studio</div>
+    <h2>Professional Voice <span class="gradient-text">Generation Studio</span></h2>
+  </div>
+  <div class="voice-studio">
+    <div class="studio-tabs">
+      <button class="studio-tab active">🔊 Text to Speech</button>
+      <button class="studio-tab">🎤 Voice Clone</button>
+      <button class="studio-tab">📝 Transcription</button>
+      <button class="studio-tab">🔄 Voice Translate</button>
+    </div>
+    <div class="studio-layout">
+      <div class="tts-panel">
+        <div class="panel-label">Enter your text</div>
+        <textarea class="tts-textarea">Welcome to VoiceAI — the most advanced AI voice platform available today. Our ultra-realistic voices are indistinguishable from human speech, perfect for any application.</textarea>
+        <div style="margin:0.8rem 0">
+          <div class="panel-label">Select Voice</div>
+          <select class="voice-select">
+            <option>Sarah — American English · Professional Female</option>
+            <option>James — British English · Authoritative Male</option>
+            <option>Luna — American English · Warm Female</option>
+            <option>Marcus — Deep · Narrator Male</option>
+          </select>
+        </div>
+        <div class="voice-controls">
+          <div class="control-group">
+            <div class="control-label">Speed: 1.0x</div>
+            <input type="range" class="control-slider" min="0.5" max="2" step="0.1" value="1">
+          </div>
+          <div class="control-group">
+            <div class="control-label">Pitch: Normal</div>
+            <input type="range" class="control-slider" min="-20" max="20" step="1" value="0">
+          </div>
+          <div class="control-group">
+            <div class="control-label">Stability: 75%</div>
+            <input type="range" class="control-slider" min="0" max="100" step="5" value="75">
+          </div>
+        </div>
+        <button class="generate-voice-btn" onclick="document.getElementById('authModal').classList.add('active')">
+          🎙️ Generate Speech
+        </button>
+        <div class="waveform-player">
+          <div class="player-header">
+            <div class="player-title">Sarah — Sample Output</div>
+            <div class="player-duration">0:08</div>
+          </div>
+          <div class="waveform" id="waveform"></div>
+          <div class="player-controls">
+            <button class="play-pause" id="playBtn">▶</button>
+            <span class="player-time">0:03 / 0:08</span>
+            <span style="font-size:0.75rem;color:var(--muted);margin-left:auto">MP3 · 128kbps · Download</span>
+          </div>
+        </div>
+      </div>
+      <div class="voices-panel">
+        <div class="voice-list-title">🎙️ Featured Voices</div>
+        <div class="voice-item active">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#06b6d4,#8b5cf6)">👩</div>
+          <div class="voice-info"><div class="voice-name">Sarah</div><div class="voice-style">Professional · Warm</div></div>
+          <div class="voice-lang">EN-US</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div class="voice-item">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">👨</div>
+          <div class="voice-info"><div class="voice-name">James</div><div class="voice-style">Authoritative · Clear</div></div>
+          <div class="voice-lang">EN-GB</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div class="voice-item">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#a855f7,#ec4899)">👩</div>
+          <div class="voice-info"><div class="voice-name">Luna</div><div class="voice-style">Conversational · Warm</div></div>
+          <div class="voice-lang">EN-US</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div class="voice-item">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">👨</div>
+          <div class="voice-info"><div class="voice-name">Marco</div><div class="voice-style">Narrator · Deep</div></div>
+          <div class="voice-lang">EN-US</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div class="voice-item">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#10b981,#06b6d4)">👩</div>
+          <div class="voice-info"><div class="voice-name">Yuki</div><div class="voice-style">Natural · Expressive</div></div>
+          <div class="voice-lang">JA</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div class="voice-item">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#ec4899,#f97316)">👨</div>
+          <div class="voice-info"><div class="voice-name">Carlos</div><div class="voice-style">Friendly · Clear</div></div>
+          <div class="voice-lang">ES</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div class="voice-item">
+          <div class="voice-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">👩</div>
+          <div class="voice-info"><div class="voice-name">Sophie</div><div class="voice-style">Elegant · Refined</div></div>
+          <div class="voice-lang">FR</div>
+          <button class="voice-play-btn">▶</button>
+        </div>
+        <div style="text-align:center;margin-top:0.8rem">
+          <button class="btn-outline" style="font-size:0.8rem;padding:0.4rem 1rem" onclick="document.getElementById('authModal').classList.add('active')">Browse All 1,000+ Voices</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Platform Features</div>
+    <h2>Everything Voice, <span class="gradient-text">Powered by AI</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔊</div>
+      <h3>Ultra-Realistic TTS</h3>
+      <p>Generate human-indistinguishable speech with emotional range, proper pacing, and natural inflection in 29 languages.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎤</div>
+      <h3>Voice Cloning</h3>
+      <p>Clone any voice from just 30 seconds of audio. Create a permanent voice model that sounds exactly like the original.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>Speech-to-Text</h3>
+      <p>99.2% accurate transcription with speaker diarization, timestamps, and punctuation in real-time or batch processing.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌍</div>
+      <h3>Voice Translation</h3>
+      <p>Translate audio content to 29 languages while preserving the original speaker's voice, tone, and emotional quality.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Low-Latency API</h3>
+      <p>Stream voice generation with under 300ms latency. Perfect for real-time applications, chatbots, and voice assistants.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <h3>Developer SDK</h3>
+      <p>REST API + SDKs for Python, Node.js, and more. Comprehensive docs, webhooks, and a generous free tier to get started.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Start Free, <span class="gradient-text">Scale as You Grow</span></h2>
+    <p class="section-sub">Pay only for what you use. No minimum commitments.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">FREE</div>
+      <div class="plan-price">$0 <span>/ month</span></div>
+      <div class="plan-desc">For personal projects and testing</div>
+      <ul class="plan-features">
+        <li>10,000 chars/month TTS</li>
+        <li>3 voice clones</li>
+        <li>60 min transcription/mo</li>
+        <li>30 standard voices</li>
+        <li>MP3 downloads</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">🎙️ Most Popular</div>
+      <div class="plan-name">CREATOR</div>
+      <div class="plan-price">$22 <span>/ month</span></div>
+      <div class="plan-desc">For content creators & businesses</div>
+      <ul class="plan-features">
+        <li>500,000 chars/month TTS</li>
+        <li>Unlimited voice clones</li>
+        <li>Unlimited transcription</li>
+        <li>1,000+ premium voices</li>
+        <li>Voice translation (10 langs)</li>
+        <li>Commercial license</li>
+        <li>API access</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">ENTERPRISE</div>
+      <div class="plan-price">$99 <span>/ month</span></div>
+      <div class="plan-desc">For high-volume applications</div>
+      <ul class="plan-features">
+        <li>Unlimited characters</li>
+        <li>Custom voice training</li>
+        <li>All 29 languages</li>
+        <li>Sub-300ms latency</li>
+        <li>SLA guarantee</li>
+        <li>Dedicated infra</li>
+        <li>White-label solution</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Give Your Apps a <span class="gradient-text">Human Voice</span></h2>
+  <p>Join 50,000+ developers and creators building with VoiceAI.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🎙️ Start Free — 10,000 chars/month</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">🎙️ VoiceAI</div>
+      <p class="footer-desc">The most advanced AI voice platform for text-to-speech, voice cloning, transcription, and real-time voice applications.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <ul class="footer-links">
+        <li><a href="#">Text to Speech</a></li>
+        <li><a href="#">Voice Cloning</a></li>
+        <li><a href="#">Transcription</a></li>
+        <li><a href="#">Voice API</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Use Cases</h4>
+      <ul class="footer-links">
+        <li><a href="#">Audiobooks</a></li>
+        <li><a href="#">Podcasts</a></li>
+        <li><a href="#">E-Learning</a></li>
+        <li><a href="#">Game Dev</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 VoiceAI. All rights reserved.</span>
+    <span>The human voice, amplified by AI 🎙️</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Start Free Today</h3>
+    <p>10,000 characters free every month — no credit card</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">💻 Continue with GitHub</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Create Free Account</button>
+  </div>
+</div>
+
+<script>
+// Generate hero soundwave
+const heroWave = document.getElementById('heroWave');
+for(let i=0;i<40;i++){
+  const bar = document.createElement('div');
+  bar.className = 'wave-bar';
+  const h = Math.random()*50+10;
+  bar.style.height = h+'px';
+  bar.style.animation = `soundwave ${0.5+Math.random()*1}s ease-in-out infinite`;
+  bar.style.animationDelay = (Math.random()*0.5)+'s';
+  heroWave.appendChild(bar);
+}
+// Generate waveform player bars
+const waveform = document.getElementById('waveform');
+for(let i=0;i<60;i++){
+  const bar = document.createElement('div');
+  bar.className = 'wf-bar'+(i<25?' played':'');
+  bar.style.height = (Math.random()*28+8)+'px';
+  waveform.appendChild(bar);
+}
+// Play button toggle
+let playing = false;
+document.getElementById('playBtn').addEventListener('click',()=>{
+  playing=!playing;
+  document.getElementById('playBtn').textContent = playing?'⏸':'▶';
+});
+// Studio tabs
+document.querySelectorAll('.studio-tab').forEach((tab,i)=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.studio-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+// Voice items
+document.querySelectorAll('.voice-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.voice-item').forEach(v=>v.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
