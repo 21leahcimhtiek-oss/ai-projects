@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MenuAI - AI-Powered Restaurant Management & Growth Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#f97316;--secondary:#ef4444;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f97316,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#f97316;color:#f97316}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#f97316,#ef4444);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(249,115,22,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:50px;font-size:0.85rem;color:#fb923c;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#f97316,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#f97316,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#fb923c;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+/* Restaurant Dashboard */
+.restaurant-demo{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 300px;gap:1.5rem}
+/* POS / Order Panel */
+.pos-panel{background:var(--bg);border-radius:12px;padding:1.2rem}
+.pos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.pos-title{font-size:0.9rem;font-weight:700}
+.table-pills{display:flex;gap:0.4rem;flex-wrap:wrap}
+.table-pill{padding:0.25rem 0.6rem;border-radius:6px;font-size:0.72rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all 0.2s}
+.table-pill.occupied{background:rgba(249,115,22,0.1);border-color:#f97316;color:#fb923c}
+.table-pill.available{background:rgba(16,185,129,0.1);border-color:#10b981;color:#34d399}
+.table-pill.reserved{background:rgba(139,92,246,0.1);border-color:#8b5cf6;color:#a78bfa}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1rem}
+.menu-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.7rem;text-align:center;cursor:pointer;transition:all 0.2s}
+.menu-item:hover{border-color:#f97316}
+.menu-emoji{font-size:1.5rem;margin-bottom:0.3rem}
+.menu-name{font-size:0.72rem;font-weight:600}
+.menu-price{font-size:0.7rem;color:#fb923c;font-weight:700}
+.menu-tag{font-size:0.6rem;color:var(--muted)}
+.order-list{background:var(--card);border-radius:8px;padding:0.8rem}
+.order-title{font-size:0.8rem;font-weight:700;margin-bottom:0.6rem;display:flex;justify-content:space-between}
+.order-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.8rem}
+.order-item:last-child{border-bottom:none}
+.order-qty{color:#fb923c;font-weight:700;width:20px}
+.order-name{flex:1;margin:0 0.5rem}
+.order-price{font-weight:600}
+.order-total{display:flex;justify-content:space-between;padding:0.6rem 0;font-weight:800;font-size:0.9rem;margin-top:0.4rem;border-top:2px solid var(--border)}
+.pay-btn{width:100%;padding:0.6rem;border-radius:8px;background:linear-gradient(135deg,#f97316,#ef4444);border:none;color:#fff;font-size:0.85rem;font-weight:700;cursor:pointer;margin-top:0.5rem}
+/* Analytics Sidebar */
+.analytics-sidebar{display:flex;flex-direction:column;gap:1rem}
+.analytics-card{background:var(--bg);border-radius:12px;padding:1rem}
+.analytics-title{font-size:0.82rem;font-weight:700;margin-bottom:0.8rem;color:#fb923c}
+.revenue-display{text-align:center;padding:0.8rem 0}
+.revenue-today{font-size:2rem;font-weight:900;color:#f97316}
+.revenue-label{font-size:0.75rem;color:var(--muted)}
+.revenue-change{font-size:0.8rem;color:#10b981;margin-top:0.2rem}
+.mini-metric-row{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
+.mini-metric{background:var(--card);border-radius:8px;padding:0.6rem;text-align:center}
+.mini-val{font-size:1rem;font-weight:800}
+.mini-label{font-size:0.65rem;color:var(--muted)}
+.ai-menu-suggest{background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(239,68,68,0.08));border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:0.8rem;font-size:0.8rem}
+.ai-suggest-title{font-weight:700;color:#fb923c;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.3rem}
+.ai-suggest-text{color:var(--muted);line-height:1.5;font-size:0.78rem}
+.top-items{display:flex;flex-direction:column;gap:0.4rem}
+.top-item{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.3rem 0;border-bottom:1px solid var(--border)}
+.top-item:last-child{border-bottom:none}
+.top-item-bar{height:4px;border-radius:2px;background:linear-gradient(90deg,#f97316,#ef4444);margin-top:2px}
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#f97316;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(239,68,68,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#f97316;background:linear-gradient(135deg,rgba(249,115,22,0.05),rgba(239,68,68,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f97316,#ef4444);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#f97316;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#f97316,#ef4444);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(239,68,68,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#f97316,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#f97316}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#f97316}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#f97316}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🍽️ MenuAI</div>
+  <ul class="nav-links">
+    <li><a href="#demo">POS Demo</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#">Integrations</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🍽️ Powering 12,000+ restaurants across North America</div>
+  <h1>The AI Restaurant Platform<br><span class="gradient-text">That Grows Your Revenue</span></h1>
+  <p class="hero-sub">MenuAI combines an intelligent POS, online ordering, kitchen display, AI menu optimization, and customer loyalty — in one beautifully simple platform that pays for itself.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🍽️ Start Free 30-Day Trial</button>
+    <button class="btn-large btn-outline">📺 Watch Live Demo</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">12K+</div><div class="stat-label">Restaurants Powered</div></div>
+    <div class="stat-item"><div class="stat-num">$2.8B</div><div class="stat-label">Orders Processed</div></div>
+    <div class="stat-item"><div class="stat-num">23%</div><div class="stat-label">Avg Revenue Increase</div></div>
+    <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-label">Restaurant Owner Rating</div></div>
+  </div>
+</hero>
+
+<section id="demo" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Live Platform Demo</div>
+    <h2>POS + Analytics + AI, <span class="gradient-text">All-in-One</span></h2>
+  </div>
+  <div class="restaurant-demo">
+    <div class="pos-panel">
+      <div class="pos-header">
+        <div class="pos-title">🍽️ Floor Plan — Table 7 Active</div>
+        <div class="table-pills">
+          <button class="table-pill available">T1</button>
+          <button class="table-pill occupied">T2</button>
+          <button class="table-pill occupied">T3</button>
+          <button class="table-pill available">T4</button>
+          <button class="table-pill reserved">T5</button>
+          <button class="table-pill available">T6</button>
+          <button class="table-pill occupied">T7 ✓</button>
+          <button class="table-pill available">T8</button>
+        </div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item" onclick="document.getElementById('authModal').classList.add('active')">
+          <div class="menu-emoji">🍔</div>
+          <div class="menu-name">Smash Burger</div>
+          <div class="menu-price">$16.99</div>
+          <div class="menu-tag">🔥 #1 Seller</div>
+        </div>
+        <div class="menu-item" onclick="document.getElementById('authModal').classList.add('active')">
+          <div class="menu-emoji">🍕</div>
+          <div class="menu-name">Margherita</div>
+          <div class="menu-price">$14.99</div>
+          <div class="menu-tag">⭐ Popular</div>
+        </div>
+        <div class="menu-item" onclick="document.getElementById('authModal').classList.add('active')">
+          <div class="menu-emoji">🥗</div>
+          <div class="menu-name">Caesar Salad</div>
+          <div class="menu-price">$11.99</div>
+          <div class="menu-tag">🌿 Healthy</div>
+        </div>
+        <div class="menu-item" onclick="document.getElementById('authModal').classList.add('active')">
+          <div class="menu-emoji">🍝</div>
+          <div class="menu-name">Carbonara</div>
+          <div class="menu-price">$18.99</div>
+          <div class="menu-tag">Chef's Pick</div>
+        </div>
+        <div class="menu-item" onclick="document.getElementById('authModal').classList.add('active')">
+          <div class="menu-emoji">🍷</div>
+          <div class="menu-name">House Red</div>
+          <div class="menu-price">$9.99</div>
+          <div class="menu-tag">🍾 Wine List</div>
+        </div>
+        <div class="menu-item" onclick="document.getElementById('authModal').classList.add('active')">
+          <div class="menu-emoji">🍰</div>
+          <div class="menu-name">Cheesecake</div>
+          <div class="menu-price">$8.99</div>
+          <div class="menu-tag">🤖 AI Upsell</div>
+        </div>
+      </div>
+      <div class="order-list">
+        <div class="order-title"><span>Table 7 Order</span><span style="color:#fb923c">3 items</span></div>
+        <div class="order-item">
+          <div class="order-qty">2x</div>
+          <div class="order-name">Smash Burger</div>
+          <div class="order-price">$33.98</div>
+        </div>
+        <div class="order-item">
+          <div class="order-qty">1x</div>
+          <div class="order-name">Caesar Salad</div>
+          <div class="order-price">$11.99</div>
+        </div>
+        <div class="order-item">
+          <div class="order-qty">2x</div>
+          <div class="order-name">House Red</div>
+          <div class="order-price">$19.98</div>
+        </div>
+        <div class="order-total">
+          <span>Total (+ tax)</span>
+          <span style="color:#f97316">$73.03</span>
+        </div>
+        <button class="pay-btn" onclick="document.getElementById('authModal').classList.add('active')">💳 Process Payment</button>
+      </div>
+    </div>
+    <div class="analytics-sidebar">
+      <div class="analytics-card">
+        <div class="analytics-title">📊 Today's Performance</div>
+        <div class="revenue-display">
+          <div class="revenue-today">$4,280</div>
+          <div class="revenue-label">Revenue Today</div>
+          <div class="revenue-change">↑ +23% vs last Tuesday</div>
+        </div>
+        <div class="mini-metric-row">
+          <div class="mini-metric">
+            <div class="mini-val" style="color:#f97316">187</div>
+            <div class="mini-label">Covers</div>
+          </div>
+          <div class="mini-metric">
+            <div class="mini-val" style="color:#10b981">$22.88</div>
+            <div class="mini-label">Avg Check</div>
+          </div>
+          <div class="mini-metric">
+            <div class="mini-val" style="color:#8b5cf6">94%</div>
+            <div class="mini-label">Table Turn</div>
+          </div>
+          <div class="mini-metric">
+            <div class="mini-val" style="color:#0ea5e9">4.8★</div>
+            <div class="mini-label">Avg Review</div>
+          </div>
+        </div>
+      </div>
+      <div class="analytics-card">
+        <div class="analytics-title">🏆 Top Sellers Today</div>
+        <div class="top-items">
+          <div class="top-item">
+            <div>🍔 Smash Burger</div>
+            <div style="color:#f97316;font-weight:700">48 orders</div>
+          </div>
+          <div style="height:4px;border-radius:2px;background:linear-gradient(90deg,#f97316,#ef4444);margin-bottom:4px;width:90%"></div>
+          <div class="top-item">
+            <div>🍕 Margherita</div>
+            <div style="color:#f97316;font-weight:700">31 orders</div>
+          </div>
+          <div style="height:4px;border-radius:2px;background:linear-gradient(90deg,#f97316,#ef4444);margin-bottom:4px;width:65%"></div>
+          <div class="top-item">
+            <div>🍝 Carbonara</div>
+            <div style="color:#f97316;font-weight:700">24 orders</div>
+          </div>
+          <div style="height:4px;border-radius:2px;background:linear-gradient(90deg,#f97316,#ef4444);margin-bottom:4px;width:50%"></div>
+        </div>
+      </div>
+      <div class="ai-menu-suggest">
+        <div class="ai-suggest-title">🤖 AI Menu Insight</div>
+        <div class="ai-suggest-text">Add Truffle Fries as an upsell with Smash Burger. 72% of similar restaurants earn +$3.20/check with this combo. Estimated monthly impact: +$1,840.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Platform Features</div>
+    <h2>Everything Your Restaurant <span class="gradient-text">Needs to Thrive</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">💳</div>
+      <h3>AI-Powered POS</h3>
+      <p>Lightning-fast point of sale with AI upsell suggestions, split bills, custom modifiers, and offline mode for zero downtime.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>Online Ordering & Delivery</h3>
+      <p>Commission-free online ordering via your own branded website. Integrate with DoorDash, UberEats, and Grubhub seamlessly.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🍳</div>
+      <h3>Kitchen Display System</h3>
+      <p>Digital KDS replaces printed tickets. Orders route automatically by station. Track prep times and reduce ticket errors by 94%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Menu Optimization</h3>
+      <p>AI analyzes sales data to suggest price changes, identify low performers, and recommend high-margin dish combinations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💝</div>
+      <h3>Customer Loyalty Program</h3>
+      <p>Built-in loyalty rewards, gift cards, and personalized campaigns that bring guests back 40% more often.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <h3>Inventory Management</h3>
+      <p>Real-time inventory tracking with AI reorder alerts, recipe costing, waste tracking, and supplier management.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Flat Monthly Rate, <span class="gradient-text">Zero Surprises</span></h2>
+    <p class="section-sub">No per-transaction fees. No hidden charges. Just growth.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">SOLO</div>
+      <div class="plan-price">$49 <span>/ month</span></div>
+      <div class="plan-desc">For single-location restaurants</div>
+      <ul class="plan-features">
+        <li>Full POS system</li>
+        <li>Online ordering</li>
+        <li>Basic analytics</li>
+        <li>Customer management</li>
+        <li>1 terminal included</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">🍽️ Most Popular</div>
+      <div class="plan-name">GROWTH</div>
+      <div class="plan-price">$99 <span>/ month</span></div>
+      <div class="plan-desc">For growing restaurants</div>
+      <ul class="plan-features">
+        <li>Everything in Solo</li>
+        <li>AI menu optimization</li>
+        <li>Kitchen display system</li>
+        <li>Loyalty program</li>
+        <li>Inventory management</li>
+        <li>Delivery integrations</li>
+        <li>3 terminals included</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">MULTI-LOCATION</div>
+      <div class="plan-price">$199 <span>/ month</span></div>
+      <div class="plan-desc">For restaurant groups & chains</div>
+      <ul class="plan-features">
+        <li>Everything in Growth</li>
+        <li>Multi-location dashboard</li>
+        <li>Franchise management</li>
+        <li>Central menu control</li>
+        <li>Enterprise reporting</li>
+        <li>Unlimited terminals</li>
+        <li>Dedicated support</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Ready to <span class="gradient-text">Fill Every Table?</span></h2>
+  <p>Join 12,000+ restaurants growing faster with MenuAI. 30 days free, no credit card needed.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">🍽️ Start Your Free 30-Day Trial</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">🍽️ MenuAI</div>
+      <p class="footer-desc">The complete AI restaurant platform — POS, online ordering, kitchen display, loyalty, and analytics in one beautifully simple system.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <ul class="footer-links">
+        <li><a href="#">Point of Sale</a></li>
+        <li><a href="#">Online Ordering</a></li>
+        <li><a href="#">Kitchen Display</a></li>
+        <li><a href="#">Loyalty Program</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Restaurant Types</h4>
+      <ul class="footer-links">
+        <li><a href="#">Full Service</a></li>
+        <li><a href="#">Fast Casual</a></li>
+        <li><a href="#">Food Trucks</a></li>
+        <li><a href="#">Multi-Location</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 MenuAI. All rights reserved.</span>
+    <span>Every restaurant deserves to thrive 🍽️</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Start Free Trial</h3>
+    <p>30 days free · No credit card · Full access</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">🍎 Continue with Apple</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="you@restaurant.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Start Free Trial</button>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.table-pill').forEach(pill=>{
+  pill.addEventListener('click',()=>{
+    document.querySelectorAll('.table-pill').forEach(p=>p.classList.remove('occupied'));
+    pill.classList.add('occupied');
+  });
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
