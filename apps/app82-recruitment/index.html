@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecruitAI - AI-Powered Talent Acquisition Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #0ea5e9;
+    --secondary: #38bdf8;
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --card2: #1a1a2e;
+    --border: rgba(14,165,233,0.2);
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color 0.3s; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-cta { display: flex; gap: 1rem; align-items: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(14,165,233,0.4); }
+  .btn-large { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 12px; }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(14,165,233,0.15) 0%, transparent 70%); }
+  .hero-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(14,165,233,0.1); border: 1px solid var(--border); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 620px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--secondary); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+
+  .section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.7; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(14,165,233,0.1); }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .demo-section { padding: 6rem 2rem; background: linear-gradient(180deg, transparent, rgba(14,165,233,0.03), transparent); }
+  .demo-container { max-width: 1200px; margin: 0 auto; }
+  .demo-app { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .demo-header { background: var(--card2); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
+  .demo-dots { display: flex; gap: 0.4rem; }
+  .demo-dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .demo-dots span:nth-child(1) { background: #ef4444; }
+  .demo-dots span:nth-child(2) { background: #f59e0b; }
+  .demo-dots span:nth-child(3) { background: #22c55e; }
+  .demo-title { font-size: 0.85rem; color: var(--muted); }
+  .demo-body { display: grid; grid-template-columns: 260px 1fr 240px; min-height: 520px; }
+
+  .pipeline-sidebar { background: var(--card2); border-right: 1px solid var(--border); padding: 1.2rem; }
+  .pipeline-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.8rem; }
+  .job-item { padding: 0.7rem; border-radius: 8px; cursor: pointer; margin-bottom: 0.4rem; border: 1px solid transparent; }
+  .job-item.active { background: rgba(14,165,233,0.1); border-color: var(--border); }
+  .job-title { font-size: 0.82rem; font-weight: 600; }
+  .job-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+  .job-count { display: inline-block; background: rgba(14,165,233,0.2); color: var(--secondary); padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.65rem; font-weight: 600; margin-top: 0.3rem; }
+  .pipeline-stats { margin-top: 1.2rem; }
+  .pipe-stat { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.78rem; }
+  .pipe-stat span:last-child { color: var(--secondary); font-weight: 600; }
+
+  .demo-main { padding: 1.5rem; }
+  .kanban-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .kanban-header h3 { font-size: 1rem; font-weight: 700; }
+  .kanban-meta { font-size: 0.78rem; color: var(--muted); }
+  .pipeline-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+  .pipe-col { background: var(--card2); border-radius: 10px; padding: 0.8rem; }
+  .pipe-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; }
+  .pipe-col-name { font-size: 0.75rem; font-weight: 700; }
+  .pipe-col-count { background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.65rem; }
+  .candidate-card { background: var(--bg); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.7rem; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.2s; }
+  .candidate-card:hover { border-color: var(--primary); }
+  .cand-name { font-size: 0.8rem; font-weight: 600; }
+  .cand-role { font-size: 0.7rem; color: var(--muted); }
+  .cand-score { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.4rem; }
+  .score-pip { width: 6px; height: 6px; border-radius: 50%; }
+  .cand-score-val { font-size: 0.68rem; color: var(--secondary); font-weight: 600; }
+  .cand-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.4rem; }
+  .cand-tag { background: rgba(14,165,233,0.1); color: var(--secondary); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.6rem; }
+
+  .demo-right { border-left: 1px solid var(--border); padding: 1.2rem; }
+  .ai-insights { margin-bottom: 1.2rem; }
+  .ai-insights h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .insight-card { background: rgba(14,165,233,0.08); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem; margin-bottom: 0.6rem; font-size: 0.78rem; line-height: 1.5; }
+  .top-candidate { margin-bottom: 1.2rem; }
+  .top-candidate h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .top-cand-card { background: rgba(14,165,233,0.05); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem; }
+  .top-cand-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .top-cand-name { font-size: 0.85rem; font-weight: 700; }
+  .top-cand-title { font-size: 0.72rem; color: var(--muted); }
+  .match-score { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+  .match-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .match-fill { height: 100%; background: linear-gradient(90deg, #0ea5e9, #38bdf8); border-radius: 3px; }
+  .match-val { font-size: 0.75rem; font-weight: 700; color: var(--secondary); }
+  .skill-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+  .skill-chip { background: rgba(14,165,233,0.15); color: var(--secondary); padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; }
+  .source-chart { }
+  .source-chart h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .source-item { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; font-size: 0.75rem; }
+  .source-name { width: 80px; color: var(--muted); }
+  .source-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .source-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+  .source-pct { width: 30px; text-align: right; color: var(--secondary); font-weight: 600; }
+
+  .pricing-section { padding: 6rem 2rem; }
+  .pricing-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; }
+  .price-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(14,165,233,0.05), rgba(56,189,248,0.05)); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .price-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--muted); }
+  .price-amount { font-size: 3rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .price-amount span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .price-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .price-btn { width: 100%; padding: 0.8rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .price-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .price-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .price-btn-fill { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #fff; }
+  .price-btn-fill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(14,165,233,0.4); }
+
+  footer { background: var(--card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer .footer-logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; position: relative; }
+  .modal h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .social-btn { width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; }
+  .social-btn:hover { border-color: var(--primary); background: rgba(14,165,233,0.05); }
+  .divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; position: relative; }
+  .divider::before,.divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .divider::before { left:0; } .divider::after { right:0; }
+  .form-input { width: 100%; padding: 0.75rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem; outline: none; }
+  .form-input:focus { border-color: var(--primary); }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🎯 RecruitAI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-ghost" onclick="document.getElementById('modal').classList.add('active')">Log In</button>
+    <button class="btn btn-primary" onclick="document.getElementById('modal').classList.add('active')">Start Free</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🎯 AI-First Talent Acquisition</div>
+    <h1>Hire <span>10x Faster</span> with<br>AI-Powered Recruiting</h1>
+    <p>Automate candidate sourcing, AI-rank applicants, schedule interviews, and predict top performers — all before your first phone screen.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-large" onclick="document.getElementById('modal').classList.add('active')">Start Hiring Free →</button>
+      <button class="btn btn-ghost btn-large">Watch Demo</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">68%</div><div class="stat-label">Faster Time-to-Hire</div></div>
+      <div class="stat"><div class="stat-num">5K+</div><div class="stat-label">Companies Hiring</div></div>
+      <div class="stat"><div class="stat-num">1.2M+</div><div class="stat-label">Candidates Placed</div></div>
+      <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Retention Rate</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">Platform</div>
+  <h2 class="section-title">Recruiting Reimagined <span style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">with AI</span></h2>
+  <p class="section-sub">From job posting to signed offer — AI automates every step of your talent acquisition funnel.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Candidate Sourcing</h3>
+      <p>Automatically source passive candidates from LinkedIn, GitHub, AngelList, and 40+ job boards. AI scores each candidate before you see them.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Resume Intelligence</h3>
+      <p>AI parses and ranks every resume against your job requirements. Bias-free scoring based purely on skills, experience, and culture fit signals.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Automated Scheduling</h3>
+      <p>AI coordinates interview schedules across time zones, sends reminders, and rescheduling — zero back-and-forth email chains.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>AI Interview Assistant</h3>
+      <p>Generate role-specific interview questions, transcribe interviews in real time, and auto-score candidate responses against rubrics.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Predictive Hiring Analytics</h3>
+      <p>AI predicts which candidates will accept offers, likely tenure, and performance scores — backed by your historical hiring data.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌍</div>
+      <h3>Global Compliance Engine</h3>
+      <p>Automated EEOC tracking, GDPR-compliant data handling, and bias auditing to ensure fair and legally compliant hiring processes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-container">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div class="section-label">Live Preview</div>
+      <h2 class="section-title">AI Recruiting Pipeline</h2>
+    </div>
+    <div class="demo-app">
+      <div class="demo-header">
+        <div class="demo-dots"><span></span><span></span><span></span></div>
+        <div class="demo-title">RecruitAI — Acme Corp Hiring Dashboard · Q1 2025</div>
+      </div>
+      <div class="demo-body">
+        <div class="pipeline-sidebar">
+          <div class="pipeline-title">Active Positions</div>
+          <div class="job-item active">
+            <div class="job-title">Senior ML Engineer</div>
+            <div class="job-meta">Engineering · Remote</div>
+            <span class="job-count">47 candidates</span>
+          </div>
+          <div class="job-item">
+            <div class="job-title">Product Manager</div>
+            <div class="job-meta">Product · NYC</div>
+            <span class="job-count">83 candidates</span>
+          </div>
+          <div class="job-item">
+            <div class="job-title">UX Designer</div>
+            <div class="job-meta">Design · SF</div>
+            <span class="job-count">31 candidates</span>
+          </div>
+          <div class="job-item">
+            <div class="job-title">Sales Director</div>
+            <div class="job-meta">Sales · Austin</div>
+            <span class="job-count">22 candidates</span>
+          </div>
+          <div class="pipeline-stats">
+            <div class="pipeline-title" style="margin-top:1rem;">Pipeline Health</div>
+            <div class="pipe-stat"><span>Avg. Time-to-Fill</span><span>18 days</span></div>
+            <div class="pipe-stat"><span>Offer Accept Rate</span><span>87%</span></div>
+            <div class="pipe-stat"><span>Source Quality</span><span>94/100</span></div>
+            <div class="pipe-stat"><span>AI Accuracy</span><span>96.2%</span></div>
+          </div>
+        </div>
+        <div class="demo-main">
+          <div class="kanban-header">
+            <h3>Senior ML Engineer — Hiring Pipeline</h3>
+            <div class="kanban-meta">47 total · 12 active · AI-ranked</div>
+          </div>
+          <div class="pipeline-cols">
+            <div class="pipe-col">
+              <div class="pipe-col-header"><span class="pipe-col-name">Applied</span><span class="pipe-col-count">24</span></div>
+              <div class="candidate-card">
+                <div class="cand-name">Sarah Chen</div>
+                <div class="cand-role">Sr. ML @ Google · 6 yrs</div>
+                <div class="cand-score"><div class="score-pip" style="background:#22c55e;"></div><span class="cand-score-val">AI Score: 96%</span></div>
+                <div class="cand-tags"><span class="cand-tag">PyTorch</span><span class="cand-tag">LLMs</span></div>
+              </div>
+              <div class="candidate-card">
+                <div class="cand-name">James Park</div>
+                <div class="cand-role">ML Eng @ Meta · 4 yrs</div>
+                <div class="cand-score"><div class="score-pip" style="background:#22c55e;"></div><span class="cand-score-val">AI Score: 91%</span></div>
+                <div class="cand-tags"><span class="cand-tag">TensorFlow</span><span class="cand-tag">MLOps</span></div>
+              </div>
+              <div class="candidate-card">
+                <div class="cand-name">Priya Sharma</div>
+                <div class="cand-role">Data Scientist @ AWS · 5 yrs</div>
+                <div class="cand-score"><div class="score-pip" style="background:#eab308;"></div><span class="cand-score-val">AI Score: 78%</span></div>
+                <div class="cand-tags"><span class="cand-tag">Python</span><span class="cand-tag">NLP</span></div>
+              </div>
+            </div>
+            <div class="pipe-col">
+              <div class="pipe-col-header"><span class="pipe-col-name">Screening</span><span class="pipe-col-count">8</span></div>
+              <div class="candidate-card">
+                <div class="cand-name">Alex Rivera</div>
+                <div class="cand-role">ML Lead @ OpenAI · 7 yrs</div>
+                <div class="cand-score"><div class="score-pip" style="background:#22c55e;"></div><span class="cand-score-val">AI Score: 98%</span></div>
+                <div class="cand-tags"><span class="cand-tag">Transformers</span><span class="cand-tag">RLHF</span></div>
+              </div>
+              <div class="candidate-card">
+                <div class="cand-name">Lisa Wang</div>
+                <div class="cand-role">Research Scientist @ DeepMind</div>
+                <div class="cand-score"><div class="score-pip" style="background:#22c55e;"></div><span class="cand-score-val">AI Score: 94%</span></div>
+                <div class="cand-tags"><span class="cand-tag">RL</span><span class="cand-tag">JAX</span></div>
+              </div>
+            </div>
+            <div class="pipe-col">
+              <div class="pipe-col-header"><span class="pipe-col-name">Interview</span><span class="pipe-col-count">3</span></div>
+              <div class="candidate-card">
+                <div class="cand-name">Marcus Johnson</div>
+                <div class="cand-role">Principal MLE @ Anthropic</div>
+                <div class="cand-score"><div class="score-pip" style="background:#22c55e;"></div><span class="cand-score-val">AI Score: 97%</span></div>
+                <div class="cand-tags"><span class="cand-tag">Claude</span><span class="cand-tag">Safety</span></div>
+              </div>
+            </div>
+            <div class="pipe-col">
+              <div class="pipe-col-header"><span class="pipe-col-name">Offer</span><span class="pipe-col-count">1</span></div>
+              <div class="candidate-card" style="border-color:rgba(34,197,94,0.3);">
+                <div class="cand-name">Diana Torres</div>
+                <div class="cand-role">Sr. ML Eng @ Microsoft</div>
+                <div class="cand-score"><div class="score-pip" style="background:#22c55e;"></div><span class="cand-score-val">AI Score: 99%</span></div>
+                <div class="cand-tags"><span class="cand-tag">🏆 Top Pick</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-right">
+          <div class="ai-insights">
+            <h4><div class="ai-dot"></div> AI Recruiter Insight</h4>
+            <div class="insight-card">"Diana Torres has a 99% match score. Offer acceptance probability: 84%. Recommend competitive equity package."</div>
+            <div class="insight-card">"Pipeline velocity is 2.3x industry average. Expected hire date: March 14."</div>
+          </div>
+          <div class="top-candidate">
+            <h4>🏆 Top Candidate</h4>
+            <div class="top-cand-card">
+              <div class="top-cand-avatar">👩‍💻</div>
+              <div class="top-cand-name">Diana Torres</div>
+              <div class="top-cand-title">Sr. ML Eng @ Microsoft · 8 yrs exp</div>
+              <div class="match-score">
+                <div class="match-bar"><div class="match-fill" style="width:99%"></div></div>
+                <span class="match-val">99%</span>
+              </div>
+              <div class="skill-chips">
+                <span class="skill-chip">PyTorch</span>
+                <span class="skill-chip">LLMs</span>
+                <span class="skill-chip">MLOps</span>
+                <span class="skill-chip">Python</span>
+              </div>
+            </div>
+          </div>
+          <div class="source-chart">
+            <h4>📊 Candidate Sources</h4>
+            <div class="source-item"><span class="source-name">LinkedIn</span><div class="source-bar"><div class="source-fill" style="width:72%"></div></div><span class="source-pct">72%</span></div>
+            <div class="source-item"><span class="source-name">GitHub</span><div class="source-bar"><div class="source-fill" style="width:45%"></div></div><span class="source-pct">45%</span></div>
+            <div class="source-item"><span class="source-name">Referrals</span><div class="source-bar"><div class="source-fill" style="width:31%"></div></div><span class="source-pct">31%</span></div>
+            <div class="source-item"><span class="source-name">Indeed</span><div class="source-bar"><div class="source-fill" style="width:18%"></div></div><span class="source-pct">18%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div style="text-align:center;max-width:600px;margin:0 auto 3rem;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Scale Your <span style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Talent Pipeline</span></h2>
+    <p style="color:var(--muted);">One great hire pays for a year of RecruitAI. ROI from day one.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Startup</div>
+      <div class="price-amount">$0<span>/mo</span></div>
+      <div class="price-desc">For early-stage companies</div>
+      <ul class="price-features">
+        <li>3 active job postings</li>
+        <li>AI resume ranking</li>
+        <li>Basic candidate pipeline</li>
+        <li>Interview scheduling</li>
+        <li>Up to 50 candidates/mo</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Get Started Free</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">🚀 Most Popular</div>
+      <div class="price-name">Growth</div>
+      <div class="price-amount">$149<span>/mo</span></div>
+      <div class="price-desc">For scaling teams</div>
+      <ul class="price-features">
+        <li>Unlimited job postings</li>
+        <li>AI candidate sourcing</li>
+        <li>Resume intelligence</li>
+        <li>Interview AI assistant</li>
+        <li>Predictive analytics</li>
+        <li>Up to 10 team members</li>
+      </ul>
+      <button class="price-btn price-btn-fill" onclick="document.getElementById('modal').classList.add('active')">Start Growth Plan</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-amount">$599<span>/mo</span></div>
+      <div class="price-desc">For large organizations</div>
+      <ul class="price-features">
+        <li>Everything in Growth</li>
+        <li>Unlimited team members</li>
+        <li>Custom AI model training</li>
+        <li>Global compliance engine</li>
+        <li>ATS integrations (Workday, SAP)</li>
+        <li>Dedicated success manager</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🎯 RecruitAI</div>
+  <p>© 2025 RecruitAI · Build world-class teams with the power of artificial intelligence.</p>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕</button>
+    <h2>Start Hiring Smarter</h2>
+    <p>Free forever plan · No credit card required</p>
+    <button class="social-btn">🔵 Continue with Google</button>
+    <button class="social-btn">🏢 Continue with Microsoft</button>
+    <div class="divider">or use email</div>
+    <input type="email" class="form-input" placeholder="Work email">
+    <input type="password" class="form-input" placeholder="Password">
+    <button class="btn btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;">Create Free Account</button>
+  </div>
+</div>
+
+</body>
+</html>
