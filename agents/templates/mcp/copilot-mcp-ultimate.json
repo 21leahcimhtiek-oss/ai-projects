@@ -1,0 +1,99 @@
+{
+  "$schema": "https://github.com/modelcontextprotocol/spec/blob/main/schema/schema.json",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "disabled": false,
+      "alwaysAllow": ["create_repository", "create_issue", "create_pull_request", "push_files", "search_code", "search_repositories", "get_file_contents", "list_commits", "create_branch", "create_release"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${WORKSPACE_PATH}"],
+      "disabled": false,
+      "alwaysAllow": ["read_file", "write_file", "create_directory", "list_directory", "search_files", "get_file_info", "move_file", "delete_file"]
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git", "--repository", "${REPO_PATH}"],
+      "disabled": false,
+      "alwaysAllow": ["git_status", "git_log", "git_diff", "git_add", "git_commit", "git_push", "git_pull", "git_branch", "git_checkout", "git_merge", "git_rebase"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": "${DATABASE_URL}"
+      },
+      "disabled": true
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "${SQLITE_DB_PATH}"],
+      "disabled": false,
+      "alwaysAllow": ["query", "list_tables", "describe_table"]
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      },
+      "disabled": true
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      },
+      "disabled": false,
+      "alwaysAllow": ["search", "get_webpage"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "disabled": false,
+      "alwaysAllow": ["store_memory", "retrieve_memory", "list_memories", "delete_memory"]
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "disabled": false,
+      "alwaysAllow": ["fetch", "fetch_multiple"]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+      "disabled": false,
+      "alwaysAllow": ["navigate", "screenshot", "click", "type", "evaluate"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "disabled": false
+    },
+    "google-maps": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-google-maps"],
+      "env": {
+        "GOOGLE_MAPS_API_KEY": "${GOOGLE_MAPS_API_KEY}"
+      },
+      "disabled": true
+    },
+    "custom-tools": {
+      "command": "node",
+      "args": [".github/agents/custom-mcp-server/index.js"],
+      "disabled": false
+    }
+  },
+  "globalSettings": {
+    "timeout": 60000,
+    "retryAttempts": 3,
+    "logLevel": "info"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "custom-mcp-server",
+  "version": "1.0.0",
+  "description": "Custom MCP server for extended Copilot capabilities",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "custom-mcp-server": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

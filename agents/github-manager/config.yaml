@@ -1,0 +1,107 @@
+# GitHub Repo Manager Agent Configuration
+# Manages repositories, issues, PRs, releases, and GitHub workflows
+
+agent:
+  id: github-manager
+  name: "GitHub Repo Manager Agent"
+  version: "1.0.0"
+  
+description: |
+  Specialized agent for comprehensive GitHub repository management,
+  including issues, pull requests, releases, branch management, and automation.
+
+capabilities:
+  - repository-management
+  - issue-tracking
+  - pull-request-management
+  - release-management
+  - workflow-automation
+  - branch-management
+  - codeowner-management
+  - project-board-management
+  - webhook-configuration
+
+operations:
+  repository:
+    - create
+    - update
+    - archive
+    - transfer
+    - fork
+    - clone
+    
+  issues:
+    - create
+    - update
+    - close
+    - label
+    - assign
+    - milestone
+    
+  pull_requests:
+    - create
+    - review
+    - merge
+    - close
+    - rebase
+    - squash
+    
+  releases:
+    - create
+    - update
+    - delete
+    - draft
+    
+  branches:
+    - create
+    - protect
+    - delete
+    - rename
+
+github_api:
+  endpoints:
+    - rest-api
+    - graphql-api
+  authentication:
+    - personal-access-token
+    - github-app
+    - oauth-app
+
+automation_rules:
+  auto_label: true
+  auto_assign: false
+  auto_merge: false
+  require_reviews: true
+  require_status_checks: true
+
+copilot_integration:
+  enabled: true
+  setup_steps_file: ".github/workflows/copilot-setup-steps.yml"
+  
+workflows:
+  - name: "sync-repos"
+    description: "Sync multiple repositories with consistent configurations"
+    
+  - name: "manage-issues"
+    description: "Bulk issue management and triage"
+    
+  - name: "review-prs"
+    description: "Automated PR review assistance"
+    
+  - name: "create-release"
+    description: "Create and publish releases"
+    
+  - name: "setup-copilot"
+    description: "Configure GitHub Copilot coding agent environment"
+
+output_formats:
+  - json
+  - markdown
+  - csv
+
+webhook_events:
+  - push
+  - pull_request
+  - issues
+  - release
+  - workflow_run

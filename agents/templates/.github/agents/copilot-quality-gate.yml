@@ -1,0 +1,190 @@
+# Quality Gate Configuration for Copilot
+# Ensures projects are completed correctly the first time
+
+name: Copilot Quality Gate
+
+on:
+  workflow_run:
+    workflows: ["Copilot Setup Steps"]
+    types: [completed]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'pull_request'
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+      security-events: write
+    
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+      
+      # ===========================================
+      # Quality Gate 1: Linting
+      # ===========================================
+      - name: Run linters
+        id: lint
+        run: |
+          echo "## Linting Results" >> $GITHUB_STEP_SUMMARY
+          if npm run lint 2>&1 | tee lint-output.txt; then
+            echo "✅ All linters passed" >> $GITHUB_STEP_SUMMARY
+            echo "lint_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Linting failed" >> $GITHUB_STEP_SUMMARY
+            cat lint-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "lint_passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+      
+      # ===========================================
+      # Quality Gate 2: Type Checking
+      # ===========================================
+      - name: Run type check
+        id: typecheck
+        run: |
+          echo "## Type Checking Results" >> $GITHUB_STEP_SUMMARY
+          if npm run type-check 2>&1 | tee type-output.txt; then
+            echo "✅ Type checking passed" >> $GITHUB_STEP_SUMMARY
+            echo "typecheck_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Type checking failed" >> $GITHUB_STEP_SUMMARY
+            cat type-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "typecheck_passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+      
+      # ===========================================
+      # Quality Gate 3: Tests
+      # ===========================================
+      - name: Run tests
+        id: test
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          if npm test -- --coverage --reporters=default 2>&1 | tee test-output.txt; then
+            echo "✅ All tests passed" >> $GITHUB_STEP_SUMMARY
+            echo "test_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Tests failed" >> $GITHUB_STEP_SUMMARY
+            cat test-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "test_passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+      
+      # ===========================================
+      # Quality Gate 4: Coverage Check
+      # ===========================================
+      - name: Check coverage
+        id: coverage
+        run: |
+          echo "## Coverage Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f coverage/coverage-summary.json ]; then
+            COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+            echo "Coverage: ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+            if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+              echo "✅ Coverage meets 80% threshold" >> $GITHUB_STEP_SUMMARY
+              echo "coverage_passed=true" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Coverage below 80% threshold" >> $GITHUB_STEP_SUMMARY
+              echo "coverage_passed=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️ No coverage report found" >> $GITHUB_STEP_SUMMARY
+            echo "coverage_passed=true" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+      
+      # ===========================================
+      # Quality Gate 5: Security Scan
+      # ===========================================
+      - name: Run security scan
+        id: security
+        run: |
+          echo "## Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          npm audit --audit=moderate > audit-output.txt 2>&1 || true
+          if grep -q "0 vulnerabilities" audit-output.txt; then
+            echo "✅ No security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+            echo "security_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Security vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+            cat audit-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "security_passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+      
+      # ===========================================
+      # Quality Gate 6: Build
+      # ===========================================
+      - name: Build project
+        id: build
+        run: |
+          echo "## Build Results" >> $GITHUB_STEP_SUMMARY
+          if npm run build 2>&1 | tee build-output.txt; then
+            echo "✅ Build successful" >> $GITHUB_STEP_SUMMARY
+            echo "build_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Build failed" >> $GITHUB_STEP_SUMMARY
+            cat build-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "build_passed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+      
+      # ===========================================
+      # Final Gate Decision
+      # ===========================================
+      - name: Quality gate decision
+        run: |
+          echo "## Quality Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Gate | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Linting | ${{ steps.lint.outputs.lint_passed == 'true' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Type Check | ${{ steps.typecheck.outputs.typecheck_passed == 'true' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests | ${{ steps.test.outputs.test_passed == 'true' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Coverage | ${{ steps.coverage.outputs.coverage_passed == 'true' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | ${{ steps.security.outputs.security_passed == 'true' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | ${{ steps.build.outputs.build_passed == 'true' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if all gates passed
+          if [[ "${{ steps.lint.outputs.lint_passed }}" != "true" || \
+                "${{ steps.test.outputs.test_passed }}" != "true" || \
+                "${{ steps.build.outputs.build_passed }}" != "true" ]]; then
+            echo ""
+            echo "❌ Quality gate failed. Please fix the issues above." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ All quality gates passed!" >> $GITHUB_STEP_SUMMARY
+      
+      # ===========================================
+      # Upload Artifacts
+      # ===========================================
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 7

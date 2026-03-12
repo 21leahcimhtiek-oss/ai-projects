@@ -1,0 +1,119 @@
+{
+  "version": "1.0.0",
+  "name": "keith-multi-agent-system",
+  "description": "Multi-agent system for software marketplace development",
+  "agents": [
+    {
+      "id": "setup-refiner",
+      "name": "Setup Refinement Agent",
+      "description": "Manages environment setup, CI/CD pipelines, MCP configurations, and development infrastructure",
+      "capabilities": [
+        "environment-configuration",
+        "cicd-pipeline-management",
+        "mcp-server-setup",
+        "docker-configuration",
+        "dependency-management"
+      ],
+      "triggers": [
+        "setup",
+        "configure",
+        "ci",
+        "cd",
+        "pipeline",
+        "environment",
+        "mcp"
+      ]
+    },
+    {
+      "id": "code-enhancer",
+      "name": "Code Enhancement Agent",
+      "description": "Reviews, optimizes, refactors code and generates tests across multiple languages",
+      "capabilities": [
+        "code-review",
+        "optimization",
+        "refactoring",
+        "test-generation",
+        "documentation-generation",
+        "linting"
+      ],
+      "triggers": [
+        "review",
+        "optimize",
+        "refactor",
+        "test",
+        "lint",
+        "document"
+      ]
+    },
+    {
+      "id": "github-manager",
+      "name": "GitHub Repo Manager Agent",
+      "description": "Manages repositories, issues, pull requests, releases, and GitHub workflows",
+      "capabilities": [
+        "repository-management",
+        "issue-tracking",
+        "pull-request-management",
+        "release-management",
+        "workflow-automation",
+        "branch-management"
+      ],
+      "triggers": [
+        "repo",
+        "issue",
+        "pr",
+        "pull-request",
+        "release",
+        "branch",
+        "github"
+      ]
+    },
+    {
+      "id": "cross-platform-integrator",
+      "name": "Cross-Platform Integration Agent",
+      "description": "Integrates with Google Dev Tools, Azure Foundry, Expo, Manus Pro, and Emergent AI",
+      "capabilities": [
+        "google-dev-integration",
+        "azure-foundry-integration",
+        "expo-mobile-deployment",
+        "manus-pro-automation",
+        "emergent-ai-connectors",
+        "multi-platform-sync"
+      ],
+      "triggers": [
+        "google",
+        "azure",
+        "expo",
+        "manus",
+        "emergent",
+        "deploy",
+        "integrate"
+      ]
+    }
+  ],
+  "services": {
+    "google-dev-tools": {
+      "status": "available",
+      "tools": ["Firebase", "Google Cloud", "BigQuery", "Cloud Functions"]
+    },
+    "azure-foundry": {
+      "status": "available",
+      "tools": ["Azure AI", "Azure DevOps", "Azure Functions", "Container Apps"]
+    },
+    "manus-pro": {
+      "status": "available",
+      "tools": ["AI Automation", "Workflow Builder"]
+    },
+    "emergent-ai": {
+      "status": "available",
+      "tools": ["AI Agents", "Custom Models"]
+    },
+    "ninja-ai": {
+      "status": "active",
+      "tools": ["SuperNinja Agent"]
+    },
+    "expo": {
+      "status": "available",
+      "tools": ["EAS Build", "EAS Submit", "Expo CLI"]
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "description": "Inter-agent communication protocol",
+  
+  "message_schema": {
+    "id": "uuid",
+    "timestamp": "ISO8601",
+    "source_agent": "agent_id",
+    "target_agent": "agent_id | broadcast",
+    "message_type": "request | response | notification | error",
+    "payload": {},
+    "correlation_id": "uuid",
+    "priority": "low | normal | high | critical",
+    "ttl_seconds": 300
+  },
+  
+  "channels": {
+    "setup-refiner": {
+      "subscribes_to": ["code-enhancer", "github-manager", "cross-platform-integrator"],
+      "publishes_to": ["broadcast", "github-manager"]
+    },
+    "code-enhancer": {
+      "subscribes_to": ["setup-refiner", "github-manager", "cross-platform-integrator"],
+      "publishes_to": ["broadcast", "github-manager"]
+    },
+    "github-manager": {
+      "subscribes_to": ["setup-refiner", "code-enhancer", "cross-platform-integrator"],
+      "publishes_to": ["broadcast"]
+    },
+    "cross-platform-integrator": {
+      "subscribes_to": ["setup-refiner", "code-enhancer", "github-manager"],
+      "publishes_to": ["broadcast"]
+    }
+  },
+  
+  "event_types": {
+    "code_review_requested": {
+      "publisher": "github-manager",
+      "subscribers": ["code-enhancer"],
+      "payload": {
+        "repo": "string",
+        "pr_number": "integer",
+        "files": "array"
+      }
+    },
+    "deployment_triggered": {
+      "publisher": "github-manager",
+      "subscribers": ["cross-platform-integrator"],
+      "payload": {
+        "repo": "string",
+        "environment": "string",
+        "platforms": "array"
+      }
+    },
+    "environment_setup_required": {
+      "publisher": "cross-platform-integrator",
+      "subscribers": ["setup-refiner"],
+      "payload": {
+        "platform": "string",
+        "requirements": "object"
+      }
+    },
+    "code_optimization_suggested": {
+      "publisher": "code-enhancer",
+      "subscribers": ["github-manager"],
+      "payload": {
+        "file": "string",
+        "suggestions": "array"
+      }
+    }
+  },
+  
+  "retry_policy": {
+    "max_retries": 3,
+    "backoff_ms": [100, 500, 2000]
+  }
+}

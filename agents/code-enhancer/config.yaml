@@ -1,0 +1,90 @@
+# Code Enhancement Agent Configuration
+# Reviews, optimizes, refactors code and generates tests
+
+agent:
+  id: code-enhancer
+  name: "Code Enhancement Agent"
+  version: "1.0.0"
+  
+description: |
+  Specialized agent for code review, optimization, refactoring,
+  test generation, and documentation across multiple programming languages.
+
+capabilities:
+  - code-review
+  - optimization
+  - refactoring
+  - test-generation
+  - documentation-generation
+  - linting
+  - security-analysis
+  - performance-profiling
+
+supported_languages:
+  - javascript
+  - typescript
+  - python
+  - go
+  - rust
+  - java
+  - csharp
+  - ruby
+  - php
+  - swift
+  - kotlin
+
+analysis_tools:
+  linting:
+    javascript: ["eslint", "prettier"]
+    typescript: ["eslint", "prettier"]
+    python: ["pylint", "black", "mypy", "ruff"]
+    go: ["golint", "gofmt"]
+    rust: ["clippy", "rustfmt"]
+    java: ["checkstyle", "spotless"]
+    
+  testing:
+    javascript: ["jest", "vitest", "mocha"]
+    typescript: ["jest", "vitest"]
+    python: ["pytest", "unittest"]
+    go: ["go test"]
+    rust: ["cargo test"]
+    java: ["junit", "testng"]
+    
+  security:
+    - "snyk"
+    - "sonarqube"
+    - "semgrep"
+    - "dependabot"
+
+review_standards:
+  - clean-code-principles
+  - solid-principles
+  - dry-principles
+  - design-patterns
+  - security-best-practices
+
+workflows:
+  - name: "review-code"
+    description: "Perform comprehensive code review"
+    
+  - name: "optimize-performance"
+    description: "Identify and implement performance optimizations"
+    
+  - name: "refactor-code"
+    description: "Refactor code for better maintainability"
+    
+  - name: "generate-tests"
+    description: "Generate unit and integration tests"
+    
+  - name: "document-code"
+    description: "Generate documentation for codebase"
+
+output_formats:
+  - markdown
+  - html
+  - json
+
+integration_hooks:
+  pre_review: []
+  post_review: []
+  on_issues_found: []

@@ -1,0 +1,72 @@
+# Setup Refinement Agent Configuration
+# Manages environment setup, CI/CD pipelines, MCP configurations
+
+agent:
+  id: setup-refiner
+  name: "Setup Refinement Agent"
+  version: "1.0.0"
+  
+description: |
+  Specialized agent for managing development environment configurations,
+  CI/CD pipelines, MCP server setups, and infrastructure automation.
+
+capabilities:
+  - environment-configuration
+  - cicd-pipeline-management
+  - mcp-server-setup
+  - docker-configuration
+  - dependency-management
+  - secrets-management
+  - workflow-optimization
+
+supported_platforms:
+  - github-actions
+  - azure-pipelines
+  - circleci
+  - gitlab-ci
+  - jenkins
+
+templates:
+  github_actions:
+    path: "templates/github-actions/"
+    includes:
+      - ci.yml
+      - cd.yml
+      - copilot-setup-steps.yml
+      
+  mcp_servers:
+    path: "templates/mcp/"
+    includes:
+      - github-mcp.json
+      - filesystem-mcp.json
+      - custom-mcp.json
+
+  docker:
+    path: "templates/docker/"
+    includes:
+      - Dockerfile
+      - docker-compose.yml
+      - .dockerignore
+
+workflows:
+  - name: "analyze-project"
+    description: "Analyze project structure and recommend setup improvements"
+    
+  - name: "setup-cicd"
+    description: "Create or update CI/CD pipelines"
+    
+  - name: "configure-mcp"
+    description: "Set up MCP server configurations"
+    
+  - name: "optimize-environment"
+    description: "Optimize development environment for performance"
+
+output_formats:
+  - yaml
+  - json
+  - toml
+
+integration_hooks:
+  pre_setup: []
+  post_setup: []
+  on_error: []

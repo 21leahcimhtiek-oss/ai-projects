@@ -1,0 +1,155 @@
+# Cross-Platform Integration Agent Configuration
+# Integrates Google Dev Tools, Azure Foundry, Expo, Manus Pro, and Emergent AI
+
+agent:
+  id: cross-platform-integrator
+  name: "Cross-Platform Integration Agent"
+  version: "1.0.0"
+  
+description: |
+  Specialized agent for multi-platform integration across Google Dev Tools,
+  Azure Foundry, Expo, Manus Pro, and Emergent AI for unified deployment
+  and development workflows.
+
+capabilities:
+  - google-dev-integration
+  - azure-foundry-integration
+  - expo-mobile-deployment
+  - manus-pro-automation
+  - emergent-ai-connectors
+  - multi-platform-sync
+  - cross-platform-testing
+  - unified-deployment
+
+integrations:
+  google_dev_tools:
+    enabled: true
+    services:
+      - name: firebase
+        capabilities:
+          - hosting
+          - firestore
+          - authentication
+          - cloud-functions
+          - cloud-messaging
+      - name: google-cloud
+        capabilities:
+          - compute-engine
+          - cloud-run
+          - cloud-functions
+          - bigquery
+          - cloud-storage
+      - name: google-ai
+        capabilities:
+          - gemini
+          - vertex-ai
+          - ai-platform
+    authentication:
+      - service-account
+      - oauth2
+      - api-key
+      
+  azure_foundry:
+    enabled: true
+    services:
+      - name: azure-ai
+        capabilities:
+          - azure-openai
+          - cognitive-services
+          - ai-search
+      - name: azure-devops
+        capabilities:
+          - repos
+          - pipelines
+          - boards
+          - artifacts
+      - name: azure-functions
+        capabilities:
+          - http-triggers
+          - timer-triggers
+          - durable-functions
+      - name: container-apps
+        capabilities:
+          - deployment
+          - scaling
+          - ingress
+    authentication:
+      - service-principal
+      - managed-identity
+      - api-key
+      
+  expo:
+    enabled: true
+    services:
+      - name: eas-build
+        capabilities:
+          - ios-builds
+          - android-builds
+          - web-builds
+      - name: eas-submit
+        capabilities:
+          - app-store
+          - play-store
+      - name: expo-cli
+        capabilities:
+          - development-server
+          - publishing
+          - updates
+    authentication:
+      - expo-token
+      - apple-id
+      - google-play-service-account
+      
+  manus_pro:
+    enabled: true
+    capabilities:
+      - ai-automation
+      - workflow-builder
+      - task-scheduling
+      - data-processing
+    authentication:
+      - api-key
+      
+  emergent_ai:
+    enabled: true
+    capabilities:
+      - custom-agents
+      - model-deployment
+      - inference-endpoints
+      - fine-tuning
+    authentication:
+      - api-key
+      
+  ninja_ai:
+    enabled: true
+    capabilities:
+      - superninja-agent
+      - multi-modal-processing
+      - tool-integration
+    authentication:
+      - session-based
+
+deployment_workflows:
+  - name: "deploy-mobile"
+    description: "Build and deploy mobile apps via Expo EAS"
+    platforms: [ios, android]
+    
+  - name: "deploy-cloud-functions"
+    description: "Deploy to Firebase/Azure Functions"
+    
+  - name: "sync-multi-platform"
+    description: "Sync code/configs across platforms"
+    
+  - name: "setup-ci-pipeline"
+    description: "Configure cross-platform CI/CD"
+
+output_formats:
+  - json
+  - yaml
+  - markdown
+
+sync_strategies:
+  - one-way-sync
+  - two-way-sync
+  - merge-sync
+  - selective-sync
