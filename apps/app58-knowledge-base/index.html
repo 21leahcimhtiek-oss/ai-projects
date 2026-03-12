@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnowledgeBase AI - Intelligent Documentation & Knowledge Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #fff; line-height: 1.6; }
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 1rem 2rem;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #f97316, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #f97316; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(249,115,22,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #f97316; color: #f97316; }
+        .btn-outline:hover { background: #f97316; color: #fff; }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-content { position: relative; z-index: 1; max-width: 850px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero h1 span { background: linear-gradient(135deg, #f97316, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: #a0a0a0; margin-bottom: 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .stats { display: flex; justify-content: center; gap: 4rem; margin-top: 4rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 2.5rem; background: linear-gradient(135deg, #f97316, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat p { color: #a0a0a0; }
+        .features { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: #a0a0a0; max-width: 600px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: #f97316; box-shadow: 0 20px 40px rgba(249,115,22,0.1); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #f97316, #eab308); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: #a0a0a0; }
+        .kb-demo { padding: 6rem 2rem; }
+        .kb-interface { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 250px 1fr; gap: 0; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; }
+        .kb-sidebar { background: rgba(255,255,255,0.05); padding: 1.5rem; border-right: 1px solid rgba(255,255,255,0.1); }
+        .kb-sidebar h4 { font-size: 0.75rem; text-transform: uppercase; color: #666; margin-bottom: 1rem; letter-spacing: 0.1em; }
+        .kb-nav-item { padding: 0.5rem 0.75rem; border-radius: 8px; cursor: pointer; color: #a0a0a0; font-size: 0.9rem; margin-bottom: 0.25rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+        .kb-nav-item:hover, .kb-nav-item.active { background: rgba(249,115,22,0.1); color: #f97316; }
+        .kb-main { padding: 2rem; }
+        .kb-search { display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; }
+        .kb-search input { background: none; border: none; color: #fff; flex: 1; font-size: 0.95rem; outline: none; }
+        .kb-article h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .kb-article p { color: #a0a0a0; margin-bottom: 1rem; font-size: 0.95rem; }
+        .kb-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .kb-tag { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); color: #f97316; padding: 0.2rem 0.75rem; border-radius: 20px; font-size: 0.8rem; }
+        .ai-answer { background: rgba(249,115,22,0.05); border: 1px solid rgba(249,115,22,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+        .ai-answer-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.875rem; color: #f97316; font-weight: 600; }
+        .ai-answer p { color: #a0a0a0; font-size: 0.875rem; }
+        .pricing { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: #f97316; transform: scale(1.05); }
+        .popular-tag { background: linear-gradient(135deg, #f97316, #eab308); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.875rem; margin-bottom: 1rem; display: inline-block; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+        .price span { font-size: 1rem; color: #a0a0a0; }
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #f97316; }
+        .testimonials { padding: 6rem 2rem; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; }
+        .testimonial-card p { font-style: italic; margin-bottom: 1rem; color: #a0a0a0; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #f97316, #eab308); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .author-info h4 { font-size: 1rem; }
+        .author-info p { font-size: 0.875rem; color: #666; font-style: normal; }
+        .cta { padding: 6rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(234,179,8,0.1)); }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #a0a0a0; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #f97316; }
+        footer p { color: #666; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a2e; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header h3 { font-size: 1.5rem; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #f97316; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .stats { gap: 2rem; } .kb-interface { grid-template-columns: 1fr; } .kb-sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">KnowledgeBase AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div style="display:flex;gap:1rem;">
+            <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Build a <span>Smart Knowledge Base</span> Your Team Actually Uses</h1>
+            <p>AI-powered documentation that writes itself, answers questions instantly, and keeps your team aligned. Stop losing knowledge when people leave.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Create Free Knowledge Base</button>
+                <button class="btn btn-outline">See Demo</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><h3>2M+</h3><p>Articles Created</p></div>
+                <div class="stat"><h3>60%</h3><p>Less Support Tickets</p></div>
+                <div class="stat"><h3>30K+</h3><p>Teams Using</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>AI-Powered Knowledge Management</h2>
+            <p>Everything you need to capture, organize, and share your team's collective knowledge.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <h3>AI Article Writer</h3>
+                <p>Describe what you want to document and AI drafts complete, structured articles with headings, examples, and code snippets.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Semantic Search</h3>
+                <p>Find exactly what you need with AI-powered search that understands context and meaning, not just keywords.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Q&A Bot</h3>
+                <p>Embed a chatbot on your docs site that answers questions instantly by searching your entire knowledge base.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Auto-Sync</h3>
+                <p>Connect to Slack, Notion, Confluence, and GitHub to automatically import and keep documentation up to date.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Knowledge Analytics</h3>
+                <p>See which articles are most read, what searches return no results, and identify documentation gaps automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>Public & Private</h3>
+                <p>Create public-facing help centers for customers and private internal wikis for your team from one platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="kb-demo" id="demo">
+        <div class="section-title">
+            <h2>Beautifully Organized Knowledge</h2>
+            <p>A knowledge base your team will love to use and contribute to.</p>
+        </div>
+        <div class="kb-interface">
+            <div class="kb-sidebar">
+                <h4>Getting Started</h4>
+                <div class="kb-nav-item active">📖 Overview</div>
+                <div class="kb-nav-item">🚀 Quick Start</div>
+                <div class="kb-nav-item">⚙️ Configuration</div>
+                <h4 style="margin-top:1.5rem;">API Reference</h4>
+                <div class="kb-nav-item">🔑 Authentication</div>
+                <div class="kb-nav-item">📡 Endpoints</div>
+                <div class="kb-nav-item">📦 Webhooks</div>
+                <h4 style="margin-top:1.5rem;">Guides</h4>
+                <div class="kb-nav-item">🔗 Integrations</div>
+                <div class="kb-nav-item">🛡️ Security</div>
+            </div>
+            <div class="kb-main">
+                <div class="kb-search">
+                    <span>🔍</span>
+                    <input placeholder="Search knowledge base or ask AI...">
+                    <span style="color:#f97316;font-size:0.8rem;">AI</span>
+                </div>
+                <div class="kb-article">
+                    <div class="kb-tags">
+                        <span class="kb-tag">Getting Started</span>
+                        <span class="kb-tag">Setup</span>
+                        <span class="kb-tag">5 min read</span>
+                    </div>
+                    <h2>Getting Started with KnowledgeBase AI</h2>
+                    <div class="ai-answer">
+                        <div class="ai-answer-header">🤖 AI Summary</div>
+                        <p>KnowledgeBase AI is a documentation platform that uses AI to help you create, organize, and search your team's knowledge. Set up takes under 5 minutes — just connect your workspace, import existing docs, and start writing.</p>
+                    </div>
+                    <p>Welcome to KnowledgeBase AI! This guide will walk you through setting up your first knowledge base and inviting your team members to collaborate.</p>
+                    <p>To get started, navigate to your dashboard and click "New Knowledge Base". Choose whether you want a public-facing help center or a private internal wiki...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Pricing for Every Stage</h2>
+            <p>From solo creators to enterprise teams with thousands of articles.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>1 knowledge base</li>
+                    <li>50 articles</li>
+                    <li>3 team members</li>
+                    <li>Basic search</li>
+                    <li>Public site</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Get Started Free</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Pro</h3>
+                <div class="price">$25<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>5 knowledge bases</li>
+                    <li>Unlimited articles</li>
+                    <li>25 team members</li>
+                    <li>AI article writer</li>
+                    <li>AI Q&A bot</li>
+                    <li>Semantic search</li>
+                    <li>Custom domain</li>
+                    <li>Analytics</li>
+                </ul>
+                <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">$99<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited everything</li>
+                    <li>SSO / SAML</li>
+                    <li>Advanced permissions</li>
+                    <li>API access</li>
+                    <li>Custom integrations</li>
+                    <li>Dedicated support</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>Teams Love KnowledgeBase AI</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"We reduced support tickets by 65% in the first month. Customers find answers themselves using the AI bot, and our team spends time on real problems."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">HC</div>
+                    <div class="author-info"><h4>Hannah Clarke</h4><p>Head of Support at Linear</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"Onboarding new engineers went from 2 weeks to 3 days. All our processes, decisions, and context are searchable. The AI summary feature is brilliant."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MO</div>
+                    <div class="author-info"><h4>Marcus O'Brien</h4><p>CTO at Vercel</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The AI article writer is a game changer. I describe a process verbally and it drafts the full documentation. What took hours now takes minutes."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">PS</div>
+                    <div class="author-info"><h4>Priya Shah</h4><p>Documentation Lead at Figma</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Centralize Your Team's Knowledge Today</h2>
+        <p>Join 30,000+ teams using KnowledgeBase AI to capture and share what they know.</p>
+        <button class="btn btn-primary" onclick="openModal('signup')">Create Free Knowledge Base</button>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a><a href="#">Features</a><a href="#">Pricing</a>
+            <a href="#">Templates</a><a href="#">Blog</a><a href="#">Contact</a>
+            <a href="#">Privacy</a><a href="#">Terms</a>
+        </div>
+        <p>&copy; 2024 KnowledgeBase AI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Login</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Slack</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Your Knowledge Base</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your Name"></div>
+                <div class="form-group"><label>Work Email</label><input type="email" placeholder="your@company.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Create Free Account</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Slack</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { document.getElementById(type + 'Modal').classList.add('active'); }
+        function closeModal(type) { document.getElementById(type + 'Modal').classList.remove('active'); }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        });
+        document.querySelectorAll('.kb-nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.kb-nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
