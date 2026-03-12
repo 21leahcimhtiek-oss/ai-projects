@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodcastAI - Create, Grow & Monetize Your Podcast with AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #fff; line-height: 1.6; }
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 1rem 2rem;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #f43f5e, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #f43f5e; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #f43f5e, #fb923c); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(244,63,94,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #f43f5e; color: #f43f5e; }
+        .btn-outline:hover { background: #f43f5e; color: #fff; }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(244,63,94,0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-content { position: relative; z-index: 1; max-width: 850px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero h1 span { background: linear-gradient(135deg, #f43f5e, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: #a0a0a0; margin-bottom: 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .stats { display: flex; justify-content: center; gap: 4rem; margin-top: 4rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 2.5rem; background: linear-gradient(135deg, #f43f5e, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat p { color: #a0a0a0; }
+        .features { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: #a0a0a0; max-width: 600px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: #f43f5e; box-shadow: 0 20px 40px rgba(244,63,94,0.1); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #f43f5e, #fb923c); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: #a0a0a0; }
+        .player-demo { padding: 6rem 2rem; }
+        .player-container { max-width: 700px; margin: 0 auto; }
+        .podcast-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: center; transition: all 0.3s; }
+        .podcast-card:hover { border-color: #f43f5e; }
+        .podcast-cover { width: 80px; height: 80px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+        .cover-1 { background: linear-gradient(135deg, #f43f5e, #fb923c); }
+        .cover-2 { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
+        .cover-3 { background: linear-gradient(135deg, #10b981, #3b82f6); }
+        .podcast-info { flex: 1; }
+        .podcast-info h3 { font-size: 1.1rem; margin-bottom: 0.25rem; }
+        .podcast-info p { color: #a0a0a0; font-size: 0.875rem; margin-bottom: 0.75rem; }
+        .podcast-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: #666; }
+        .play-btn { width: 50px; height: 50px; background: linear-gradient(135deg, #f43f5e, #fb923c); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; flex-shrink: 0; transition: all 0.3s; }
+        .play-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(244,63,94,0.4); }
+        .progress-bar { background: rgba(255,255,255,0.1); border-radius: 4px; height: 4px; margin-top: 0.5rem; overflow: hidden; }
+        .progress-fill { background: linear-gradient(135deg, #f43f5e, #fb923c); height: 100%; border-radius: 4px; }
+        .pricing { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: #f43f5e; transform: scale(1.05); }
+        .popular-tag { background: linear-gradient(135deg, #f43f5e, #fb923c); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.875rem; margin-bottom: 1rem; display: inline-block; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+        .price span { font-size: 1rem; color: #a0a0a0; }
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #f43f5e; }
+        .testimonials { padding: 6rem 2rem; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; }
+        .testimonial-card p { font-style: italic; margin-bottom: 1rem; color: #a0a0a0; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #f43f5e, #fb923c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .author-info h4 { font-size: 1rem; }
+        .author-info p { font-size: 0.875rem; color: #666; font-style: normal; }
+        .cta { padding: 6rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(244,63,94,0.1), rgba(251,146,60,0.1)); }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #a0a0a0; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #f43f5e; }
+        footer p { color: #666; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a2e; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header h3 { font-size: 1.5rem; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #f43f5e; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .stats { gap: 2rem; } .podcast-card { flex-direction: column; text-align: center; } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">PodcastAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#player">Episodes</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div style="display:flex;gap:1rem;">
+            <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Create, Grow & Monetize Your <span>Podcast with AI</span></h1>
+            <p>PodcastAI transcribes, edits, distributes, and grows your podcast automatically. Focus on recording great content — let AI handle everything else.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Podcasting Free</button>
+                <button class="btn btn-outline">Hear Samples</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><h3>100K+</h3><p>Podcasters</p></div>
+                <div class="stat"><h3>5M+</h3><p>Episodes Published</p></div>
+                <div class="stat"><h3>10x</h3><p>Faster Production</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>AI-Powered Podcast Production</h2>
+            <p>Everything you need to produce, publish, and profit from your podcast.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎙️</div>
+                <h3>AI Audio Editor</h3>
+                <p>Remove filler words, background noise, and awkward silences automatically. Studio-quality audio in one click.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Auto Transcription</h3>
+                <p>Get accurate transcripts of every episode instantly. Use them for show notes, blog posts, and SEO content.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📢</div>
+                <h3>One-Click Distribution</h3>
+                <p>Publish to Spotify, Apple Podcasts, Google, Amazon, and 20+ platforms simultaneously with one click.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✂️</div>
+                <h3>Clip Generator</h3>
+                <p>AI identifies the best moments from your episodes and creates short clips for social media automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Growth Analytics</h3>
+                <p>Track listeners, downloads, and revenue across all platforms in one unified dashboard.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Monetization Hub</h3>
+                <p>Manage sponsorships, listener support, premium subscriptions, and merchandise from one place.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="player-demo" id="player">
+        <div class="section-title">
+            <h2>Beautiful Podcast Player</h2>
+            <p>Your listeners get a stunning, embeddable player on any website.</p>
+        </div>
+        <div class="player-container">
+            <div class="podcast-card">
+                <div class="podcast-cover cover-1">🎙️</div>
+                <div class="podcast-info">
+                    <h3>The AI Revolution — Ep. 142</h3>
+                    <p>How artificial intelligence is reshaping the future of work and what you need to know.</p>
+                    <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
+                    <div class="podcast-meta">
+                        <span>🎧 24,500 plays</span>
+                        <span>⏱️ 47:32</span>
+                        <span>📅 Dec 15, 2024</span>
+                    </div>
+                </div>
+                <div class="play-btn">▶</div>
+            </div>
+            <div class="podcast-card">
+                <div class="podcast-cover cover-2">🚀</div>
+                <div class="podcast-info">
+                    <h3>Startup Stories — Ep. 141</h3>
+                    <p>From zero to $10M ARR: An exclusive conversation with three breakout founders.</p>
+                    <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+                    <div class="podcast-meta">
+                        <span>🎧 18,200 plays</span>
+                        <span>⏱️ 62:18</span>
+                        <span>📅 Dec 8, 2024</span>
+                    </div>
+                </div>
+                <div class="play-btn">▶</div>
+            </div>
+            <div class="podcast-card">
+                <div class="podcast-cover cover-3">💡</div>
+                <div class="podcast-info">
+                    <h3>Deep Tech Dive — Ep. 140</h3>
+                    <p>Quantum computing explained simply — and why it matters for your business in 2025.</p>
+                    <div class="progress-bar"><div class="progress-fill" style="width:10%"></div></div>
+                    <div class="podcast-meta">
+                        <span>🎧 15,800 plays</span>
+                        <span>⏱️ 38:45</span>
+                        <span>📅 Dec 1, 2024</span>
+                    </div>
+                </div>
+                <div class="play-btn">▶</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Start Free, Grow Unlimited</h2>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>3 hours storage</li>
+                    <li>Basic distribution</li>
+                    <li>Auto transcription</li>
+                    <li>Embeddable player</li>
+                    <li>Basic analytics</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Start Free</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Creator</h3>
+                <div class="price">$19<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited storage</li>
+                    <li>All 20+ platforms</li>
+                    <li>AI audio editor</li>
+                    <li>Clip generator</li>
+                    <li>Advanced analytics</li>
+                    <li>Monetization tools</li>
+                    <li>Custom domain</li>
+                </ul>
+                <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Network</h3>
+                <div class="price">$79<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Everything in Creator</li>
+                    <li>Multiple shows</li>
+                    <li>Team collaboration</li>
+                    <li>White-label player</li>
+                    <li>Advanced monetization</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>Podcasters Love PodcastAI</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"PodcastAI cut my episode production time from 6 hours to 45 minutes. The AI editor removes all my filler words and makes me sound professional."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">KH</div>
+                    <div class="author-info"><h4>Kyle Harris</h4><p>Host, TechTalks Podcast</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The clip generator is brilliant. It finds the best 60-second moments and formats them for Instagram, TikTok, and LinkedIn automatically. My social following tripled."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AS</div>
+                    <div class="author-info"><h4>Amanda Simmons</h4><p>Host, Startup Stories</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The transcription SEO feature turned my podcast into a content machine. My website traffic increased 400% because every episode is now a fully indexed article."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">PK</div>
+                    <div class="author-info"><h4>Patrick Kim</h4><p>Host, Growth Mindset</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Your Voice Deserves to Be Heard</h2>
+        <p>Join 100,000+ podcasters using PodcastAI to reach more listeners and earn more revenue.</p>
+        <button class="btn btn-primary" onclick="openModal('signup')">Start Podcasting Free Today</button>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a><a href="#">Features</a><a href="#">Pricing</a>
+            <a href="#">Distribution</a><a href="#">Blog</a><a href="#">Contact</a>
+            <a href="#">Privacy</a><a href="#">Terms</a>
+        </div>
+        <p>&copy; 2024 PodcastAI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Login</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Spotify</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Start Your Podcast</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Podcast Name</label><input type="text" placeholder="My Awesome Podcast"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Launch Free</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Apple</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { document.getElementById(type + 'Modal').classList.add('active'); }
+        function closeModal(type) { document.getElementById(type + 'Modal').classList.remove('active'); }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        });
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.textContent = btn.textContent === '▶' ? '⏸' : '▶';
+            });
+        });
+    </script>
+</body>
+</html>
