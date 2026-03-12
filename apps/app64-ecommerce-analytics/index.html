@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSense AI - Intelligent E-commerce Analytics & Growth Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #fff; line-height: 1.6; }
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 1rem 2rem;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #0ea5e9, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: #0ea5e9; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #0ea5e9, #10b981); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(14,165,233,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #0ea5e9; color: #0ea5e9; }
+        .btn-outline:hover { background: #0ea5e9; color: #fff; }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-content { position: relative; z-index: 1; max-width: 850px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero h1 span { background: linear-gradient(135deg, #0ea5e9, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: #a0a0a0; margin-bottom: 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .stats { display: flex; justify-content: center; gap: 4rem; margin-top: 4rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 2.5rem; background: linear-gradient(135deg, #0ea5e9, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat p { color: #a0a0a0; }
+        .features { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: #a0a0a0; max-width: 600px; margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: #0ea5e9; box-shadow: 0 20px 40px rgba(14,165,233,0.1); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #0ea5e9, #10b981); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: #a0a0a0; }
+        .dashboard-demo { padding: 6rem 2rem; }
+        .analytics-dashboard { max-width: 1100px; margin: 0 auto; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem; }
+        .dash-top { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .kpi-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; }
+        .kpi-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .kpi-value { font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, #0ea5e9, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .kpi-change { font-size: 0.8rem; margin-top: 0.25rem; }
+        .kpi-up { color: #10b981; }
+        .kpi-down { color: #ef4444; }
+        .dash-mid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+        .chart-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; }
+        .chart-box h4 { font-size: 0.9rem; color: #a0a0a0; margin-bottom: 1rem; }
+        .mini-chart { display: flex; align-items: flex-end; gap: 0.5rem; height: 100px; }
+        .bar { flex: 1; background: linear-gradient(to top, #0ea5e9, #10b981); border-radius: 4px 4px 0 0; opacity: 0.8; transition: opacity 0.3s; }
+        .bar:hover { opacity: 1; }
+        .top-products { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; }
+        .top-products h4 { font-size: 0.9rem; color: #a0a0a0; margin-bottom: 1rem; }
+        .product-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.875rem; }
+        .product-row:last-child { border-bottom: none; }
+        .product-name { color: #fff; }
+        .product-rev { color: #10b981; font-weight: 600; }
+        .ai-insight { background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.3); border-radius: 12px; padding: 1rem; display: flex; gap: 1rem; align-items: flex-start; }
+        .ai-insight-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .ai-insight p { font-size: 0.875rem; color: #a0a0a0; }
+        .ai-insight strong { color: #0ea5e9; }
+        .pricing { padding: 6rem 2rem; background: rgba(255,255,255,0.02); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; text-align: center; transition: all 0.3s; }
+        .pricing-card.popular { border-color: #0ea5e9; transform: scale(1.05); }
+        .popular-tag { background: linear-gradient(135deg, #0ea5e9, #10b981); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.875rem; margin-bottom: 1rem; display: inline-block; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+        .price span { font-size: 1rem; color: #a0a0a0; }
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li { padding: 0.5rem 0; color: #a0a0a0; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li::before { content: '✓'; color: #0ea5e9; }
+        .testimonials { padding: 6rem 2rem; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; }
+        .testimonial-card p { font-style: italic; margin-bottom: 1rem; color: #a0a0a0; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #0ea5e9, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .author-info h4 { font-size: 1rem; }
+        .author-info p { font-size: 0.875rem; color: #666; font-style: normal; }
+        .cta { padding: 6rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(16,185,129,0.1)); }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: #a0a0a0; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        footer { padding: 3rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: #a0a0a0; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #0ea5e9; }
+        footer p { color: #666; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a2e; border-radius: 20px; padding: 2.5rem; max-width: 450px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header h3 { font-size: 1.5rem; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #a0a0a0; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #0ea5e9; }
+        .social-login { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .social-btn { flex: 1; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .nav-links { display: none; } .stats { gap: 2rem; } .dash-top { grid-template-columns: repeat(2,1fr); } .dash-mid { grid-template-columns: 1fr; } }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">ShopSense AI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <div style="display:flex;gap:1rem;">
+            <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Free</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Grow Your Store Faster with <span>AI-Powered Analytics</span></h1>
+            <p>ShopSense AI turns your e-commerce data into actionable insights. Understand what's selling, who's buying, and exactly what to do next to grow revenue.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Connect Your Store Free</button>
+                <button class="btn btn-outline">See Demo</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><h3>$1B+</h3><p>Revenue Tracked</p></div>
+                <div class="stat"><h3>40K+</h3><p>Stores Connected</p></div>
+                <div class="stat"><h3>3.2x</h3><p>Average Revenue Lift</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>AI Analytics Built for E-commerce Growth</h2>
+            <p>Stop guessing. Start knowing exactly why your store is growing — or not.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Growth Insights</h3>
+                <p>Get daily AI-generated recommendations on what products to promote, which customers to target, and what to optimize.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Customer Segmentation</h3>
+                <p>Automatically segment customers by behavior, LTV, and purchase patterns to personalize marketing campaigns.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Product Intelligence</h3>
+                <p>Know which products are your real winners, which are dragging margins, and when to restock before you run out.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔮</div>
+                <h3>Revenue Forecasting</h3>
+                <p>AI predicts next month's revenue, seasonal trends, and cash flow needs with 94% accuracy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3>Cart Abandonment AI</h3>
+                <p>Identify the exact reasons customers abandon and automatically trigger personalized recovery sequences.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Multi-Platform</h3>
+                <p>Connect Shopify, WooCommerce, Amazon, Etsy, and 30+ platforms to see your entire business in one view.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-demo" id="dashboard">
+        <div class="section-title">
+            <h2>Your Store at a Glance</h2>
+            <p>A unified dashboard that gives you complete visibility into your e-commerce performance.</p>
+        </div>
+        <div class="analytics-dashboard">
+            <div class="dash-top">
+                <div class="kpi-card">
+                    <div class="kpi-label">Revenue (MTD)</div>
+                    <div class="kpi-value">$124,830</div>
+                    <div class="kpi-change kpi-up">↑ 28% vs last month</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Orders</div>
+                    <div class="kpi-value">2,847</div>
+                    <div class="kpi-change kpi-up">↑ 18% vs last month</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Avg Order Value</div>
+                    <div class="kpi-value">$43.84</div>
+                    <div class="kpi-change kpi-up">↑ 8% vs last month</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Cart Abandonment</div>
+                    <div class="kpi-value">62.3%</div>
+                    <div class="kpi-change kpi-down">↓ 5% vs last month</div>
+                </div>
+            </div>
+            <div class="dash-mid">
+                <div class="chart-box">
+                    <h4>📈 Revenue This Month</h4>
+                    <div class="mini-chart">
+                        <div class="bar" style="height:40%"></div>
+                        <div class="bar" style="height:55%"></div>
+                        <div class="bar" style="height:45%"></div>
+                        <div class="bar" style="height:70%"></div>
+                        <div class="bar" style="height:60%"></div>
+                        <div class="bar" style="height:80%"></div>
+                        <div class="bar" style="height:65%"></div>
+                        <div class="bar" style="height:90%"></div>
+                        <div class="bar" style="height:75%"></div>
+                        <div class="bar" style="height:95%"></div>
+                        <div class="bar" style="height:85%"></div>
+                        <div class="bar" style="height:100%"></div>
+                    </div>
+                </div>
+                <div class="top-products">
+                    <h4>🏆 Top Products</h4>
+                    <div class="product-row">
+                        <span class="product-name">Wireless Earbuds Pro</span>
+                        <span class="product-rev">$18,420</span>
+                    </div>
+                    <div class="product-row">
+                        <span class="product-name">Smart Watch Series X</span>
+                        <span class="product-rev">$14,280</span>
+                    </div>
+                    <div class="product-row">
+                        <span class="product-name">Laptop Stand Premium</span>
+                        <span class="product-rev">$9,840</span>
+                    </div>
+                    <div class="product-row">
+                        <span class="product-name">USB-C Hub 7-in-1</span>
+                        <span class="product-rev">$7,650</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-insight">
+                <div class="ai-insight-icon">🤖</div>
+                <div>
+                    <p><strong>AI Insight:</strong> Your "Wireless Earbuds Pro" are trending 340% above average this week. Based on current velocity, you'll sell out in 8 days. <strong>Recommend: Reorder 500 units now</strong> and increase ad spend by 20% to capitalize on demand peak.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Pricing That Pays for Itself</h2>
+            <p>Most merchants 3x their ROI within the first month.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>1 store connection</li>
+                    <li>Basic analytics</li>
+                    <li>30-day data history</li>
+                    <li>Weekly reports</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Connect Free</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <h3>Growth</h3>
+                <div class="price">$49<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>3 store connections</li>
+                    <li>AI growth insights</li>
+                    <li>Customer segmentation</li>
+                    <li>Revenue forecasting</li>
+                    <li>Cart recovery AI</li>
+                    <li>1-year data history</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">$199<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Unlimited stores</li>
+                    <li>Advanced AI models</li>
+                    <li>Custom dashboards</li>
+                    <li>API access</li>
+                    <li>Data export</li>
+                    <li>Dedicated analyst</li>
+                </ul>
+                <button class="btn btn-outline" style="width:100%">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>Store Owners Love ShopSense AI</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"ShopSense AI's cart abandonment insights helped us redesign our checkout flow. Our conversion rate jumped from 1.8% to 4.2% — that's $80K extra revenue monthly."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">ZK</div>
+                    <div class="author-info"><h4>Zara Khan</h4><p>Founder, FashionForward</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The AI restocking alerts saved us from a $120K out-of-stock disaster during Black Friday. We now have inventory intelligence we never had before."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">BT</div>
+                    <div class="author-info"><h4>Ben Taylor</h4><p>CEO, TechGadgets Store</p></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"We connected all 4 of our stores and finally have one unified view. The AI identifies which store is cannibalizing which and how to optimize across channels."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">OM</div>
+                    <div class="author-info"><h4>Olivia Martinez</h4><p>Multi-store Owner</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Know Your Numbers, Grow Your Store</h2>
+        <p>Join 40,000+ e-commerce stores using ShopSense AI to make smarter decisions and grow faster.</p>
+        <button class="btn btn-primary" onclick="openModal('signup')">Connect Your Store Free</button>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a><a href="#">Features</a><a href="#">Pricing</a>
+            <a href="#">Integrations</a><a href="#">Blog</a><a href="#">Contact</a>
+            <a href="#">Privacy</a><a href="#">Terms</a>
+        </div>
+        <p>&copy; 2024 ShopSense AI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome Back</h3>
+                <button class="close-btn" onclick="closeModal('login')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@store.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Login</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Shopify</button>
+                <button class="social-btn">Google</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Connect Your Store</h3>
+                <button class="close-btn" onclick="closeModal('signup')">&times;</button>
+            </div>
+            <form>
+                <div class="form-group"><label>Store Name</label><input type="text" placeholder="My Awesome Store"></div>
+                <div class="form-group"><label>Email</label><input type="email" placeholder="your@store.com"></div>
+                <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:1rem;">Connect Free</button>
+            </form>
+            <div class="social-login">
+                <button class="social-btn">Shopify</button>
+                <button class="social-btn">WooCommerce</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) { document.getElementById(type + 'Modal').classList.add('active'); }
+        function closeModal(type) { document.getElementById(type + 'Modal').classList.remove('active'); }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>
