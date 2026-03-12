@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InfluencerAI - AI-Powered Influencer Marketing Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#e879f9;--secondary:#f97316;--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e2e8f0;--muted:#64748b}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5%;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(12px);z-index:100}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#e879f9,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.95rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:1rem;align-items:center}
+.btn-outline{padding:0.5rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.btn-outline:hover{border-color:#e879f9;color:#e879f9}
+.btn-primary{padding:0.5rem 1.4rem;background:linear-gradient(135deg,#e879f9,#f97316);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+hero{display:block;padding:6rem 5% 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(232,121,249,0.12) 0%,transparent 70%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:rgba(232,121,249,0.1);border:1px solid rgba(232,121,249,0.3);border-radius:50px;font-size:0.85rem;color:#f0abfc;margin-bottom:1.5rem}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.gradient-text{background:linear-gradient(135deg,#e879f9,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.2rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-large{padding:0.9rem 2rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.stats-row{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:2rem}
+.stat-item{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#e879f9,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
+section{padding:5rem 5%}
+.section-header{text-align:center;margin-bottom:3rem}
+.section-label{font-size:0.85rem;color:#f0abfc;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.2}
+.section-sub{color:var(--muted);font-size:1.05rem;margin-top:0.8rem;max-width:600px;margin-left:auto;margin-right:auto}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s}
+.feature-card:hover{border-color:#e879f9;transform:translateY(-4px)}
+.feature-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem;background:linear-gradient(135deg,rgba(232,121,249,0.2),rgba(249,115,22,0.2))}
+.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:0.6rem}
+.feature-card p{color:var(--muted);font-size:0.9rem;line-height:1.6}
+/* Influencer Cards */
+.influencers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;max-width:1100px;margin:0 auto}
+.influencer-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all 0.3s;cursor:pointer}
+.influencer-card:hover{border-color:#e879f9;transform:translateY(-4px)}
+.inf-avatar{width:72px;height:72px;border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:2rem;position:relative}
+.inf-verified{position:absolute;bottom:0;right:0;width:22px;height:22px;background:#e879f9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;border:2px solid var(--card)}
+.inf-name{font-size:1rem;font-weight:700;margin-bottom:0.2rem}
+.inf-handle{font-size:0.82rem;color:var(--muted);margin-bottom:0.6rem}
+.inf-category{display:inline-block;padding:0.2rem 0.7rem;border-radius:20px;font-size:0.72rem;font-weight:600;background:rgba(232,121,249,0.1);color:#f0abfc;margin-bottom:0.8rem}
+.inf-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.8rem}
+.inf-stat{background:var(--bg);border-radius:8px;padding:0.4rem}
+.inf-stat-val{font-size:0.9rem;font-weight:800}
+.inf-stat-label{font-size:0.65rem;color:var(--muted)}
+.inf-score{font-size:0.8rem;font-weight:700;color:#e879f9;margin-bottom:0.6rem}
+.inf-btn{width:100%;padding:0.4rem;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#e879f9,#f97316);border:none;color:#fff}
+/* Campaign Dashboard */
+.campaign-demo{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;max-width:1000px;margin:0 auto}
+.demo-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.demo-header h3{font-size:1rem;font-weight:700}
+.campaign-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.camp-metric{background:var(--bg);border-radius:12px;padding:1rem;text-align:center}
+.camp-val{font-size:1.5rem;font-weight:800}
+.camp-label{font-size:0.75rem;color:var(--muted);margin-top:0.2rem}
+.camp-change{font-size:0.72rem;margin-top:0.2rem;color:#10b981}
+.campaign-table{background:var(--bg);border-radius:12px;overflow:hidden}
+.table-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:0.7rem 1rem;background:rgba(232,121,249,0.05);font-size:0.75rem;font-weight:600;color:var(--muted)}
+.table-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:0.7rem 1rem;border-top:1px solid var(--border);font-size:0.82rem;align-items:center}
+.table-row:hover{background:rgba(232,121,249,0.03)}
+.inf-row-info{display:flex;align-items:center;gap:0.7rem}
+.inf-row-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem}
+.inf-row-name{font-weight:600;font-size:0.82rem}
+.inf-row-platform{font-size:0.72rem;color:var(--muted)}
+.perf-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;width:60px}
+.perf-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#e879f9,#f97316)}
+.status-badge{padding:0.2rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:600}
+.status-active{background:rgba(16,185,129,0.1);color:#10b981}
+.status-pending{background:rgba(245,158,11,0.1);color:#f59e0b}
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s}
+.pricing-card.featured{border-color:#e879f9;background:linear-gradient(135deg,rgba(232,121,249,0.05),rgba(249,115,22,0.05))}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e879f9,#f97316);color:#fff;padding:0.3rem 1rem;border-radius:20px;font-size:0.8rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.8rem;font-weight:900;line-height:1;margin-bottom:0.3rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:1.5rem}
+.plan-features li{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;padding:0.35rem 0;color:var(--muted)}
+.plan-features li::before{content:'✓';color:#e879f9;font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:0.8rem;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.plan-btn.featured-btn{background:linear-gradient(135deg,#e879f9,#f97316);border:none;color:#fff}
+.cta-section{text-align:center;padding:5rem 5%;background:linear-gradient(135deg,rgba(232,121,249,0.06),rgba(249,115,22,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+footer{padding:3rem 5%;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#e879f9,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.8rem}
+.footer-desc{color:var(--muted);font-size:0.9rem;line-height:1.6}
+.footer-col h4{font-size:0.9rem;font-weight:700;margin-bottom:1rem}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:0.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
+.footer-links a:hover{color:#e879f9}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.85rem}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;position:relative}
+.modal h3{font-size:1.4rem;font-weight:800;margin-bottom:0.5rem}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.social-btns{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem}
+.social-btn{padding:0.8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;gap:0.6rem;transition:all 0.2s}
+.social-btn:hover{border-color:#e879f9}
+.divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--muted);font-size:0.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;color:var(--muted)}
+.form-group input{width:100%;padding:0.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#e879f9}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⭐ InfluencerAI</div>
+  <ul class="nav-links">
+    <li><a href="#discover">Discover</a></li>
+    <li><a href="#campaigns">Campaigns</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-outline" onclick="document.getElementById('authModal').classList.add('active')">Log in</button>
+    <button class="btn-primary" onclick="document.getElementById('authModal').classList.add('active')">Start Free</button>
+  </div>
+</nav>
+
+<hero>
+  <div class="hero-glow"></div>
+  <div class="badge">🚀 #1 AI Influencer Marketing Platform of 2025</div>
+  <h1>Find, Activate & Measure<br><span class="gradient-text">Influencer Campaigns with AI</span></h1>
+  <p class="hero-sub">InfluencerAI discovers perfect brand-fit creators, automates outreach, manages campaigns, and delivers real ROI analytics — all in one intelligent platform.</p>
+  <div class="hero-btns">
+    <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">⭐ Start Free — No Credit Card</button>
+    <button class="btn-large btn-outline">🎬 Watch Platform Tour</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">5M+</div><div class="stat-label">Creator Database</div></div>
+    <div class="stat-item"><div class="stat-num">$2.8B</div><div class="stat-label">Campaign Value Managed</div></div>
+    <div class="stat-item"><div class="stat-num">8.4x</div><div class="stat-label">Average ROAS</div></div>
+    <div class="stat-item"><div class="stat-num">50K+</div><div class="stat-label">Brands Served</div></div>
+  </div>
+</hero>
+
+<section id="discover">
+  <div class="section-header">
+    <div class="section-label">AI Creator Discovery</div>
+    <h2>Find Your Perfect <span class="gradient-text">Brand Ambassadors</span></h2>
+    <p class="section-sub">AI matches your brand to creators by audience quality, engagement, and brand safety scores.</p>
+  </div>
+  <div class="influencers-grid">
+    <div class="influencer-card">
+      <div class="inf-avatar" style="background:linear-gradient(135deg,#e879f9,#f97316)">
+        👩‍🎨
+        <div class="inf-verified">✓</div>
+      </div>
+      <div class="inf-name">Sofia Martinez</div>
+      <div class="inf-handle">@sofiacreates</div>
+      <div class="inf-category">Beauty & Lifestyle</div>
+      <div class="inf-stats">
+        <div class="inf-stat"><div class="inf-stat-val">2.4M</div><div class="inf-stat-label">Followers</div></div>
+        <div class="inf-stat"><div class="inf-stat-val">6.8%</div><div class="inf-stat-label">Eng. Rate</div></div>
+      </div>
+      <div class="inf-score">🤖 AI Match: 97/100</div>
+      <button class="inf-btn" onclick="document.getElementById('authModal').classList.add('active')">View Profile</button>
+    </div>
+    <div class="influencer-card">
+      <div class="inf-avatar" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">
+        👨‍💻
+        <div class="inf-verified">✓</div>
+      </div>
+      <div class="inf-name">Jake Thompson</div>
+      <div class="inf-handle">@jakeTech</div>
+      <div class="inf-category">Tech & Gaming</div>
+      <div class="inf-stats">
+        <div class="inf-stat"><div class="inf-stat-val">890K</div><div class="inf-stat-label">Followers</div></div>
+        <div class="inf-stat"><div class="inf-stat-val">9.2%</div><div class="inf-stat-label">Eng. Rate</div></div>
+      </div>
+      <div class="inf-score">🤖 AI Match: 94/100</div>
+      <button class="inf-btn" onclick="document.getElementById('authModal').classList.add('active')">View Profile</button>
+    </div>
+    <div class="influencer-card">
+      <div class="inf-avatar" style="background:linear-gradient(135deg,#10b981,#22c55e)">
+        🧘‍♀️
+        <div class="inf-verified">✓</div>
+      </div>
+      <div class="inf-name">Priya Wellness</div>
+      <div class="inf-handle">@priyafit</div>
+      <div class="inf-category">Health & Fitness</div>
+      <div class="inf-stats">
+        <div class="inf-stat"><div class="inf-stat-val">1.1M</div><div class="inf-stat-label">Followers</div></div>
+        <div class="inf-stat"><div class="inf-stat-val">7.4%</div><div class="inf-stat-label">Eng. Rate</div></div>
+      </div>
+      <div class="inf-score">🤖 AI Match: 91/100</div>
+      <button class="inf-btn" onclick="document.getElementById('authModal').classList.add('active')">View Profile</button>
+    </div>
+    <div class="influencer-card">
+      <div class="inf-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">
+        👨‍🍳
+        <div class="inf-verified">✓</div>
+      </div>
+      <div class="inf-name">Marco Cucina</div>
+      <div class="inf-handle">@marcofood</div>
+      <div class="inf-category">Food & Travel</div>
+      <div class="inf-stats">
+        <div class="inf-stat"><div class="inf-stat-val">540K</div><div class="inf-stat-label">Followers</div></div>
+        <div class="inf-stat"><div class="inf-stat-val">11.3%</div><div class="inf-stat-label">Eng. Rate</div></div>
+      </div>
+      <div class="inf-score">🤖 AI Match: 88/100</div>
+      <button class="inf-btn" onclick="document.getElementById('authModal').classList.add('active')">View Profile</button>
+    </div>
+  </div>
+</section>
+
+<section id="campaigns" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Campaign Dashboard</div>
+    <h2>Track Every Campaign <span class="gradient-text">in Real Time</span></h2>
+  </div>
+  <div class="campaign-demo">
+    <div class="demo-header">
+      <h3>🌸 Summer Beauty Launch — Active Campaign</h3>
+      <button class="btn-primary" style="padding:0.4rem 1rem;font-size:0.85rem" onclick="document.getElementById('authModal').classList.add('active')">+ New Campaign</button>
+    </div>
+    <div class="campaign-metrics">
+      <div class="camp-metric">
+        <div class="camp-val" style="color:#e879f9">12.4M</div>
+        <div class="camp-label">Total Reach</div>
+        <div class="camp-change">↑ +23% this week</div>
+      </div>
+      <div class="camp-metric">
+        <div class="camp-val" style="color:#f97316">847K</div>
+        <div class="camp-label">Engagements</div>
+        <div class="camp-change">↑ +18% this week</div>
+      </div>
+      <div class="camp-metric">
+        <div class="camp-val" style="color:#10b981">8.6x</div>
+        <div class="camp-label">ROAS</div>
+        <div class="camp-change">↑ Above target</div>
+      </div>
+      <div class="camp-metric">
+        <div class="camp-val" style="color:#3b82f6">$128K</div>
+        <div class="camp-label">Revenue Driven</div>
+        <div class="camp-change">↑ +34% vs last</div>
+      </div>
+    </div>
+    <div class="campaign-table">
+      <div class="table-header">
+        <span>Creator</span>
+        <span>Platform</span>
+        <span>Reach</span>
+        <span>Performance</span>
+        <span>Status</span>
+      </div>
+      <div class="table-row">
+        <div class="inf-row-info"><div class="inf-row-avatar" style="background:linear-gradient(135deg,#e879f9,#f97316)">👩‍🎨</div><div><div class="inf-row-name">Sofia Martinez</div><div class="inf-row-platform">Instagram · TikTok</div></div></div>
+        <span style="color:var(--muted);font-size:0.8rem">📸 IG · 🎵 TT</span>
+        <span style="font-weight:600">4.8M</span>
+        <div><div class="perf-bar"><div class="perf-fill" style="width:92%"></div></div></div>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="table-row">
+        <div class="inf-row-info"><div class="inf-row-avatar" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">👨‍💻</div><div><div class="inf-row-name">Jake Thompson</div><div class="inf-row-platform">YouTube · Twitter</div></div></div>
+        <span style="color:var(--muted);font-size:0.8rem">▶️ YT · 🐦 TW</span>
+        <span style="font-weight:600">2.1M</span>
+        <div><div class="perf-bar"><div class="perf-fill" style="width:75%"></div></div></div>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="table-row">
+        <div class="inf-row-info"><div class="inf-row-avatar" style="background:linear-gradient(135deg,#10b981,#22c55e)">🧘‍♀️</div><div><div class="inf-row-name">Priya Wellness</div><div class="inf-row-platform">Instagram · Blog</div></div></div>
+        <span style="color:var(--muted);font-size:0.8rem">📸 IG · 📝 Blog</span>
+        <span style="font-weight:600">1.6M</span>
+        <div><div class="perf-bar"><div class="perf-fill" style="width:60%"></div></div></div>
+        <span class="status-badge status-pending">Review</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Platform Features</div>
+    <h2>End-to-End Influencer <span class="gradient-text">Marketing OS</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>AI Creator Discovery</h3>
+      <p>Search 5M+ creators by niche, audience demographics, engagement rate, location, and brand safety score.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📧</div>
+      <h3>Automated Outreach</h3>
+      <p>AI-personalized outreach emails and DMs that get 3x higher response rates. Manage all creator communications in one inbox.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>Campaign Management</h3>
+      <p>Brief creators, review content, manage approvals, and track deliverables from a single campaign hub.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>ROI Analytics</h3>
+      <p>Track reach, engagement, conversions, and revenue in real time. Prove ROI with comprehensive performance reports.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Brand Safety AI</h3>
+      <p>Automatically screen creators for past controversies, fake followers, and content that conflicts with brand values.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💸</div>
+      <h3>Payment Automation</h3>
+      <p>Automatically pay creators upon content approval. Support for 50+ currencies with tax form management built in.</p>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="padding-top:2rem">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2>Scale Your Influence <span class="gradient-text">Marketing ROI</span></h2>
+    <p class="section-sub">Plans for every brand, from startups to enterprises.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">STARTER</div>
+      <div class="plan-price">$0 <span>/ month</span></div>
+      <div class="plan-desc">For brands just getting started</div>
+      <ul class="plan-features">
+        <li>Search 50K creators</li>
+        <li>3 active campaigns</li>
+        <li>Basic analytics</li>
+        <li>Email outreach (50/mo)</li>
+        <li>Standard reporting</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-name">GROWTH</div>
+      <div class="plan-price">$149 <span>/ month</span></div>
+      <div class="plan-desc">For brands scaling influencer marketing</div>
+      <ul class="plan-features">
+        <li>Full 5M creator database</li>
+        <li>Unlimited campaigns</li>
+        <li>AI creator matching</li>
+        <li>Automated outreach</li>
+        <li>ROI & conversion tracking</li>
+        <li>Brand safety scoring</li>
+        <li>Payment automation</li>
+      </ul>
+      <button class="plan-btn featured-btn" onclick="document.getElementById('authModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">ENTERPRISE</div>
+      <div class="plan-price">$499 <span>/ month</span></div>
+      <div class="plan-desc">For agencies and large brands</div>
+      <ul class="plan-features">
+        <li>Everything in Growth</li>
+        <li>White-label platform</li>
+        <li>Multi-brand management</li>
+        <li>Custom AI training</li>
+        <li>Dedicated account manager</li>
+        <li>API & CRM integrations</li>
+        <li>Advanced fraud detection</li>
+      </ul>
+      <button class="plan-btn" onclick="document.getElementById('authModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h2>Turn Creators Into Your <span class="gradient-text">Best Sales Channel</span></h2>
+  <p>Join 50,000+ brands driving real revenue with InfluencerAI.</p>
+  <button class="btn-large btn-primary" onclick="document.getElementById('authModal').classList.add('active')">⭐ Start Free — No Credit Card</button>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">⭐ InfluencerAI</div>
+      <p class="footer-desc">The AI-powered influencer marketing platform that finds perfect creators, automates campaigns, and delivers measurable ROI at scale.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul class="footer-links">
+        <li><a href="#">Creator Discovery</a></li>
+        <li><a href="#">Campaign Manager</a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Payments</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Channels</h4>
+      <ul class="footer-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Twitter/X</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 InfluencerAI. All rights reserved.</span>
+    <span>Built for brands that want real results ⭐</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">✕</button>
+    <h3>Start Free Today</h3>
+    <p>Join 50,000+ brands growing with InfluencerAI</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Continue with Google</button>
+      <button class="social-btn">💼 Continue with LinkedIn</button>
+    </div>
+    <div class="divider">or</div>
+    <div class="form-group">
+      <label>Work Email</label>
+      <input type="email" placeholder="you@brand.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+    <button class="btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem">Create Free Account</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('authModal').classList.remove('active');
+});
+</script>
+</body>
+</html>
