@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiAI - AI-Powered Logistics & Last-Mile Delivery Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #f97316;
+    --secondary: #fb923c;
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --card2: #1a1a2e;
+    --border: rgba(249,115,22,0.2);
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #f97316, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color 0.3s; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-cta { display: flex; gap: 1rem; align-items: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { background: linear-gradient(135deg, #f97316, #fb923c); color: #fff; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(249,115,22,0.4); }
+  .btn-large { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 12px; }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(249,115,22,0.12) 0%, transparent 70%); }
+  .hero-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(249,115,22,0.1); border: 1px solid var(--border); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, #f97316, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 620px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--secondary); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+
+  .section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.7; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(249,115,22,0.1); }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .demo-section { padding: 6rem 2rem; background: linear-gradient(180deg, transparent, rgba(249,115,22,0.03), transparent); }
+  .demo-container { max-width: 1200px; margin: 0 auto; }
+  .demo-app { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .demo-header { background: var(--card2); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
+  .demo-dots { display: flex; gap: 0.4rem; }
+  .demo-dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .demo-dots span:nth-child(1) { background: #ef4444; }
+  .demo-dots span:nth-child(2) { background: #f59e0b; }
+  .demo-dots span:nth-child(3) { background: #22c55e; }
+  .demo-title { font-size: 0.85rem; color: var(--muted); }
+  .demo-body { display: grid; grid-template-columns: 1fr 280px; min-height: 520px; }
+
+  .demo-main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+  .kpi-card { background: var(--card2); border-radius: 10px; padding: 1rem; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+  .kpi-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .kpi-val { font-size: 1.5rem; font-weight: 800; color: var(--secondary); }
+  .kpi-label { font-size: 0.68rem; color: var(--muted); margin-top: 0.2rem; }
+  .kpi-trend { font-size: 0.65rem; margin-top: 0.2rem; }
+  .trend-up { color: #22c55e; }
+  .trend-down { color: #ef4444; }
+
+  .delivery-map { background: var(--card2); border-radius: 12px; padding: 1.2rem; }
+  .delivery-map h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .map-area { position: relative; height: 200px; background: rgba(249,115,22,0.03); border-radius: 8px; border: 1px solid rgba(249,115,22,0.1); overflow: hidden; }
+  .map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(249,115,22,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.05) 1px, transparent 1px); background-size: 30px 30px; }
+  .map-vehicle { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid #fff; cursor: pointer; }
+  .map-vehicle::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 20px; height: 20px; border-radius: 50%; background: rgba(249,115,22,0.3); animation: ripple 1.5s ease-out infinite; }
+  @keyframes ripple { 0% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 100% { transform: translate(-50%,-50%) scale(2.5); opacity: 0; } }
+  .map-depot { position: absolute; width: 14px; height: 14px; border-radius: 3px; background: rgba(59,130,246,0.8); border: 2px solid #60a5fa; }
+  .map-delivery { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(34,197,94,0.8); }
+
+  .routes-table { background: var(--card2); border-radius: 12px; padding: 1.2rem; }
+  .routes-table h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .route-row { display: grid; grid-template-columns: 0.8fr 1fr 0.8fr 0.8fr 0.7fr 0.6fr; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.78rem; }
+  .route-row.header { font-size: 0.68rem; color: var(--muted); font-weight: 600; }
+  .driver-info { display: flex; align-items: center; gap: 0.5rem; }
+  .driver-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; }
+  .delivery-status { font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+  .ds-enroute { background: rgba(249,115,22,0.15); color: var(--secondary); }
+  .ds-delivered { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .ds-delayed { background: rgba(239,68,68,0.15); color: #f87171; }
+  .ds-pickup { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .efficiency-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .eff-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #f97316, #fb923c); }
+
+  .demo-right { border-left: 1px solid var(--border); padding: 1.2rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .ai-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .ai-alert { padding: 0.7rem; border-radius: 8px; font-size: 0.76px; line-height: 1.5; margin-bottom: 0.5rem; font-size: 0.76rem; }
+  .aa-warn { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); }
+  .aa-good { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+  .aa-info { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); }
+  .zone-perf h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .zone-item { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; font-size: 0.76rem; }
+  .zone-name { width: 55px; color: var(--muted); }
+  .zone-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; }
+  .zone-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #f97316, #fb923c); }
+  .zone-val { width: 35px; text-align: right; font-weight: 600; color: var(--secondary); }
+  .today-stats h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .ts-item { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.78rem; }
+  .ts-val { font-weight: 700; color: var(--secondary); }
+
+  .pricing-section { padding: 6rem 2rem; }
+  .pricing-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; }
+  .price-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(249,115,22,0.05), rgba(251,146,60,0.05)); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f97316, #fb923c); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .price-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--muted); }
+  .price-amount { font-size: 3rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .price-amount span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .price-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .price-btn { width: 100%; padding: 0.8rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .price-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .price-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .price-btn-fill { background: linear-gradient(135deg, #f97316, #fb923c); color: #fff; }
+  .price-btn-fill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(249,115,22,0.4); }
+
+  footer { background: var(--card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer .footer-logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #f97316, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; position: relative; }
+  .modal h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .social-btn { width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; }
+  .social-btn:hover { border-color: var(--primary); background: rgba(249,115,22,0.05); }
+  .divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; position: relative; }
+  .divider::before,.divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .divider::before { left:0; } .divider::after { right:0; }
+  .form-input { width: 100%; padding: 0.75rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem; outline: none; }
+  .form-input:focus { border-color: var(--primary); }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🚚 LogiAI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-ghost" onclick="document.getElementById('modal').classList.add('active')">Log In</button>
+    <button class="btn btn-primary" onclick="document.getElementById('modal').classList.add('active')">Get Started Free</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🚚 AI-Optimized Last-Mile Delivery</div>
+    <h1>Deliver Faster,<br>Cheaper with <span>AI Routing</span></h1>
+    <p>Optimize every delivery route in real time, predict delays before they happen, and give customers live tracking — powered by AI that never stops learning.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-large" onclick="document.getElementById('modal').classList.add('active')">Get Started Free →</button>
+      <button class="btn btn-ghost btn-large">Watch Demo</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">28%</div><div class="stat-label">Faster Deliveries</div></div>
+      <div class="stat"><div class="stat-num">35%</div><div class="stat-label">Fuel Cost Savings</div></div>
+      <div class="stat"><div class="stat-num">99.2%</div><div class="stat-label">On-Time Rate</div></div>
+      <div class="stat"><div class="stat-num">3,500+</div><div class="stat-label">Fleets Powered</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">Platform</div>
+  <h2 class="section-title">AI Logistics That <span style="background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Delivers Results</span></h2>
+  <p class="section-sub">From warehouse to doorstep — AI optimization at every step of your logistics operation.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>Dynamic Route Optimization</h3>
+      <p>AI recalculates optimal routes in real time based on traffic, weather, driver capacity, and delivery time windows — saving 28% on delivery time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Live Tracking & Customer Comms</h3>
+      <p>Real-time GPS tracking with automated customer notifications via SMS/email. Live map sharing with precise 1-hour delivery windows.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Dispatch Automation</h3>
+      <p>Automatically assign orders to the optimal driver based on location, vehicle capacity, skills, and workload — zero manual dispatching needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚠️</div>
+      <h3>Predictive Delay Detection</h3>
+      <p>AI predicts delivery delays up to 2 hours in advance and automatically notifies customers and dispatchers with updated ETAs.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Driver Performance Analytics</h3>
+      <p>Score every driver on efficiency, safety, customer ratings, and compliance. AI coaching recommendations improve fleet performance over time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Multi-Carrier Integration</h3>
+      <p>Connect FedEx, UPS, DHL, and 50+ regional carriers. AI auto-selects the best carrier for each shipment based on cost, speed, and reliability.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-container">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div class="section-label">Live Preview</div>
+      <h2 class="section-title">AI Dispatch & Delivery Dashboard</h2>
+    </div>
+    <div class="demo-app">
+      <div class="demo-header">
+        <div class="demo-dots"><span></span><span></span><span></span></div>
+        <div class="demo-title">LogiAI — FastShip Logistics · Operations Center · Live</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-main">
+          <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-icon">📦</div><div class="kpi-val">1,284</div><div class="kpi-label">Active Deliveries</div><div class="kpi-trend trend-up">↑ 12% today</div></div>
+            <div class="kpi-card"><div class="kpi-icon">✅</div><div class="kpi-val">96.8%</div><div class="kpi-label">On-Time Rate</div><div class="kpi-trend trend-up">↑ +1.4%</div></div>
+            <div class="kpi-card"><div class="kpi-icon">🚚</div><div class="kpi-val">142</div><div class="kpi-label">Active Drivers</div><div class="kpi-trend trend-up">↑ 8 new today</div></div>
+            <div class="kpi-card"><div class="kpi-icon">⚡</div><div class="kpi-val">18.4</div><div class="kpi-label">Avg. Delivery (min)</div><div class="kpi-trend trend-down">↓ -2.1 min saved</div></div>
+          </div>
+          <div class="delivery-map">
+            <h4>🗺️ Live Delivery Map — City Center Zone</h4>
+            <div class="map-area">
+              <div class="map-grid"></div>
+              <!-- Depot -->
+              <div class="map-depot" style="top:45%;left:48%;"></div>
+              <!-- Vehicles in motion -->
+              <div class="map-vehicle" style="top:25%;left:20%;background:#f97316;"></div>
+              <div class="map-vehicle" style="top:60%;left:30%;background:#fb923c;"></div>
+              <div class="map-vehicle" style="top:35%;left:65%;background:#f97316;"></div>
+              <div class="map-vehicle" style="top:70%;left:72%;background:#22c55e;"></div>
+              <div class="map-vehicle" style="top:15%;left:55%;background:#fb923c;"></div>
+              <!-- Delivery points -->
+              <div class="map-delivery" style="top:20%;left:18%;"></div>
+              <div class="map-delivery" style="top:55%;left:25%;"></div>
+              <div class="map-delivery" style="top:40%;left:70%;"></div>
+              <div class="map-delivery" style="top:75%;left:65%;"></div>
+              <div class="map-delivery" style="top:10%;left:60%;"></div>
+              <!-- Route lines via SVG -->
+              <svg style="position:absolute;inset:0;width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 48% 47% Q 30% 30% 20% 25%" stroke="rgba(249,115,22,0.4)" fill="none" stroke-width="1.5" stroke-dasharray="4,3"/>
+                <path d="M 48% 47% Q 35% 60% 30% 62%" stroke="rgba(251,146,60,0.4)" fill="none" stroke-width="1.5" stroke-dasharray="4,3"/>
+                <path d="M 48% 47% Q 60% 40% 65% 37%" stroke="rgba(249,115,22,0.4)" fill="none" stroke-width="1.5" stroke-dasharray="4,3"/>
+              </svg>
+              <div style="position:absolute;bottom:0.5rem;left:0.5rem;display:flex;gap:0.8rem;font-size:0.62rem;">
+                <span style="color:#f97316;">● Vehicle (142)</span>
+                <span style="color:#22c55e;">● Delivered (892)</span>
+                <span style="color:#3b82f6;">■ Depot (8)</span>
+              </div>
+            </div>
+          </div>
+          <div class="routes-table">
+            <h4>🚚 Active Driver Routes</h4>
+            <div class="route-row header"><div>Driver</div><div>Route</div><div>Deliveries</div><div>ETA</div><div>Efficiency</div><div>Status</div></div>
+            <div class="route-row">
+              <div class="driver-info"><div class="driver-avatar" style="background:rgba(249,115,22,0.2);color:#fb923c;">JD</div><span>Jake D.</span></div>
+              <div>Zone A · 12 stops</div>
+              <div>8/12</div>
+              <div>2:45 PM</div>
+              <div><div class="efficiency-bar"><div class="eff-fill" style="width:91%;"></div></div></div>
+              <div><span class="delivery-status ds-enroute">En Route</span></div>
+            </div>
+            <div class="route-row">
+              <div class="driver-info"><div class="driver-avatar" style="background:rgba(34,197,94,0.2);color:#4ade80;">SR</div><span>Sarah R.</span></div>
+              <div>Zone B · 15 stops</div>
+              <div>15/15</div>
+              <div>1:30 PM</div>
+              <div><div class="efficiency-bar"><div class="eff-fill" style="width:98%;"></div></div></div>
+              <div><span class="delivery-status ds-delivered">Completed</span></div>
+            </div>
+            <div class="route-row">
+              <div class="driver-info"><div class="driver-avatar" style="background:rgba(239,68,68,0.2);color:#f87171;">MK</div><span>Mike K.</span></div>
+              <div>Zone C · 10 stops</div>
+              <div>4/10</div>
+              <div>4:15 PM</div>
+              <div><div class="efficiency-bar"><div class="eff-fill" style="width:68%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div></div>
+              <div><span class="delivery-status ds-delayed">Delayed</span></div>
+            </div>
+            <div class="route-row">
+              <div class="driver-info"><div class="driver-avatar" style="background:rgba(59,130,246,0.2);color:#60a5fa;">AL</div><span>Anna L.</span></div>
+              <div>Zone D · 9 stops</div>
+              <div>0/9</div>
+              <div>3:00 PM</div>
+              <div><div class="efficiency-bar"><div class="eff-fill" style="width:0%;"></div></div></div>
+              <div><span class="delivery-status ds-pickup">At Pickup</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-right">
+          <div class="ai-panel">
+            <h4><div class="ai-dot"></div> AI Dispatch Alerts</h4>
+            <div class="ai-alert aa-warn">⚠️ Mike K. delayed by 45min due to accident on I-95. AI rerouted 3 stops to Anna L.</div>
+            <div class="ai-alert aa-good">✅ Zone A optimized — Jake saved 2.4 gallons of fuel vs yesterday's route.</div>
+            <div class="ai-alert aa-info">📦 147 new orders queued for 3PM wave. 12 drivers available for dispatch.</div>
+          </div>
+          <div class="zone-perf">
+            <h4>📊 Zone Performance</h4>
+            <div class="zone-item"><span class="zone-name">Zone A</span><div class="zone-bar"><div class="zone-fill" style="width:91%;"></div></div><span class="zone-val">91%</span></div>
+            <div class="zone-item"><span class="zone-name">Zone B</span><div class="zone-bar"><div class="zone-fill" style="width:98%;"></div></div><span class="zone-val">98%</span></div>
+            <div class="zone-item"><span class="zone-name">Zone C</span><div class="zone-bar"><div class="zone-fill" style="width:68%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div><span class="zone-val" style="color:#f87171;">68%</span></div>
+            <div class="zone-item"><span class="zone-name">Zone D</span><div class="zone-bar"><div class="zone-fill" style="width:85%;"></div></div><span class="zone-val">85%</span></div>
+          </div>
+          <div class="today-stats">
+            <h4>📈 Today's Summary</h4>
+            <div class="ts-item"><span>Deliveries Completed</span><span class="ts-val">892</span></div>
+            <div class="ts-item"><span>Failed Attempts</span><span class="ts-val" style="color:#f87171;">23</span></div>
+            <div class="ts-item"><span>Fuel Saved</span><span class="ts-val">$284</span></div>
+            <div class="ts-item"><span>Avg. Rating</span><span class="ts-val">4.8 ⭐</span></div>
+            <div class="ts-item"><span>CO₂ Reduction</span><span class="ts-val" style="color:#4ade80;">-18%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div style="text-align:center;max-width:600px;margin:0 auto 3rem;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Scale Your <span style="background:linear-gradient(135deg,#f97316,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Delivery Operations</span></h2>
+    <p style="color:var(--muted);">Pay per delivery or a flat monthly fee. No contracts, cancel anytime.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-amount">$99<span>/mo</span></div>
+      <div class="price-desc">For small delivery businesses</div>
+      <ul class="price-features">
+        <li>Up to 10 drivers</li>
+        <li>Route optimization</li>
+        <li>Live GPS tracking</li>
+        <li>Customer notifications</li>
+        <li>Basic analytics</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">🚚 Most Popular</div>
+      <div class="price-name">Growth</div>
+      <div class="price-amount">$299<span>/mo</span></div>
+      <div class="price-desc">For growing logistics companies</div>
+      <ul class="price-features">
+        <li>Up to 100 drivers</li>
+        <li>AI dispatch automation</li>
+        <li>Predictive delay detection</li>
+        <li>Driver performance analytics</li>
+        <li>Multi-carrier integration</li>
+        <li>White-label customer app</li>
+      </ul>
+      <button class="price-btn price-btn-fill" onclick="document.getElementById('modal').classList.add('active')">Start Growth Plan</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large logistics networks</div>
+      <ul class="price-features">
+        <li>Unlimited drivers & orders</li>
+        <li>Custom AI model training</li>
+        <li>Warehouse management integration</li>
+        <li>Dedicated SLA support</li>
+        <li>Advanced route algorithms</li>
+        <li>API & webhook access</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🚚 LogiAI</div>
+  <p>© 2025 LogiAI · Powering the future of last-mile delivery with artificial intelligence.</p>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕</button>
+    <h2>Get Started Free</h2>
+    <p>14-day free trial · No credit card required</p>
+    <button class="social-btn">🔵 Continue with Google</button>
+    <button class="social-btn">🍎 Continue with Apple</button>
+    <div class="divider">or use email</div>
+    <input type="email" class="form-input" placeholder="Work email">
+    <input type="password" class="form-input" placeholder="Password">
+    <button class="btn btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;">Create Account</button>
+  </div>
+</div>
+
+</body>
+</html>
