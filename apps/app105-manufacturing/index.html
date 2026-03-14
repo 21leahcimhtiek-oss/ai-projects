@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ManufacturingAI - AI-Powered Smart Factory Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --orange:#f97316;--orange2:#fb923c;--orange3:#fed7aa;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--teal:#14b8a6
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--orange),var(--orange2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#fff;font-weight:600}
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(249,115,22,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--orange);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--orange),var(--orange2),var(--orange3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--orange),var(--orange2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#fff;font-weight:700}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--orange),var(--orange2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:260px 1fr 290px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* LINE SIDEBAR */
+.line-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:680px;overflow-y:auto}
+.line-sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.line-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.line-item.active{background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.3)}
+.line-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.l-name{font-size:0.88rem;font-weight:600;margin-bottom:2px}
+.l-product{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.l-meta{display:flex;justify-content:space-between;align-items:center}
+.l-oee{font-size:0.82rem;font-weight:700;color:var(--orange)}
+.l-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.ls-run{background:rgba(34,197,94,0.15);color:var(--green)}
+.ls-stop{background:rgba(239,68,68,0.15);color:var(--red)}
+.ls-maint{background:rgba(245,158,11,0.15);color:var(--amber)}
+.ls-setup{background:rgba(59,130,246,0.15);color:var(--blue)}
+
+/* MAIN */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.line-header{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.lh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.lh-name{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.lh-sub{font-size:0.82rem;color:var(--muted)}
+.lh-actions{display:flex;gap:8px}
+.act-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.act-btn:hover{border-color:var(--orange);color:var(--orange)}
+.act-btn.primary{background:linear-gradient(135deg,var(--orange),var(--orange2));border:none;color:#fff;font-weight:600}
+.line-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* MACHINE STATUS */
+.machine-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-hdr h3{font-size:0.95rem;font-weight:600}
+.machine-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.machine{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;position:relative}
+.machine:hover{border-color:rgba(249,115,22,0.4)}
+.machine.running{border-color:rgba(34,197,94,0.3)}
+.machine.fault{border-color:rgba(239,68,68,0.3);animation:alert-pulse 2s infinite}
+@keyframes alert-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 12px rgba(239,68,68,0.3)}}
+.machine.idle{border-color:rgba(100,116,139,0.3)}
+.m-name{font-size:0.78rem;font-weight:600;margin-bottom:6px}
+.m-status-dot{width:8px;height:8px;border-radius:50%;position:absolute;top:10px;right:10px}
+.dot-run{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5)}
+.dot-fault{background:var(--red);box-shadow:0 0 6px rgba(239,68,68,0.5)}
+.dot-idle{background:var(--muted)}
+.dot-maint{background:var(--amber)}
+.m-speed{font-size:1.1rem;font-weight:700;margin-bottom:2px}
+.m-temp{font-size:0.72rem;color:var(--muted)}
+.m-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
+.m-fill{height:100%;border-radius:2px}
+
+/* PRODUCTION CHART */
+.prod-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+
+/* DEFECT TABLE */
+.defect-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.defect-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.defect-table th{text-align:left;color:var(--muted);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border)}
+.defect-table td{padding:10px 12px;border-bottom:1px solid rgba(42,42,62,0.5)}
+.defect-table tr:last-child td{border-bottom:none}
+.severity{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.sev-high{background:rgba(239,68,68,0.15);color:var(--red)}
+.sev-med{background:rgba(245,158,11,0.15);color:var(--amber)}
+.sev-low{background:rgba(34,197,94,0.15);color:var(--green)}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-card{background:var(--surface2);border:1px solid rgba(249,115,22,0.3);border-radius:16px;padding:20px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ai-hdr span{font-size:0.85rem;font-weight:600;color:var(--orange)}
+.ai-item{background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-item-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-item-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.b-red{background:rgba(239,68,68,0.15);color:var(--red)}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green)}
+
+.energy-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.energy-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5);font-size:0.82rem}
+.energy-row:last-child{border-bottom:none}
+.e-label{color:var(--muted)}
+.e-bar{display:flex;align-items:center;gap:6px}
+.ebar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;width:70px}
+.ebar-fill{height:100%;border-radius:3px}
+
+.shift-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.shift-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.shift-item:last-child{border-bottom:none}
+.shift-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.shift-info{flex:1}
+.shift-name{font-size:0.82rem;font-weight:600}
+.shift-role{font-size:0.72rem;color:var(--muted)}
+.shift-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.ss-on{background:rgba(34,197,94,0.15);color:var(--green)}
+.ss-off{background:rgba(100,116,139,0.15);color:var(--muted)}
+
+/* FEATURES / PRICING */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(249,115,22,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(249,115,22,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(249,115,22,0.2),rgba(251,146,60,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+.price-card.popular{border-color:var(--orange);box-shadow:0 0 40px rgba(249,115,22,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--orange);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--orange);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--orange),var(--orange2));border:none;color:#fff}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-icon">🏭</div><span>ManufacturingAI</span></div>
+  <div class="nav-links">
+    <a href="#">Production</a><a href="#">Quality Control</a><a href="#">Predictive Maintenance</a><a href="#">Energy</a><a href="#">Supply Chain</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Get Demo</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🏭 Industry 4.0 AI for Smart Factories</div>
+  <h1>Build the Smart Factory<br><span>of Tomorrow, Today</span></h1>
+  <p>Connect machines, predict failures before they happen, detect defects with computer vision, and optimize production in real time — all powered by industrial AI.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Get Demo</button>
+    <button class="btn-hero-outline">View Case Studies</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">1,200+</div><div class="stat-label">Factories</div></div>
+    <div class="stat"><div class="stat-num">42%</div><div class="stat-label">Downtime Reduction</div></div>
+    <div class="stat"><div class="stat-num">99.4%</div><div class="stat-label">Defect Detection Rate</div></div>
+    <div class="stat"><div class="stat-num">18%</div><div class="stat-label">OEE Improvement</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live Factory Operations Dashboard</h2>
+    <p>Real-time monitoring across all production lines and machines</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- LINE SIDEBAR -->
+    <div class="line-sidebar">
+      <h3>Production Lines (7)</h3>
+      <div class="line-item active">
+        <div class="l-name">Line A — Assembly</div>
+        <div class="l-product">Engine Block Assembly</div>
+        <div class="l-meta"><span class="l-oee">OEE 87.4%</span><span class="l-status ls-run">RUNNING</span></div>
+      </div>
+      <div class="line-item">
+        <div class="l-name">Line B — Machining</div>
+        <div class="l-product">CNC Precision Parts</div>
+        <div class="l-meta"><span class="l-oee">OEE 91.2%</span><span class="l-status ls-run">RUNNING</span></div>
+      </div>
+      <div class="line-item">
+        <div class="l-name">Line C — Welding</div>
+        <div class="l-product">Chassis Fabrication</div>
+        <div class="l-meta"><span class="l-oee">OEE 72.1%</span><span class="l-status ls-maint">MAINTENANCE</span></div>
+      </div>
+      <div class="line-item">
+        <div class="l-name">Line D — Painting</div>
+        <div class="l-product">Surface Coating</div>
+        <div class="l-meta"><span class="l-oee">OEE 84.6%</span><span class="l-status ls-run">RUNNING</span></div>
+      </div>
+      <div class="line-item">
+        <div class="l-name">Line E — QC Inspection</div>
+        <div class="l-product">Final Inspection</div>
+        <div class="l-meta"><span class="l-oee">OEE 94.8%</span><span class="l-status ls-run">RUNNING</span></div>
+      </div>
+      <div class="line-item">
+        <div class="l-name">Line F — Packaging</div>
+        <div class="l-product">Boxing & Palletizing</div>
+        <div class="l-meta"><span class="l-oee">OEE 88.3%</span><span class="l-status ls-run">RUNNING</span></div>
+      </div>
+      <div class="line-item">
+        <div class="l-name">Line G — Testing</div>
+        <div class="l-product">End-of-Line Testing</div>
+        <div class="l-meta"><span class="l-oee">OEE 0%</span><span class="l-status ls-stop">STOPPED</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <div class="line-header">
+        <div class="lh-top">
+          <div>
+            <div class="lh-name">Line A — Engine Block Assembly</div>
+            <div class="lh-sub">12 Stations • Shift 2 (14:00–22:00) • Supervisor: R. Johnson • Target: 240 units/shift</div>
+          </div>
+          <div class="lh-actions">
+            <button class="act-btn">📊 Report</button>
+            <button class="act-btn">⏸ Pause</button>
+            <button class="act-btn primary">⚡ AI Optimize</button>
+          </div>
+        </div>
+        <div class="line-kpis">
+          <div class="kpi">
+            <div class="kpi-label">OEE Score</div>
+            <div class="kpi-val" style="color:var(--orange)">87.4%</div>
+            <div class="kpi-sub">Target: 85%</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Units Produced</div>
+            <div class="kpi-val" style="color:var(--green)">168</div>
+            <div class="kpi-sub">Target: 180 by now</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Defect Rate</div>
+            <div class="kpi-val" style="color:var(--amber)">1.2%</div>
+            <div class="kpi-sub">2 units flagged</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Cycle Time</div>
+            <div class="kpi-val" style="color:var(--blue)">3.8 min</div>
+            <div class="kpi-sub">Target: 3.5 min</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Machine Status -->
+      <div class="machine-card">
+        <div class="card-hdr"><h3>⚙️ Machine Status — Line A</h3><span style="font-size:0.78rem;color:var(--muted)">Live • 12 machines</span></div>
+        <div class="machine-grid">
+          <div class="machine running">
+            <div class="m-status-dot dot-run"></div>
+            <div class="m-name">Robot ARM-01</div>
+            <div class="m-speed" style="color:var(--green)">98%</div>
+            <div class="m-temp">Temp: 42°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:98%;background:var(--green)"></div></div>
+          </div>
+          <div class="machine running">
+            <div class="m-status-dot dot-run"></div>
+            <div class="m-name">CNC Mill-03</div>
+            <div class="m-speed" style="color:var(--green)">94%</div>
+            <div class="m-temp">Temp: 58°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:94%;background:var(--green)"></div></div>
+          </div>
+          <div class="machine fault">
+            <div class="m-status-dot dot-fault"></div>
+            <div class="m-name">Press-02</div>
+            <div class="m-speed" style="color:var(--red)">FAULT</div>
+            <div class="m-temp">Temp: 89°C ⚠️</div>
+            <div class="m-bar"><div class="m-fill" style="width:100%;background:var(--red)"></div></div>
+          </div>
+          <div class="machine running">
+            <div class="m-status-dot dot-run"></div>
+            <div class="m-name">Conveyor-01</div>
+            <div class="m-speed" style="color:var(--green)">100%</div>
+            <div class="m-temp">Temp: 28°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:100%;background:var(--green)"></div></div>
+          </div>
+          <div class="machine running">
+            <div class="m-status-dot dot-run"></div>
+            <div class="m-name">Torque-04</div>
+            <div class="m-speed" style="color:var(--orange)">82%</div>
+            <div class="m-temp">Temp: 51°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:82%;background:var(--orange)"></div></div>
+          </div>
+          <div class="machine idle">
+            <div class="m-status-dot dot-maint"></div>
+            <div class="m-name">Welder-06</div>
+            <div class="m-speed" style="color:var(--amber)">MAINT</div>
+            <div class="m-temp">Temp: 22°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:0%;background:var(--amber)"></div></div>
+          </div>
+          <div class="machine running">
+            <div class="m-status-dot dot-run"></div>
+            <div class="m-name">Vision-AI-01</div>
+            <div class="m-speed" style="color:var(--green)">99%</div>
+            <div class="m-temp">GPU: 71°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:99%;background:var(--green)"></div></div>
+          </div>
+          <div class="machine running">
+            <div class="m-status-dot dot-run"></div>
+            <div class="m-name">Pick-Place-02</div>
+            <div class="m-speed" style="color:var(--green)">96%</div>
+            <div class="m-temp">Temp: 38°C</div>
+            <div class="m-bar"><div class="m-fill" style="width:96%;background:var(--green)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Production Output Chart -->
+      <div class="prod-card">
+        <div class="card-hdr"><h3>📈 Hourly Production Output vs Target</h3></div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:16px">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;height:110px;margin-right:8px">
+            <span style="font-size:0.6rem;color:var(--muted)">30</span>
+            <span style="font-size:0.6rem;color:var(--muted)">20</span>
+            <span style="font-size:0.6rem;color:var(--muted)">10</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:flex-end;flex:1">
+            <!-- Target line reference bars -->
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:88px;background:linear-gradient(to top,rgba(249,115,22,0.4),rgba(249,115,22,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">14:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:92px;background:linear-gradient(to top,rgba(249,115,22,0.4),rgba(249,115,22,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">15:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:80px;background:linear-gradient(to top,rgba(249,115,22,0.4),rgba(249,115,22,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">16:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:75px;background:linear-gradient(to top,rgba(239,68,68,0.3),rgba(239,68,68,0.6));border-radius:4px 4px 0 0;border:1px solid rgba(239,68,68,0.5)"></div>
+              <span style="font-size:0.62rem;color:var(--red)">17:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:88px;background:linear-gradient(to top,rgba(249,115,22,0.4),rgba(249,115,22,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">18:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:95px;background:linear-gradient(to top,rgba(34,197,94,0.4),rgba(34,197,94,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">19:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:85px;background:linear-gradient(to top,rgba(249,115,22,0.4),rgba(249,115,22,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">20:00</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div style="width:100%;height:50px;background:linear-gradient(to top,rgba(100,116,139,0.3),rgba(100,116,139,0.5));border-radius:4px 4px 0 0;border:1px dashed var(--border)"></div>
+              <span style="font-size:0.62rem;color:var(--muted)">Now</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:6px;padding-left:34px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--muted)"><div style="width:12px;height:12px;border-radius:2px;background:rgba(249,115,22,0.6)"></div>On Target</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--muted)"><div style="width:12px;height:12px;border-radius:2px;background:rgba(239,68,68,0.5)"></div>Below Target</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--muted)"><div style="width:12px;height:12px;border-radius:2px;background:rgba(34,197,94,0.5)"></div>Above Target</div>
+        </div>
+      </div>
+
+      <!-- Defect Log -->
+      <div class="defect-card">
+        <div class="card-hdr"><h3>🔍 AI Quality Control Log</h3><span style="font-size:0.78rem;color:var(--green)">Vision AI Active</span></div>
+        <table class="defect-table">
+          <thead><tr><th>Time</th><th>Station</th><th>Defect Type</th><th>Unit #</th><th>Severity</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--muted)">20:14</td>
+              <td>Station 8</td>
+              <td>Surface scratch — torque housing</td>
+              <td>#A-1682</td>
+              <td><span class="severity sev-low">Minor</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Rework</button></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">19:47</td>
+              <td>Station 3</td>
+              <td>Misaligned gasket — cylinder head</td>
+              <td>#A-1671</td>
+              <td><span class="severity sev-high">Critical</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Scrap</button></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">18:52</td>
+              <td>Station 11</td>
+              <td>Torque spec out of range +3%</td>
+              <td>#A-1658</td>
+              <td><span class="severity sev-med">Medium</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Rework</button></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted)">17:11</td>
+              <td>Station 6</td>
+              <td>Burr detected — oil passage</td>
+              <td>#A-1634</td>
+              <td><span class="severity sev-med">Medium</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Rework</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="ai-card">
+        <div class="ai-hdr"><div class="ai-dot"></div><span>AI Predictive Maintenance</span></div>
+        <div class="ai-item">
+          <div class="ai-item-title">🚨 Press-02 Overheating</div>
+          <div class="ai-item-text">Vibration sensor spike + 89°C temp detected on Press-02. AI predicts bearing failure within 4–6 hours. Recommend immediate maintenance intervention to prevent $28,000 unplanned downtime.</div>
+          <span class="badge b-red">CRITICAL</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">⚠️ Torque-04 Degrading</div>
+          <div class="ai-item-text">Torque-04 showing 12% efficiency drop over 72h. Likely lubrication issue. Scheduled maintenance during next planned stop recommended. Parts already in inventory.</div>
+          <span class="badge b-amber">SCHEDULE</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">✅ Cycle Time Optimization</div>
+          <div class="ai-item-text">AI identified 22-second reduction possible at Station 5 by resequencing bolt torque operations. Implementation would increase throughput by 9.4% with zero capital cost.</div>
+          <span class="badge b-green">+9.4% OUTPUT</span>
+        </div>
+      </div>
+
+      <div class="energy-card">
+        <div class="card-hdr"><h3>⚡ Energy Consumption</h3></div>
+        <div class="energy-row">
+          <span class="e-label">Robot ARM-01</span>
+          <div class="e-bar">
+            <div class="ebar"><div class="ebar-fill" style="width:78%;background:var(--orange)"></div></div>
+            <span style="font-size:0.75rem">78 kW</span>
+          </div>
+        </div>
+        <div class="energy-row">
+          <span class="e-label">CNC Mill-03</span>
+          <div class="e-bar">
+            <div class="ebar"><div class="ebar-fill" style="width:92%;background:var(--red)"></div></div>
+            <span style="font-size:0.75rem">92 kW</span>
+          </div>
+        </div>
+        <div class="energy-row">
+          <span class="e-label">Conveyor-01</span>
+          <div class="e-bar">
+            <div class="ebar"><div class="ebar-fill" style="width:35%;background:var(--green)"></div></div>
+            <span style="font-size:0.75rem">35 kW</span>
+          </div>
+        </div>
+        <div class="energy-row">
+          <span class="e-label">Vision-AI-01</span>
+          <div class="e-bar">
+            <div class="ebar"><div class="ebar-fill" style="width:28%;background:var(--green)"></div></div>
+            <span style="font-size:0.75rem">28 kW</span>
+          </div>
+        </div>
+        <div class="energy-row">
+          <span class="e-label">Line A Total</span>
+          <div class="e-bar">
+            <div class="ebar"><div class="ebar-fill" style="width:84%;background:var(--amber)"></div></div>
+            <span style="font-size:0.75rem;font-weight:700;color:var(--orange)">342 kW</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="shift-card">
+        <div class="card-hdr"><h3>👷 Shift 2 Team</h3></div>
+        <div class="shift-item">
+          <div class="shift-avatar" style="background:#f97316">RJ</div>
+          <div class="shift-info"><div class="shift-name">R. Johnson</div><div class="shift-role">Shift Supervisor</div></div>
+          <span class="shift-status ss-on">On Floor</span>
+        </div>
+        <div class="shift-item">
+          <div class="shift-avatar" style="background:#3b82f6">TK</div>
+          <div class="shift-info"><div class="shift-name">T. Kowalski</div><div class="shift-role">Machine Operator</div></div>
+          <span class="shift-status ss-on">On Floor</span>
+        </div>
+        <div class="shift-item">
+          <div class="shift-avatar" style="background:#10b981">AM</div>
+          <div class="shift-info"><div class="shift-name">A. Martinez</div><div class="shift-role">Quality Inspector</div></div>
+          <span class="shift-status ss-on">On Floor</span>
+        </div>
+        <div class="shift-item">
+          <div class="shift-avatar" style="background:#8b5cf6">LP</div>
+          <div class="shift-info"><div class="shift-name">L. Park</div><div class="shift-role">Maintenance Tech</div></div>
+          <span class="shift-status ss-on">On Floor</span>
+        </div>
+        <div class="shift-item">
+          <div class="shift-avatar" style="background:#64748b">BW</div>
+          <div class="shift-info"><div class="shift-name">B. Williams</div><div class="shift-role">Line Technician</div></div>
+          <span class="shift-status ss-off">On Break</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-header">
+    <h2>Smart Factory AI Capabilities</h2>
+    <p>Industry 4.0 technology that delivers measurable ROI</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>Predictive Maintenance</h3>
+      <p>AI monitors 500+ machine parameters in real time, predicting failures 24–72 hours in advance. Reduce unplanned downtime by 42% and extend equipment life by 30%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👁️</div>
+      <h3>Computer Vision QC</h3>
+      <p>Deep learning vision systems inspect 100% of production at line speed — detecting surface defects, dimensional errors, and assembly mistakes with 99.4% accuracy.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>OEE Optimization</h3>
+      <p>Real-time OEE tracking with AI root-cause analysis for availability, performance, and quality losses. Identify and eliminate the 20% of causes driving 80% of downtime.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Energy Intelligence</h3>
+      <p>Machine-level energy monitoring with AI recommendations for demand shifting, idle reduction, and process optimization. Reduce energy costs by 22% on average.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Digital Twin</h3>
+      <p>Create virtual replicas of your production lines to simulate changes, test optimization scenarios, and train AI models without disrupting live production.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <h3>Supply Chain Integration</h3>
+      <p>Connect production data with ERP, MES, and supplier systems. AI-driven demand forecasting reduces WIP inventory by 25% while preventing material shortages.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-header">
+    <h2>Manufacturing Plans</h2>
+    <p>Flexible pricing for factories of every size</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">SMALL FACTORY</div>
+      <div class="price-amount">$999<span>/mo</span></div>
+      <div class="price-desc">For facilities up to 50 machines</div>
+      <ul class="price-features">
+        <li>Up to 50 connected machines</li>
+        <li>Real-time OEE dashboard</li>
+        <li>Basic predictive maintenance</li>
+        <li>Production reporting</li>
+        <li>Shift management tools</li>
+        <li>Email support</li>
+      </ul>
+      <button class="price-btn">Get Demo</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">MID-SIZE PLANT</div>
+      <div class="price-amount">$3,999<span>/mo</span></div>
+      <div class="price-desc">For plants with 50–500 machines</div>
+      <ul class="price-features">
+        <li>Up to 500 connected machines</li>
+        <li>Computer vision QC system</li>
+        <li>Advanced predictive AI</li>
+        <li>Digital twin (2 lines)</li>
+        <li>Energy management AI</li>
+        <li>ERP/MES integration</li>
+        <li>24/7 priority support</li>
+      </ul>
+      <button class="price-btn">Get Demo</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large manufacturers & multi-site</div>
+      <ul class="price-features">
+        <li>Unlimited machines & sites</li>
+        <li>Full digital twin platform</li>
+        <li>Custom AI model training</li>
+        <li>Supply chain integration</li>
+        <li>Dedicated implementation team</li>
+        <li>On-premise deployment option</li>
+        <li>SLA & uptime guarantees</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">🏭</div><span>ManufacturingAI</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">Security</a><a href="#">ISO 27001</a><a href="#">API</a><a href="#">Support</a>
+  </div>
+  <div>© 2024 ManufacturingAI Inc. • App #105</div>
+</footer>
+
+</body>
+</html>
