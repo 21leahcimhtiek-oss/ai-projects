@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SocialAI - AI-Powered Social Media Management</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #f97316;
+    --secondary: #fb923c;
+    --accent: #fed7aa;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a2e;
+    --border: #ffffff15;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; color: var(--muted); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 0.75rem; }
+  .btn-ghost { padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: transparent; color: var(--text); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), #ea580c); color: white; font-weight: 600; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(249,115,22,0.4); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 100px; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .btn-lg { padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-lg-primary { background: linear-gradient(135deg, var(--primary), #ea580c); color: white; }
+  .btn-lg-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(249,115,22,0.45); }
+  .btn-lg-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-lg-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat strong { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat span { font-size: 0.85rem; color: var(--muted); }
+
+  /* Platform icons strip */
+  .platforms-strip { padding: 1.5rem 2rem; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 2.5rem; flex-wrap: wrap; }
+  .platform-icon { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--muted); font-weight: 600; }
+  .platform-icon span { font-size: 1.4rem; }
+
+  .demo-section { padding: 5rem 2rem; background: var(--surface); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .section-header p { color: var(--muted); font-size: 1.1rem; }
+  .dashboard { max-width: 1200px; margin: 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  .dash-header { background: rgba(249,115,22,0.05); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-weight: 700; font-size: 1rem; }
+  .dash-tabs { display: flex; gap: 0.5rem; }
+  .dash-tab { padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.78rem; color: var(--muted); cursor: pointer; }
+  .dash-tab.active { background: rgba(249,115,22,0.2); color: var(--secondary); }
+  .dash-body { display: grid; grid-template-columns: 230px 1fr; min-height: 540px; }
+
+  .post-sidebar { border-right: 1px solid var(--border); padding: 1rem; overflow-y: auto; }
+  .post-sidebar h4 { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .post-item { padding: 0.65rem; border-radius: 8px; margin-bottom: 0.4rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .post-item:hover, .post-item.active { border-color: var(--primary); background: rgba(249,115,22,0.07); }
+  .post-preview { font-size: 0.78rem; font-weight: 500; margin-bottom: 0.25rem; line-height: 1.3; }
+  .post-platforms { display: flex; gap: 0.25rem; margin-bottom: 0.25rem; font-size: 0.75rem; }
+  .post-time { font-size: 0.68rem; color: var(--muted); }
+  .post-status { display: inline-block; font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 600; }
+  .ps-live { background: rgba(34,197,94,0.15); color: #86efac; }
+  .ps-sched { background: rgba(249,115,22,0.15); color: #fed7aa; }
+  .ps-draft { background: rgba(148,163,184,0.15); color: #94a3b8; }
+
+  .social-main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; }
+  .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .kpi-value { font-size: 1.4rem; font-weight: 800; }
+  .kpi-value.orange { color: var(--secondary); }
+  .kpi-value.green { color: #86efac; }
+  .kpi-value.blue { color: #7dd3fc; }
+  .kpi-delta { font-size: 0.72rem; color: #86efac; margin-top: 0.2rem; }
+
+  /* Post composer */
+  .composer { background: rgba(249,115,22,0.04); border: 1px solid rgba(249,115,22,0.15); border-radius: 10px; padding: 1rem; }
+  .composer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .composer-title { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+  .ai-tag { background: linear-gradient(135deg, var(--primary), #ea580c); color: white; font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+  .platform-toggles { display: flex; gap: 0.4rem; }
+  .platform-toggle { padding: 0.25rem 0.6rem; border-radius: 5px; font-size: 0.7rem; cursor: pointer; border: 1px solid var(--border); background: rgba(249,115,22,0.1); color: var(--secondary); font-weight: 600; }
+  .post-text { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; font-size: 0.82rem; color: var(--text); line-height: 1.6; margin-bottom: 0.6rem; min-height: 70px; }
+  .post-text em { color: var(--secondary); font-style: normal; }
+  .composer-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .comp-btn { padding: 0.28rem 0.65rem; border: 1px solid rgba(249,115,22,0.2); border-radius: 5px; font-size: 0.7rem; cursor: pointer; background: rgba(249,115,22,0.08); color: var(--secondary); transition: all 0.2s; }
+  .comp-btn:hover { background: rgba(249,115,22,0.15); }
+  .comp-btn-primary { background: linear-gradient(135deg, var(--primary), #ea580c); color: white; border-color: transparent; }
+
+  /* Analytics row */
+  .analytics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .engagement-chart { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .engagement-chart h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .bar-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .bar-platform { font-size: 0.75rem; min-width: 80px; color: var(--muted); }
+  .bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bf-ig { background: linear-gradient(90deg, #f97316, #ec4899); }
+  .bf-tw { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+  .bf-li { background: linear-gradient(90deg, #0284c7, #0ea5e9); }
+  .bf-tk { background: linear-gradient(90deg, #ec4899, #f97316); }
+  .bf-fb { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .bar-val { font-size: 0.72rem; font-weight: 700; color: var(--secondary); min-width: 32px; text-align: right; }
+  .best-times { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .best-times h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .time-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+  .time-cell { aspect-ratio: 1; border-radius: 3px; cursor: pointer; transition: opacity 0.2s; }
+  .tc-0 { background: rgba(249,115,22,0.08); }
+  .tc-1 { background: rgba(249,115,22,0.2); }
+  .tc-2 { background: rgba(249,115,22,0.4); }
+  .tc-3 { background: rgba(249,115,22,0.65); }
+  .tc-4 { background: rgba(249,115,22,0.9); }
+  .time-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-top: 3px; }
+  .time-day-label { font-size: 0.58rem; color: var(--muted); text-align: center; }
+
+  .features-section { padding: 5rem 2rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(249,115,22,0.1); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(251,146,60,0.1)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  .pricing-section { padding: 5rem 2rem; background: var(--surface); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+  .pricing-card.popular { border-color: var(--primary); box-shadow: 0 0 30px rgba(249,115,22,0.15); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), #ea580c); padding: 0.3rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .pricing-tier { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .pricing-price { font-size: 2.8rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .pricing-features { list-style: none; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pricing-features li { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pricing-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 0.8rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-plan-primary { background: linear-gradient(135deg, var(--primary), #ea580c); color: white; }
+  .btn-plan-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(249,115,22,0.4); }
+  .btn-plan-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+  .cta-section { padding: 5rem 2rem; text-align: center; background: var(--bg); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; position: relative; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  footer { padding: 3rem 2rem 2rem; border-top: 1px solid var(--border); background: var(--surface); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.6; max-width: 250px; }
+  .footer-col h4 { font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+  .footer-col a { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem; width: 100%; max-width: 440px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--primary), #ea580c); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+  .social-btns { display: flex; gap: 0.75rem; }
+  .social-btn { flex: 1; padding: 0.65rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-size: 0.85rem; cursor: pointer; }
+  .modal-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">📱 SocialAI</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Analytics</a>
+    <a href="#">Scheduling</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="document.getElementById('loginModal').classList.add('active')">Sign In</button>
+    <button class="btn-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">📱 AI Social Media Management</div>
+  <h1>Grow Every Channel<br><span>with AI-Powered Posts</span></h1>
+  <p>SocialAI writes, schedules, and optimizes content for all your social platforms — increasing engagement by 3x while saving 15+ hours per week.</p>
+  <div class="hero-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    <button class="btn-lg btn-lg-ghost">See How It Works</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>180K+</strong><span>Brands & Creators</span></div>
+    <div class="hero-stat"><strong>3x</strong><span>Avg Engagement Lift</span></div>
+    <div class="hero-stat"><strong>15hrs</strong><span>Saved Per Week</span></div>
+    <div class="hero-stat"><strong>8</strong><span>Platforms Supported</span></div>
+  </div>
+</section>
+
+<!-- Platform strip -->
+<div class="platforms-strip">
+  <div class="platform-icon"><span>📸</span> Instagram</div>
+  <div class="platform-icon"><span>🐦</span> X (Twitter)</div>
+  <div class="platform-icon"><span>💼</span> LinkedIn</div>
+  <div class="platform-icon"><span>🎵</span> TikTok</div>
+  <div class="platform-icon"><span>👥</span> Facebook</div>
+  <div class="platform-icon"><span>📌</span> Pinterest</div>
+  <div class="platform-icon"><span>▶️</span> YouTube</div>
+  <div class="platform-icon"><span>🧵</span> Threads</div>
+</div>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Your AI Social Media Command Center</h2>
+    <p>Write, schedule, analyze, and optimize — all from one beautiful dashboard</p>
+  </div>
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-title">📱 SocialAI — Acme Brand Workspace</span>
+      <div class="dash-tabs">
+        <div class="dash-tab active">Compose</div>
+        <div class="dash-tab">Calendar</div>
+        <div class="dash-tab">Analytics</div>
+      </div>
+    </div>
+    <div class="dash-body">
+      <div class="post-sidebar">
+        <h4>Scheduled Posts (14)</h4>
+        <div class="post-item active">
+          <div class="post-preview">🚀 Excited to announce our Q3 product launch — this changes everything...</div>
+          <div class="post-platforms">📸 🐦 💼</div>
+          <div class="post-time">Today 3:00 PM</div>
+          <span class="post-status ps-sched">Scheduled</span>
+        </div>
+        <div class="post-item">
+          <div class="post-preview">5 ways AI is transforming how teams work in 2025 🤖 Thread →</div>
+          <div class="post-platforms">🐦 🧵</div>
+          <div class="post-time">Today 6:00 PM</div>
+          <span class="post-status ps-sched">Scheduled</span>
+        </div>
+        <div class="post-item">
+          <div class="post-preview">Behind the scenes of our team retreat 🏔️ #culture #teamwork</div>
+          <div class="post-platforms">📸 👥</div>
+          <div class="post-time">Yesterday</div>
+          <span class="post-status ps-live">Published</span>
+        </div>
+        <div class="post-item">
+          <div class="post-preview">New blog: The Ultimate Guide to B2B Content Marketing in 2025</div>
+          <div class="post-platforms">💼 🐦</div>
+          <div class="post-time">Draft</div>
+          <span class="post-status ps-draft">Draft</span>
+        </div>
+        <div class="post-item">
+          <div class="post-preview">Customer spotlight: How TechCorp grew 3x with our platform 🎯</div>
+          <div class="post-platforms">📸 💼 👥</div>
+          <div class="post-time">Tomorrow 10 AM</div>
+          <span class="post-status ps-sched">Scheduled</span>
+        </div>
+      </div>
+
+      <div class="social-main">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Total Followers</div>
+            <div class="kpi-value orange">284K</div>
+            <div class="kpi-delta">▲ 4,200 this week</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg Engagement</div>
+            <div class="kpi-value green">6.8%</div>
+            <div class="kpi-delta">▲ 2.1x industry avg</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Posts This Month</div>
+            <div class="kpi-value orange">94</div>
+            <div class="kpi-delta">Across 8 platforms</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Link Clicks</div>
+            <div class="kpi-value blue">12.4K</div>
+            <div class="kpi-delta">▲ 31% vs last mo</div>
+          </div>
+        </div>
+
+        <!-- AI Composer -->
+        <div class="composer">
+          <div class="composer-header">
+            <span class="composer-title">✨ AI Post Composer <span class="ai-tag">GPT-4</span></span>
+            <div class="platform-toggles">
+              <span class="platform-toggle">📸</span>
+              <span class="platform-toggle">🐦</span>
+              <span class="platform-toggle">💼</span>
+              <span class="platform-toggle">🎵</span>
+            </div>
+          </div>
+          <div class="post-text">
+            🚀 Big news: We just crossed <em>10,000 customers</em> — and we're just getting started.<br><br>
+            When we launched 18 months ago, we had one mission: make AI work for <em>real businesses</em>, not just Silicon Valley giants.<br><br>
+            Thank you to every customer, partner, and team member who made this possible. 🙏<br><br>
+            <em>#milestone #SaaS #AI #grateful</em>
+          </div>
+          <div class="composer-actions">
+            <button class="comp-btn">✨ Rewrite with AI</button>
+            <button class="comp-btn">📸 Add Image</button>
+            <button class="comp-btn">🎯 Optimize Hashtags</button>
+            <button class="comp-btn">🌐 Translate</button>
+            <button class="comp-btn">⏰ Best Time</button>
+            <button class="comp-btn comp-btn-primary">Schedule Post →</button>
+          </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="analytics-row">
+          <div class="engagement-chart">
+            <h4>Engagement by Platform (This Month)</h4>
+            <div class="bar-row"><span class="bar-platform">📸 Instagram</span><div class="bar-bg"><div class="bar-fill bf-ig" style="width:88%"></div></div><span class="bar-val">8.4%</span></div>
+            <div class="bar-row"><span class="bar-platform">🎵 TikTok</span><div class="bar-bg"><div class="bar-fill bf-tk" style="width:82%"></div></div><span class="bar-val">12.1%</span></div>
+            <div class="bar-row"><span class="bar-platform">💼 LinkedIn</span><div class="bar-bg"><div class="bar-fill bf-li" style="width:65%"></div></div><span class="bar-val">5.2%</span></div>
+            <div class="bar-row"><span class="bar-platform">🐦 X/Twitter</span><div class="bar-bg"><div class="bar-fill bf-tw" style="width:52%"></div></div><span class="bar-val">3.8%</span></div>
+            <div class="bar-row"><span class="bar-platform">👥 Facebook</span><div class="bar-bg"><div class="bar-fill bf-fb" style="width:38%"></div></div><span class="bar-val">2.4%</span></div>
+          </div>
+          <div class="best-times">
+            <h4>🤖 AI Best Posting Times (Your Audience)</h4>
+            <div class="time-grid">
+              <div class="time-cell tc-1"></div><div class="time-cell tc-2"></div><div class="time-cell tc-3"></div><div class="time-cell tc-4"></div><div class="time-cell tc-3"></div><div class="time-cell tc-2"></div><div class="time-cell tc-1"></div>
+              <div class="time-cell tc-0"></div><div class="time-cell tc-1"></div><div class="time-cell tc-2"></div><div class="time-cell tc-3"></div><div class="time-cell tc-2"></div><div class="time-cell tc-1"></div><div class="time-cell tc-0"></div>
+              <div class="time-cell tc-2"></div><div class="time-cell tc-3"></div><div class="time-cell tc-4"></div><div class="time-cell tc-4"></div><div class="time-cell tc-4"></div><div class="time-cell tc-3"></div><div class="time-cell tc-1"></div>
+              <div class="time-cell tc-1"></div><div class="time-cell tc-2"></div><div class="time-cell tc-3"></div><div class="time-cell tc-3"></div><div class="time-cell tc-2"></div><div class="time-cell tc-1"></div><div class="time-cell tc-0"></div>
+            </div>
+            <div class="time-days">
+              <div class="time-day-label">Mon</div><div class="time-day-label">Tue</div><div class="time-day-label">Wed</div><div class="time-day-label">Thu</div><div class="time-day-label">Fri</div><div class="time-day-label">Sat</div><div class="time-day-label">Sun</div>
+            </div>
+            <div style="margin-top:0.5rem;font-size:0.7rem;color:var(--muted);">🔥 Peak: Tue–Thu, 9 AM & 6 PM for your audience timezone</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="section-header">
+    <h2>Everything You Need to Dominate Social Media</h2>
+    <p>AI tools that grow your audience, maximize engagement, and save your team hours every day</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">✍</div>
+      <h3>AI Caption Writer</h3>
+      <p>Generate on-brand captions, threads, and long-form posts for every platform in seconds. Trained on your brand voice and top-performing content.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Smart Scheduling</h3>
+      <p>AI analyzes your audience to find the perfect posting times for each platform. Schedule weeks of content in minutes with one-click bulk scheduling.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Unified Analytics</h3>
+      <p>Track followers, reach, engagement, clicks, and conversions across all platforms in one dashboard with AI-powered insights and competitor benchmarking.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>Visual Content Studio</h3>
+      <p>AI-powered image and video templates for every platform. Auto-resize content for Instagram, LinkedIn, TikTok, and more from a single design.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>Social Inbox</h3>
+      <p>Manage DMs, comments, and mentions from all platforms in one inbox. AI suggests responses and auto-routes urgent messages to the right team member.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Competitor Intelligence</h3>
+      <p>Track competitor content, follower growth, and top posts. AI identifies content gaps and trending topics your audience is hungry for.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="section-header">
+    <h2>Plans for Every Creator and Brand</h2>
+    <p>From solo creators to enterprise marketing teams</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Solo</div>
+      <div class="pricing-price">$19<span>/mo</span></div>
+      <div class="pricing-desc">For individual creators managing their personal brand across platforms</div>
+      <ul class="pricing-features">
+        <li>3 social profiles</li>
+        <li>AI caption writer (100 posts/mo)</li>
+        <li>Smart scheduling</li>
+        <li>Basic analytics</li>
+        <li>Content calendar</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="pricing-tier">Growth</div>
+      <div class="pricing-price">$79<span>/mo</span></div>
+      <div class="pricing-desc">For brands and agencies managing multiple clients and channels</div>
+      <ul class="pricing-features">
+        <li>15 social profiles</li>
+        <li>Unlimited AI posts</li>
+        <li>Best-time scheduling AI</li>
+        <li>Unified social inbox</li>
+        <li>Competitor intelligence</li>
+        <li>Visual content studio</li>
+        <li>Team collaboration (3 users)</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Agency</div>
+      <div class="pricing-price">$249<span>/mo</span></div>
+      <div class="pricing-desc">For agencies managing social media for 10+ clients at scale</div>
+      <ul class="pricing-features">
+        <li>Unlimited profiles & clients</li>
+        <li>White-label reports</li>
+        <li>Custom AI brand voices</li>
+        <li>Client approval workflows</li>
+        <li>Priority support</li>
+        <li>API access</li>
+        <li>Unlimited team members</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Stop Guessing. Start Growing.</h2>
+  <p>Join 180,000 brands using SocialAI to grow faster with less effort</p>
+  <div class="cta-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free 14-Day Trial</button>
+    <button class="btn-lg btn-lg-ghost">Book a Demo</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">📱 SocialAI</div>
+      <p>AI-powered social media management that grows your audience and engagement across every platform.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">AI Writer</a><a href="#">Scheduling</a><a href="#">Analytics</a><a href="#">Inbox</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Help Center</a><a href="#">API</a><a href="#">Privacy</a><a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 SocialAI · AI-Powered Social Media Management · All rights reserved</div>
+</footer>
+
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signupModal').classList.remove('active')">×</button>
+    <h2>Start Free Trial</h2>
+    <p>14 days free, no credit card required</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🍎 Apple</button>
+    </div>
+    <div class="modal-divider">— or sign up with email —</div>
+    <div class="form-group"><label>Full Name</label><input type="text" placeholder="Jane Smith"></div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jane@brand.com"></div>
+    <div class="form-group"><label>Company / Brand</label><input type="text" placeholder="Acme Brand Co."></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Start Free Trial</button>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('loginModal').classList.remove('active')">×</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to SocialAI</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🍎 Apple</button>
+    </div>
+    <div class="modal-divider">— or sign in with email —</div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jane@brand.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Sign In</button>
+  </div>
+</div>
+
+</body>
+</html>
