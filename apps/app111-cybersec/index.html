@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberSecAI - AI-Powered Cybersecurity & Threat Intelligence</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#22c55e;--accent2:#4ade80;--accent3:#86efac;
+  --text:#e2e8f0;--muted:#64748b;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(34,197,94,0.1) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:700px;}
+
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.threat-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.threat-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.threat-item:hover,.threat-item.active{background:var(--surface2);border-color:var(--border);}
+.threat-item.active{border-color:rgba(34,197,94,0.4);}
+.threat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.threat-name{font-size:0.82rem;font-weight:600;}
+.threat-sev{font-size:0.68rem;padding:2px 7px;border-radius:4px;font-weight:600;}
+.sev-critical{background:rgba(239,68,68,0.15);color:#ef4444;}
+.sev-high{background:rgba(245,158,11,0.15);color:#f59e0b;}
+.sev-medium{background:rgba(59,130,246,0.15);color:#3b82f6;}
+.sev-low{background:rgba(34,197,94,0.15);color:#22c55e;}
+.threat-meta{font-size:0.72rem;color:var(--muted);}
+.threat-time{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--red);}
+.kpi-change.down{color:var(--accent);}
+
+/* THREAT MAP */
+.threat-map{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.map-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;display:flex;justify-content:space-between;}
+.world-map{background:#0d1117;border-radius:8px;height:130px;position:relative;overflow:hidden;border:1px solid var(--border);}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(34,197,94,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,0.04) 1px,transparent 1px);background-size:20px 20px;}
+.attack-dot{position:absolute;width:8px;height:8px;border-radius:50%;animation:attackPulse 2s ease-in-out infinite;}
+@keyframes attackPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.8);opacity:0.5;}}
+.attack-line{position:absolute;height:1px;transform-origin:left center;opacity:0.4;}
+.map-legend{display:flex;gap:1rem;margin-top:0.5rem;}
+.map-legend-item{display:flex;align-items:center;gap:4px;font-size:0.72rem;color:var(--muted);}
+.map-dot{width:8px;height:8px;border-radius:50%;}
+
+/* ATTACK TIMELINE */
+.timeline-container{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.timeline-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;}
+.attack-bars{display:flex;align-items:flex-end;gap:4px;height:80px;}
+.attack-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.attack-bar{width:100%;border-radius:3px 3px 0 0;cursor:pointer;transition:opacity 0.2s;}
+.attack-bar:hover{opacity:0.8;}
+.bar-lbl{font-size:0.6rem;color:var(--muted);}
+
+/* ENDPOINT TABLE */
+.endpoint-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.endpoint-table th{padding:0.5rem 0.75rem;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600;}
+.endpoint-table td{padding:0.55rem 0.75rem;border-bottom:1px solid rgba(30,42,58,0.5);}
+.endpoint-table tr:last-child td{border-bottom:none;}
+.risk-badge{padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;}
+.risk-critical{background:rgba(239,68,68,0.15);color:#ef4444;}
+.risk-high{background:rgba(245,158,11,0.15);color:#f59e0b;}
+.risk-medium{background:rgba(59,130,246,0.15);color:#3b82f6;}
+.risk-low{background:rgba(34,197,94,0.15);color:#22c55e;}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;}
+
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.score-ring{text-align:center;padding:0.5rem;}
+.score-circle{width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--accent) 0% 82%,var(--surface) 82% 100%);display:flex;align-items:center;justify-content:center;margin:0 auto 0.5rem;position:relative;}
+.score-inner{width:62px;height:62px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:var(--accent);}
+.score-label{font-size:0.75rem;color:var(--muted);}
+
+.vuln-bar{margin-top:0.25rem;}
+.vuln-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.vuln-label{font-size:0.75rem;color:var(--muted);}
+.vuln-count{font-size:0.75rem;font-weight:700;}
+.vuln-track{flex:1;height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin:0 8px;}
+.vuln-fill{height:100%;border-radius:3px;}
+
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(34,197,94,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(74,222,128,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(34,197,94,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🛡️</div>
+    <span>CyberSecAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Threat Detection</a>
+    <a href="#">Endpoint Security</a>
+    <a href="#">SOC Automation</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Sign In</button>
+    <button class="btn btn-primary">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🛡️ AI-Powered Cybersecurity Platform</div>
+  <h1>Stop Threats Before They <span>Strike Your Network</span></h1>
+  <p>AI-driven threat detection, automated SOC response, endpoint protection, and real-time threat intelligence — stop breaches in milliseconds, not months.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Free Trial</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">View Live Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">99.97%</div><div class="lbl">Threat Detection Rate</div></div>
+    <div class="hero-stat"><div class="val">0.8ms</div><div class="lbl">Avg. Response Time</div></div>
+    <div class="hero-stat"><div class="val">4,200+</div><div class="lbl">Enterprise Clients</div></div>
+    <div class="hero-stat"><div class="val">2.1B</div><div class="lbl">Threats Blocked Daily</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>🛡️ Live Security Operations Center</h2>
+  <p class="sub">Real-time threat intelligence and automated incident response</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Active Threats</h3>
+        <input class="search-box" placeholder="🔍 Search threats..." value="">
+      </div>
+      <div class="threat-list">
+        <div class="threat-item active">
+          <div class="threat-top"><span class="threat-name">APT-29 Cozy Bear</span><span class="threat-sev sev-critical">CRITICAL</span></div>
+          <div class="threat-meta">🌍 Origin: Russia · Lateral Movement</div>
+          <div class="threat-time">⏱ Detected 4 min ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">Ransomware: LockBit 3.0</span><span class="threat-sev sev-critical">CRITICAL</span></div>
+          <div class="threat-meta">💀 Encryption attempt on 3 hosts</div>
+          <div class="threat-time">⏱ Detected 11 min ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">SQL Injection Wave</span><span class="threat-sev sev-high">HIGH</span></div>
+          <div class="threat-meta">🌐 API gateway · 847 requests</div>
+          <div class="threat-time">⏱ Detected 18 min ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">Credential Stuffing</span><span class="threat-sev sev-high">HIGH</span></div>
+          <div class="threat-meta">🔑 Auth portal · 12,400 attempts</div>
+          <div class="threat-time">⏱ Detected 31 min ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">C2 Beacon Activity</span><span class="threat-sev sev-high">HIGH</span></div>
+          <div class="threat-meta">📡 Cobalt Strike · WORKSTATION-42</div>
+          <div class="threat-time">⏱ Detected 45 min ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">Phishing Campaign</span><span class="threat-sev sev-medium">MEDIUM</span></div>
+          <div class="threat-meta">📧 24 emails · 3 users clicked</div>
+          <div class="threat-time">⏱ Detected 1h ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">Port Scan Detected</span><span class="threat-sev sev-medium">MEDIUM</span></div>
+          <div class="threat-meta">🔍 192.168.1.0/24 range sweep</div>
+          <div class="threat-time">⏱ Detected 2h ago</div>
+        </div>
+        <div class="threat-item">
+          <div class="threat-top"><span class="threat-name">Anomalous Data Transfer</span><span class="threat-sev sev-low">LOW</span></div>
+          <div class="threat-meta">📤 4.2 GB to external endpoint</div>
+          <div class="threat-time">⏱ Detected 3h ago</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>🔴 APT-29 Cozy Bear — Incident Analysis</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Timeline</div>
+          <div class="tab">Attack Graph</div>
+          <div class="tab">Forensics</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Threats Today</div>
+            <div class="kpi-value" style="color:var(--red);">2,847</div>
+            <div class="kpi-change up">↑ +18% vs yesterday</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Auto-Blocked</div>
+            <div class="kpi-value" style="color:var(--accent);">2,841</div>
+            <div class="kpi-change down">✓ 99.79% block rate</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Open Incidents</div>
+            <div class="kpi-value" style="color:var(--yellow);">6</div>
+            <div class="kpi-change up">↑ 2 critical active</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">MTTD</div>
+            <div class="kpi-value" style="color:var(--accent);">0.8ms</div>
+            <div class="kpi-change down">↓ -12% this week</div>
+          </div>
+        </div>
+
+        <!-- Attack Origin Map -->
+        <div class="threat-map">
+          <div class="map-title">
+            <span>🌍 Real-Time Attack Origin Map</span>
+            <span style="font-size:0.75rem;color:var(--muted);">Live · 847 active sources</span>
+          </div>
+          <div class="world-map">
+            <div class="map-grid"></div>
+            <!-- Attack dots representing origins -->
+            <div class="attack-dot" style="background:#ef4444;left:15%;top:35%;animation-delay:0s;"></div>
+            <div class="attack-dot" style="background:#ef4444;left:18%;top:40%;animation-delay:0.3s;width:6px;height:6px;"></div>
+            <div class="attack-dot" style="background:#f59e0b;left:72%;top:28%;animation-delay:0.6s;"></div>
+            <div class="attack-dot" style="background:#ef4444;left:74%;top:32%;animation-delay:0.9s;width:6px;height:6px;"></div>
+            <div class="attack-dot" style="background:#f59e0b;left:68%;top:35%;animation-delay:1.2s;"></div>
+            <div class="attack-dot" style="background:#3b82f6;left:30%;top:55%;animation-delay:0.4s;"></div>
+            <div class="attack-dot" style="background:#ef4444;left:85%;top:45%;animation-delay:0.8s;"></div>
+            <!-- Target dot -->
+            <div class="attack-dot" style="background:#22c55e;left:50%;top:40%;animation-delay:0s;width:12px;height:12px;box-shadow:0 0 8px rgba(34,197,94,0.6);"></div>
+            <!-- Attack lines -->
+            <div style="position:absolute;left:15%;top:35%;width:36%;height:1px;background:linear-gradient(90deg,rgba(239,68,68,0.6),rgba(239,68,68,0));transform:rotate(8deg);"></div>
+            <div style="position:absolute;left:72%;top:28%;width:22%;height:1px;background:linear-gradient(270deg,rgba(239,68,68,0.6),rgba(239,68,68,0));transform:rotate(15deg) scaleX(-1);"></div>
+            <div style="position:absolute;left:30%;top:52%;width:21%;height:1px;background:linear-gradient(90deg,rgba(59,130,246,0.6),rgba(59,130,246,0));transform:rotate(-12deg);"></div>
+          </div>
+          <div class="map-legend">
+            <div class="map-legend-item"><div class="map-dot" style="background:#ef4444;"></div>Critical Source</div>
+            <div class="map-legend-item"><div class="map-dot" style="background:#f59e0b;"></div>High Source</div>
+            <div class="map-legend-item"><div class="map-dot" style="background:#3b82f6;"></div>Medium Source</div>
+            <div class="map-legend-item"><div class="map-dot" style="background:#22c55e;"></div>Your Network</div>
+          </div>
+        </div>
+
+        <!-- Hourly Attack Volume -->
+        <div class="timeline-container">
+          <div class="timeline-title">⏱ Hourly Attack Volume (Last 12 Hours)</div>
+          <div class="attack-bars">
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:30px;background:linear-gradient(180deg,#3b82f6,rgba(59,130,246,0.3));"></div><div class="bar-lbl">02h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:22px;background:linear-gradient(180deg,#3b82f6,rgba(59,130,246,0.3));"></div><div class="bar-lbl">03h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:18px;background:linear-gradient(180deg,#3b82f6,rgba(59,130,246,0.3));"></div><div class="bar-lbl">04h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:35px;background:linear-gradient(180deg,#f59e0b,rgba(245,158,11,0.3));"></div><div class="bar-lbl">05h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:48px;background:linear-gradient(180deg,#f59e0b,rgba(245,158,11,0.3));"></div><div class="bar-lbl">06h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:65px;background:linear-gradient(180deg,#ef4444,rgba(239,68,68,0.3));"></div><div class="bar-lbl">07h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:58px;background:linear-gradient(180deg,#ef4444,rgba(239,68,68,0.3));"></div><div class="bar-lbl">08h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:72px;background:linear-gradient(180deg,#ef4444,rgba(239,68,68,0.3));"></div><div class="bar-lbl">09h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:80px;background:linear-gradient(180deg,#ef4444,rgba(239,68,68,0.3));"></div><div class="bar-lbl">10h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:75px;background:linear-gradient(180deg,#ef4444,rgba(239,68,68,0.3));"></div><div class="bar-lbl">11h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:68px;background:linear-gradient(180deg,#f59e0b,rgba(245,158,11,0.3));"></div><div class="bar-lbl">12h</div></div>
+            <div class="attack-bar-wrap"><div class="attack-bar" style="height:55px;background:linear-gradient(180deg,#f59e0b,rgba(245,158,11,0.3));"></div><div class="bar-lbl">13h</div></div>
+          </div>
+        </div>
+
+        <!-- Endpoint Risk Table -->
+        <div class="timeline-container">
+          <div class="timeline-title">💻 High-Risk Endpoints</div>
+          <table class="endpoint-table">
+            <thead><tr><th>Hostname</th><th>IP Address</th><th>Risk Score</th><th>Status</th><th>Last Activity</th></tr></thead>
+            <tbody>
+              <tr><td>WORKSTATION-42</td><td>10.0.1.42</td><td><span class="risk-badge risk-critical">98 / Critical</span></td><td><span class="status-dot" style="background:#ef4444;"></span>Isolated</td><td>4 min ago</td></tr>
+              <tr><td>SERVER-DB-01</td><td>10.0.2.11</td><td><span class="risk-badge risk-critical">91 / Critical</span></td><td><span class="status-dot" style="background:#f59e0b;"></span>Monitoring</td><td>11 min ago</td></tr>
+              <tr><td>LAPTOP-SALES-07</td><td>10.0.3.71</td><td><span class="risk-badge risk-high">74 / High</span></td><td><span class="status-dot" style="background:#f59e0b;"></span>Scanning</td><td>28 min ago</td></tr>
+              <tr><td>DEVBOX-JENKINS</td><td>10.0.4.22</td><td><span class="risk-badge risk-medium">52 / Medium</span></td><td><span class="status-dot" style="background:#22c55e;"></span>Normal</td><td>1h ago</td></tr>
+              <tr><td>GATEWAY-VPN-03</td><td>10.0.0.3</td><td><span class="risk-badge risk-low">24 / Low</span></td><td><span class="status-dot" style="background:#22c55e;"></span>Normal</td><td>2h ago</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Security Advisor</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card alert">
+          <div class="insight-title">🔴 APT-29 Active Intrusion</div>
+          <div class="insight-body">Nation-state actor detected performing lateral movement. WORKSTATION-42 auto-isolated. Kill chain at Stage 4 (Lateral Movement). Recommend immediate IR escalation.</div>
+          <div class="insight-action">→ Initiate Playbook IR-007</div>
+        </div>
+
+        <div class="insight-card alert">
+          <div class="insight-title">🔴 LockBit Ransomware Stopped</div>
+          <div class="insight-body">Encryption attempt blocked on 3 hosts. Malicious binary quarantined. Shadow copies preserved. No data encrypted. Attacker entry via phishing email at 09:14.</div>
+          <div class="insight-action">→ Patch CVE-2024-1234 immediately</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Credential Stuffing Attack</div>
+          <div class="insight-body">12,400 automated login attempts from 847 IPs. 3 accounts potentially compromised. AI auto-enabled MFA challenge and geo-blocked high-risk IP ranges.</div>
+          <div class="insight-action">→ Force password reset for 3 users</div>
+        </div>
+
+        <!-- Security Score -->
+        <div class="insight-card">
+          <div class="score-ring">
+            <div class="score-circle">
+              <div class="score-inner">82</div>
+            </div>
+            <div class="score-label">Security Posture Score</div>
+          </div>
+          <div class="vuln-bar">
+            <div class="vuln-row">
+              <span class="vuln-label">Critical CVEs</span>
+              <div class="vuln-track"><div class="vuln-fill" style="width:15%;background:#ef4444;"></div></div>
+              <span class="vuln-count" style="color:#ef4444;">3</span>
+            </div>
+            <div class="vuln-row">
+              <span class="vuln-label">High CVEs</span>
+              <div class="vuln-track"><div class="vuln-fill" style="width:40%;background:#f59e0b;"></div></div>
+              <span class="vuln-count" style="color:#f59e0b;">12</span>
+            </div>
+            <div class="vuln-row">
+              <span class="vuln-label">Medium CVEs</span>
+              <div class="vuln-track"><div class="vuln-fill" style="width:65%;background:#3b82f6;"></div></div>
+              <span class="vuln-count" style="color:#3b82f6;">28</span>
+            </div>
+            <div class="vuln-row">
+              <span class="vuln-label">Patched Today</span>
+              <div class="vuln-track"><div class="vuln-fill" style="width:80%;background:#22c55e;"></div></div>
+              <span class="vuln-count" style="color:#22c55e;">47</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Enterprise-Grade Security Intelligence</h2>
+  <p class="sub">Comprehensive protection from endpoint to cloud, powered by AI threat intelligence</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>AI Threat Detection</h3>
+      <p>Behavioral AI models detect zero-day threats, APT activity, and anomalous patterns with 99.97% accuracy and sub-millisecond response.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>Automated SOC Response</h3>
+      <p>AI-driven playbooks automatically isolate infected hosts, revoke credentials, block IPs, and generate incident reports — no human latency.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>Threat Intelligence Feed</h3>
+      <p>Real-time global threat intelligence from 4,200+ enterprise sensors, dark web monitoring, and nation-state activity tracking.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💻</div>
+      <h3>Endpoint Protection</h3>
+      <p>Next-gen EDR with AI-powered malware prevention, ransomware rollback, and forensic investigation across all endpoints and cloud workloads.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>Identity & Access Security</h3>
+      <p>AI-powered UEBA detects insider threats, compromised credentials, and privilege escalation before data exfiltration occurs.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Compliance Automation</h3>
+      <p>Automated compliance reporting for SOC 2, ISO 27001, HIPAA, PCI-DSS, and GDPR with continuous control monitoring and audit trails.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Security for Every Organization</h2>
+  <p class="sub">Protecting SMBs to Fortune 500 enterprises with AI-first security</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Business</div>
+      <div class="price-amount">$12<span>/endpoint/mo</span></div>
+      <div class="price-desc">Growing companies up to 500 endpoints needing enterprise-grade protection</div>
+      <ul class="price-features">
+        <li>Up to 500 endpoints</li>
+        <li>AI threat detection</li>
+        <li>Automated response</li>
+        <li>Basic threat intel</li>
+        <li>SOC 2 compliance</li>
+        <li>Business hours support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Enterprise</div>
+      <div class="price-amount">$24<span>/endpoint/mo</span></div>
+      <div class="price-desc">Large enterprises with complex environments and compliance requirements</div>
+      <ul class="price-features">
+        <li>Unlimited endpoints</li>
+        <li>Full AI SOC automation</li>
+        <li>Global threat intel feed</li>
+        <li>Identity security (UEBA)</li>
+        <li>All compliance frameworks</li>
+        <li>Dark web monitoring</li>
+        <li>24/7 SOC analyst support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Government</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Federal agencies and critical infrastructure requiring FedRAMP and classified environments</div>
+      <ul class="price-features">
+        <li>FedRAMP High authorized</li>
+        <li>Air-gapped deployment</li>
+        <li>Nation-state threat intel</li>
+        <li>CISA framework alignment</li>
+        <li>Dedicated security team</li>
+        <li>SLA 99.999% uptime</li>
+        <li>Custom integrations</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🛡️ CyberSecAI</div>
+  <p>AI-Powered Cybersecurity & Threat Intelligence Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 CyberSecAI Inc. · Privacy · Terms · Security · SOC 2 Certified</p>
+</footer>
+
+</body>
+</html>
