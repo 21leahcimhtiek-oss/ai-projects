@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InsuranceAI - AI-Powered Underwriting & Claims Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --cyan:#0891b2;--cyan2:#06b6d4;--cyan3:#67e8f9;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--purple:#8b5cf6
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#fff;font-weight:600}
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(8,145,178,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(8,145,178,0.1);border:1px solid rgba(8,145,178,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--cyan2);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--cyan),var(--cyan2),var(--cyan3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#fff;font-weight:700}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--cyan2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:270px 1fr 290px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* CLAIMS SIDEBAR */
+.claims-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:680px;overflow-y:auto}
+.claims-sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.claim-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.claim-item.active{background:rgba(8,145,178,0.1);border-color:rgba(8,145,178,0.3)}
+.claim-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.cl-id{font-size:0.72rem;color:var(--cyan2);font-weight:600;margin-bottom:2px}
+.cl-name{font-size:0.88rem;font-weight:600;margin-bottom:2px}
+.cl-type{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.cl-meta{display:flex;justify-content:space-between;align-items:center}
+.cl-amount{font-size:0.82rem;font-weight:700;color:var(--cyan2)}
+.cl-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.cst-open{background:rgba(59,130,246,0.15);color:var(--blue)}
+.cst-review{background:rgba(245,158,11,0.15);color:var(--amber)}
+.cst-approved{background:rgba(34,197,94,0.15);color:var(--green)}
+.cst-denied{background:rgba(239,68,68,0.15);color:var(--red)}
+.cst-fraud{background:rgba(139,92,246,0.15);color:var(--purple)}
+
+/* MAIN */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.claim-header{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.ch-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.ch-id{font-size:0.8rem;color:var(--cyan2);font-weight:600;margin-bottom:4px}
+.ch-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.ch-sub{font-size:0.82rem;color:var(--muted)}
+.ch-actions{display:flex;gap:8px}
+.act-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.act-btn:hover{border-color:var(--cyan2);color:var(--cyan2)}
+.act-btn.primary{background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;color:#fff;font-weight:600}
+.claim-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* DOCUMENT REVIEW */
+.doc-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-hdr h3{font-size:0.95rem;font-weight:600}
+.doc-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.doc-table th{text-align:left;color:var(--muted);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border)}
+.doc-table td{padding:10px 12px;border-bottom:1px solid rgba(42,42,62,0.5)}
+.doc-table tr:last-child td{border-bottom:none}
+.doc-badge{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.db-ok{background:rgba(34,197,94,0.15);color:var(--green)}
+.db-flag{background:rgba(239,68,68,0.15);color:var(--red)}
+.db-pend{background:rgba(245,158,11,0.15);color:var(--amber)}
+.db-ai{background:rgba(8,145,178,0.15);color:var(--cyan2)}
+
+/* TIMELINE */
+.timeline-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.timeline{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:12px;padding-bottom:14px;position:relative}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:1px;background:var(--border)}
+.tl-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;flex-shrink:0}
+.tl-dot.cyan{background:rgba(8,145,178,0.2);border:2px solid var(--cyan2)}
+.tl-dot.green{background:rgba(34,197,94,0.2);border:2px solid var(--green)}
+.tl-dot.amber{background:rgba(245,158,11,0.2);border:2px solid var(--amber)}
+.tl-dot.red{background:rgba(239,68,68,0.2);border:2px solid var(--red)}
+.tl-dot.gray{background:rgba(100,116,139,0.2);border:2px solid var(--muted)}
+.tl-content{}
+.tl-title{font-size:0.85rem;font-weight:600;margin-bottom:2px}
+.tl-desc{font-size:0.75rem;color:var(--muted)}
+.tl-time{font-size:0.7rem;color:var(--muted);margin-top:3px}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-card{background:var(--surface2);border:1px solid rgba(8,145,178,0.3);border-radius:16px;padding:20px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan2);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ai-hdr span{font-size:0.85rem;font-weight:600;color:var(--cyan2)}
+.ai-item{background:rgba(8,145,178,0.05);border:1px solid rgba(8,145,178,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-item-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-item-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.b-red{background:rgba(239,68,68,0.15);color:var(--red)}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green)}
+.b-purple{background:rgba(139,92,246,0.15);color:var(--purple)}
+
+.risk-score-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.risk-gauge{display:flex;align-items:center;justify-content:center;margin:16px 0}
+.gauge-circle{width:100px;height:100px;border-radius:50%;background:conic-gradient(var(--amber) 0% 58%,var(--border) 58% 100%);display:flex;align-items:center;justify-content:center;position:relative}
+.gauge-inner{width:72px;height:72px;border-radius:50%;background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge-val{font-size:1.3rem;font-weight:800;color:var(--amber)}
+.gauge-label{font-size:0.6rem;color:var(--muted)}
+.risk-factors{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.rf-item{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem}
+.rf-label{color:var(--muted)}
+.rf-bar{display:flex;align-items:center;gap:6px}
+.rfbar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;width:60px}
+.rfbar-fill{height:100%;border-radius:3px}
+
+.portfolio-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.portfolio-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5);font-size:0.82rem}
+.portfolio-row:last-child{border-bottom:none;font-weight:700}
+.p-label{color:var(--muted)}
+.p-val{font-weight:600}
+
+/* FEATURES / PRICING */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(8,145,178,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(8,145,178,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(8,145,178,0.2),rgba(6,182,212,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+.price-card.popular{border-color:var(--cyan2);box-shadow:0 0 40px rgba(8,145,178,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--cyan2);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--cyan2);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;color:#fff}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-icon">🛡️</div><span>InsuranceAI</span></div>
+  <div class="nav-links">
+    <a href="#">Claims</a><a href="#">Underwriting</a><a href="#">Fraud Detection</a><a href="#">Risk Analytics</a><a href="#">Compliance</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Request Demo</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🛡️ AI-Driven Insurance Operations</div>
+  <h1>Settle Claims Faster,<br><span>Detect Fraud Instantly</span></h1>
+  <p>InsuranceAI automates underwriting decisions, accelerates claims processing, and flags fraudulent patterns in real time — reducing costs by 35% while improving customer satisfaction.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Request Demo</button>
+    <button class="btn-hero-outline">See Platform</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">340+</div><div class="stat-label">Insurers</div></div>
+    <div class="stat"><div class="stat-num">72%</div><div class="stat-label">Faster Claims Processing</div></div>
+    <div class="stat"><div class="stat-num">$2.1B+</div><div class="stat-label">Fraud Prevented</div></div>
+    <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Auto-Approval Rate</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live Claims Management Dashboard</h2>
+    <p>AI-powered claims processing, fraud detection, and risk scoring</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- CLAIMS SIDEBAR -->
+    <div class="claims-sidebar">
+      <h3>Active Claims (18)</h3>
+      <div class="claim-item active">
+        <div class="cl-id">CLM-2024-8847</div>
+        <div class="cl-name">Marcus Wellington</div>
+        <div class="cl-type">Auto — Collision</div>
+        <div class="cl-meta"><span class="cl-amount">$18,400</span><span class="cl-status cst-review">AI REVIEW</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8841</div>
+        <div class="cl-name">Priya Sharma</div>
+        <div class="cl-type">Home — Water Damage</div>
+        <div class="cl-meta"><span class="cl-amount">$42,800</span><span class="cl-status cst-open">OPEN</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8835</div>
+        <div class="cl-name">J&R Construction LLC</div>
+        <div class="cl-type">Commercial — Liability</div>
+        <div class="cl-meta"><span class="cl-amount">$125,000</span><span class="cl-status cst-fraud">FRAUD FLAG</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8829</div>
+        <div class="cl-name">Linda Okafor</div>
+        <div class="cl-type">Life — Disability</div>
+        <div class="cl-meta"><span class="cl-amount">$8,200</span><span class="cl-status cst-approved">APPROVED</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8822</div>
+        <div class="cl-name">TechStart Inc.</div>
+        <div class="cl-type">Cyber — Data Breach</div>
+        <div class="cl-meta"><span class="cl-amount">$380,000</span><span class="cl-status cst-review">AI REVIEW</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8810</div>
+        <div class="cl-name">Carlos Rivera</div>
+        <div class="cl-type">Auto — Theft</div>
+        <div class="cl-meta"><span class="cl-amount">$31,500</span><span class="cl-status cst-open">OPEN</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8803</div>
+        <div class="cl-name">Sarah Chen</div>
+        <div class="cl-type">Health — Surgery</div>
+        <div class="cl-meta"><span class="cl-amount">$62,000</span><span class="cl-status cst-approved">APPROVED</span></div>
+      </div>
+      <div class="claim-item">
+        <div class="cl-id">CLM-2024-8798</div>
+        <div class="cl-name">Blue Ridge Farm</div>
+        <div class="cl-type">Agriculture — Crop Loss</div>
+        <div class="cl-meta"><span class="cl-amount">$94,200</span><span class="cl-status cst-denied">DENIED</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <div class="claim-header">
+        <div class="ch-top">
+          <div>
+            <div class="ch-id">CLM-2024-8847 • Auto Insurance — Collision</div>
+            <div class="ch-title">Marcus Wellington — 2022 BMW 3 Series</div>
+            <div class="ch-sub">Filed: Oct 10, 2024 • Adjuster: K. Thompson • Policy: AUTO-44821-TX</div>
+          </div>
+          <div class="ch-actions">
+            <button class="act-btn">📎 Docs</button>
+            <button class="act-btn">📞 Contact</button>
+            <button class="act-btn primary">⚡ AI Adjudicate</button>
+          </div>
+        </div>
+        <div class="claim-kpis">
+          <div class="kpi">
+            <div class="kpi-label">Claim Amount</div>
+            <div class="kpi-val" style="color:var(--cyan2)">$18,400</div>
+            <div class="kpi-sub">Repair estimate</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Fraud Score</div>
+            <div class="kpi-val" style="color:var(--green)">12/100</div>
+            <div class="kpi-sub">Low risk</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Days Open</div>
+            <div class="kpi-val" style="color:var(--amber)">4 days</div>
+            <div class="kpi-sub">SLA: 10 days</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">AI Recommendation</div>
+            <div class="kpi-val" style="color:var(--green);font-size:1rem">APPROVE</div>
+            <div class="kpi-sub">94% confidence</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="doc-card">
+        <div class="card-hdr"><h3>📁 Claim Documents & AI Analysis</h3><button class="act-btn primary">+ Upload</button></div>
+        <table class="doc-table">
+          <thead><tr><th>Document</th><th>Type</th><th>Submitted</th><th>AI Verification</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Police_Report_TX2024-4482.pdf</td>
+              <td style="color:var(--muted)">Police Report</td>
+              <td style="color:var(--muted)">Oct 10</td>
+              <td><span class="doc-badge db-ok">✓ Verified</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">View</button></td>
+            </tr>
+            <tr>
+              <td>Repair_Estimate_BMW_dealer.pdf</td>
+              <td style="color:var(--muted)">Repair Estimate</td>
+              <td style="color:var(--muted)">Oct 11</td>
+              <td><span class="doc-badge db-ok">✓ Verified</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">View</button></td>
+            </tr>
+            <tr>
+              <td>Vehicle_Photos_x12.zip</td>
+              <td style="color:var(--muted)">Damage Photos</td>
+              <td style="color:var(--muted)">Oct 11</td>
+              <td><span class="doc-badge db-ai">🤖 AI Analyzed</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">View</button></td>
+            </tr>
+            <tr>
+              <td>Driver_License_MW.pdf</td>
+              <td style="color:var(--muted)">ID Verification</td>
+              <td style="color:var(--muted)">Oct 10</td>
+              <td><span class="doc-badge db-ok">✓ Verified</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">View</button></td>
+            </tr>
+            <tr>
+              <td>Independent_Appraisal.pdf</td>
+              <td style="color:var(--muted)">Appraisal</td>
+              <td style="color:var(--muted)">Oct 13</td>
+              <td><span class="doc-badge db-pend">Pending Review</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Timeline -->
+      <div class="timeline-card">
+        <div class="card-hdr"><h3>📅 Claims Processing Timeline</h3></div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-content">
+              <div class="tl-title">Claim Filed — Online Portal</div>
+              <div class="tl-desc">AI intake bot collected all initial information, verified policy coverage, and auto-assigned to adjuster K. Thompson</div>
+              <div class="tl-time">Oct 10, 2024 • 09:14 AM</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-content">
+              <div class="tl-title">Documents Received & AI Verified</div>
+              <div class="tl-desc">Police report, repair estimate, and photos verified. AI image analysis confirms damage consistent with reported accident.</div>
+              <div class="tl-time">Oct 11, 2024 • 2:30 PM</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot cyan"></div>
+            <div class="tl-content">
+              <div class="tl-title">AI Fraud Screening Passed</div>
+              <div class="tl-desc">Fraud score: 12/100. Cross-referenced 47 data points including claimant history, repair shop reputation, and geolocation data.</div>
+              <div class="tl-time">Oct 12, 2024 • 08:45 AM</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot amber"></div>
+            <div class="tl-content">
+              <div class="tl-title">Independent Appraisal Ordered</div>
+              <div class="tl-desc">Repair estimate ($18,400) slightly above AI benchmark ($16,200). Independent appraisal requested per SOP for amounts >$15K.</div>
+              <div class="tl-time">Oct 13, 2024 • 11:00 AM</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot gray"></div>
+            <div class="tl-content">
+              <div class="tl-title">Adjuster Final Review — Pending</div>
+              <div class="tl-desc">Awaiting independent appraisal. AI recommends approval at $17,800 (negotiated). SLA deadline: Oct 20.</div>
+              <div class="tl-time">Oct 14, 2024 • Est.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="ai-card">
+        <div class="ai-hdr"><div class="ai-dot"></div><span>AI Claims Intelligence</span></div>
+        <div class="ai-item">
+          <div class="ai-item-title">✅ Auto-Approval Recommendation</div>
+          <div class="ai-item-text">Based on 47-point analysis, AI recommends approval at $17,800. Damage photos confirm collision pattern. Claimant has clean 8-year history. Repair shop is 5-star rated.</div>
+          <span class="badge b-green">94% CONFIDENCE</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">⚠️ Estimate Variance Flagged</div>
+          <div class="ai-item-text">Dealer estimate ($18,400) is 13.6% above AI benchmark ($16,200). Recommend negotiating to $17,800 — within acceptable variance for this vehicle class and damage type.</div>
+          <span class="badge b-amber">NEGOTIATE</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">🚨 Fraud Alert — CLM-8835</div>
+          <div class="ai-item-text">J&R Construction claim flagged: 3rd liability claim in 18 months, IP address matches 2 prior fraudulent claims, contractor not licensed in state. Recommend SIU investigation.</div>
+          <span class="badge b-red">SIU REFERRAL</span>
+        </div>
+      </div>
+
+      <!-- Risk Score -->
+      <div class="risk-score-card">
+        <div class="card-hdr"><h3>⚖️ Claim Risk Score</h3></div>
+        <div class="risk-gauge">
+          <div class="gauge-circle">
+            <div class="gauge-inner">
+              <div class="gauge-val">12</div>
+              <div class="gauge-label">LOW RISK</div>
+            </div>
+          </div>
+        </div>
+        <div class="risk-factors">
+          <div class="rf-item">
+            <span class="rf-label">Claimant History</span>
+            <div class="rf-bar">
+              <div class="rfbar"><div class="rfbar-fill" style="width:10%;background:var(--green)"></div></div>
+              <span style="font-size:0.72rem;color:var(--green)">Low</span>
+            </div>
+          </div>
+          <div class="rf-item">
+            <span class="rf-label">Damage Consistency</span>
+            <div class="rf-bar">
+              <div class="rfbar"><div class="rfbar-fill" style="width:8%;background:var(--green)"></div></div>
+              <span style="font-size:0.72rem;color:var(--green)">Low</span>
+            </div>
+          </div>
+          <div class="rf-item">
+            <span class="rf-label">Estimate Variance</span>
+            <div class="rf-bar">
+              <div class="rfbar"><div class="rfbar-fill" style="width:40%;background:var(--amber)"></div></div>
+              <span style="font-size:0.72rem;color:var(--amber)">Med</span>
+            </div>
+          </div>
+          <div class="rf-item">
+            <span class="rf-label">Document Authenticity</span>
+            <div class="rf-bar">
+              <div class="rfbar"><div class="rfbar-fill" style="width:5%;background:var(--green)"></div></div>
+              <span style="font-size:0.72rem;color:var(--green)">Low</span>
+            </div>
+          </div>
+          <div class="rf-item">
+            <span class="rf-label">Network Risk</span>
+            <div class="rf-bar">
+              <div class="rfbar"><div class="rfbar-fill" style="width:12%;background:var(--green)"></div></div>
+              <span style="font-size:0.72rem;color:var(--green)">Low</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Summary -->
+      <div class="portfolio-card">
+        <div class="card-hdr"><h3>📊 Portfolio Summary</h3></div>
+        <div class="portfolio-row"><span class="p-label">Open Claims</span><span class="p-val">147</span></div>
+        <div class="portfolio-row"><span class="p-label">Avg Processing Time</span><span class="p-val" style="color:var(--green)">3.2 days</span></div>
+        <div class="portfolio-row"><span class="p-label">Auto-Approved (AI)</span><span class="p-val" style="color:var(--cyan2)">94 (64%)</span></div>
+        <div class="portfolio-row"><span class="p-label">Fraud Flags (Oct)</span><span class="p-val" style="color:var(--red)">8 cases</span></div>
+        <div class="portfolio-row"><span class="p-label">Fraud Prevented (Oct)</span><span class="p-val" style="color:var(--green)">$1.24M</span></div>
+        <div class="portfolio-row"><span class="p-label">Total Reserves (Oct)</span><span class="p-val" style="color:var(--cyan2)">$8.4M</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-header">
+    <h2>AI Insurance Technology Suite</h2>
+    <p>End-to-end automation for modern insurers</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Instant Claims Processing</h3>
+      <p>AI auto-adjudicates 64% of claims instantly — no human intervention needed. Straight-through processing for low-complexity claims reduces cost-per-claim by 72%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🕵️</div>
+      <h3>Real-Time Fraud Detection</h3>
+      <p>AI cross-references 200+ fraud signals including claimant networks, repair shop histories, social media, and geolocation data. Detect organized fraud rings automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>AI Underwriting Engine</h3>
+      <p>Dynamic risk scoring and premium pricing using telematics, IoT data, credit signals, and behavioral analytics. Reduce loss ratio by 18% with precision underwriting.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Document Intelligence</h3>
+      <p>OCR and NLP extract and verify data from police reports, medical records, repair estimates, and financial documents automatically — eliminating manual data entry.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Customer Self-Service</h3>
+      <p>AI chatbot handles FNOL, status updates, document uploads, and simple approvals 24/7. Reduce call center volume by 55% while improving NPS by 40 points.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Regulatory Compliance</h3>
+      <p>Built-in state DOI compliance rules, auto-generated regulatory reports, and complete audit trails for all AI decisions. SOC 2 Type II and NAIC compliant.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-header">
+    <h2>Insurance Platform Pricing</h2>
+    <p>Flexible plans for carriers, MGAs, and reinsurers</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">REGIONAL CARRIER</div>
+      <div class="price-amount">$1,499<span>/mo</span></div>
+      <div class="price-desc">For small and regional insurers</div>
+      <ul class="price-features">
+        <li>Up to 500 claims/month</li>
+        <li>AI fraud scoring</li>
+        <li>Claims workflow automation</li>
+        <li>Document OCR & extraction</li>
+        <li>Basic underwriting AI</li>
+        <li>Standard reporting</li>
+      </ul>
+      <button class="price-btn">Request Demo</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">NATIONAL CARRIER</div>
+      <div class="price-amount">$5,999<span>/mo</span></div>
+      <div class="price-desc">For mid-size to national insurers</div>
+      <ul class="price-features">
+        <li>Unlimited claims volume</li>
+        <li>Advanced fraud detection AI</li>
+        <li>Full underwriting engine</li>
+        <li>SIU case management</li>
+        <li>Customer self-service portal</li>
+        <li>API integrations (CMS, ISO)</li>
+        <li>24/7 priority support</li>
+      </ul>
+      <button class="price-btn">Request Demo</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large carriers and reinsurers</div>
+      <ul class="price-features">
+        <li>Custom AI model training</li>
+        <li>Telematics & IoT integration</li>
+        <li>White-label platform</li>
+        <li>Multi-line of business</li>
+        <li>Dedicated ML engineers</li>
+        <li>On-premise deployment</li>
+        <li>Custom SLA guarantees</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">🛡️</div><span>InsuranceAI</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">NAIC Compliance</a><a href="#">Security</a><a href="#">API</a><a href="#">Support</a>
+  </div>
+  <div>© 2024 InsuranceAI Inc. • App #106</div>
+</footer>
+
+</body>
+</html>
