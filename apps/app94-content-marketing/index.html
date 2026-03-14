@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContentAI - AI-Powered Content Marketing Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #8b5cf6;
+    --secondary: #a78bfa;
+    --accent: #c4b5fd;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a2e;
+    --border: #ffffff15;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; color: var(--muted); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 0.75rem; }
+  .btn-ghost { padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: transparent; color: var(--text); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), #7c3aed); color: white; font-weight: 600; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(139,92,246,0.4); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 100px; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .btn-lg { padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-lg-primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: white; }
+  .btn-lg-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,0.45); }
+  .btn-lg-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-lg-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat strong { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat span { font-size: 0.85rem; color: var(--muted); }
+
+  .demo-section { padding: 5rem 2rem; background: var(--surface); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .section-header p { color: var(--muted); font-size: 1.1rem; }
+  .dashboard { max-width: 1200px; margin: 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  .dash-header { background: rgba(139,92,246,0.05); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-weight: 700; font-size: 1rem; }
+  .dash-tabs { display: flex; gap: 0.5rem; }
+  .dash-tab { padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.78rem; color: var(--muted); cursor: pointer; }
+  .dash-tab.active { background: rgba(139,92,246,0.2); color: var(--secondary); }
+  .dash-body { display: grid; grid-template-columns: 220px 1fr; min-height: 540px; }
+
+  .content-sidebar { border-right: 1px solid var(--border); padding: 1rem; }
+  .content-sidebar h4 { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .content-item { padding: 0.65rem; border-radius: 8px; margin-bottom: 0.4rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .content-item:hover, .content-item.active { border-color: var(--primary); background: rgba(139,92,246,0.08); }
+  .ci-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .ci-type { font-size: 0.68rem; color: var(--muted); }
+  .ci-status { display: inline-block; font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 600; margin-top: 0.25rem; }
+  .cs-draft { background: rgba(148,163,184,0.15); color: #94a3b8; }
+  .cs-review { background: rgba(251,191,36,0.15); color: #fde68a; }
+  .cs-published { background: rgba(34,197,94,0.15); color: #86efac; }
+  .cs-scheduled { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+
+  .content-main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; }
+  .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .kpi-value { font-size: 1.4rem; font-weight: 800; }
+  .kpi-value.purple { color: var(--secondary); }
+  .kpi-value.green { color: #86efac; }
+  .kpi-value.amber { color: #fde68a; }
+  .kpi-delta { font-size: 0.72rem; color: #86efac; margin-top: 0.2rem; }
+
+  /* AI Writer */
+  .ai-writer { background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.15); border-radius: 10px; padding: 1rem; }
+  .ai-writer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .ai-writer-title { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+  .ai-chip { background: linear-gradient(135deg, var(--primary), #7c3aed); font-size: 0.62rem; padding: 0.15rem 0.5rem; border-radius: 4px; color: white; }
+  .doc-area { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; min-height: 120px; }
+  .doc-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+  .doc-body { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+  .doc-body .highlight { color: var(--accent); }
+  .ai-toolbar { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+  .ai-btn { padding: 0.3rem 0.7rem; border: 1px solid rgba(139,92,246,0.3); border-radius: 6px; font-size: 0.72rem; cursor: pointer; background: rgba(139,92,246,0.1); color: var(--secondary); transition: all 0.2s; }
+  .ai-btn:hover { background: rgba(139,92,246,0.2); }
+
+  /* Calendar + Perf */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .cal-panel { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .cal-panel h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day { aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; cursor: pointer; }
+  .cal-day.has-content { background: rgba(139,92,246,0.25); color: var(--accent); font-weight: 700; }
+  .cal-day.today { background: var(--primary); color: white; font-weight: 700; }
+  .cal-day:hover { background: rgba(139,92,246,0.15); }
+  .perf-panel { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .perf-panel h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .perf-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .perf-label { font-size: 0.75rem; min-width: 100px; color: var(--muted); }
+  .perf-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+  .perf-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+  .perf-val { font-size: 0.72rem; font-weight: 700; color: var(--secondary); min-width: 36px; text-align: right; }
+
+  .features-section { padding: 5rem 2rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(139,92,246,0.1); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(167,139,250,0.1)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  .pricing-section { padding: 5rem 2rem; background: var(--surface); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+  .pricing-card.popular { border-color: var(--primary); box-shadow: 0 0 30px rgba(139,92,246,0.15); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), #7c3aed); padding: 0.3rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .pricing-tier { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .pricing-price { font-size: 2.8rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .pricing-features { list-style: none; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pricing-features li { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pricing-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 0.8rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-plan-primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: white; }
+  .btn-plan-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(139,92,246,0.4); }
+  .btn-plan-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+  .cta-section { padding: 5rem 2rem; text-align: center; background: var(--bg); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; position: relative; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  footer { padding: 3rem 2rem 2rem; border-top: 1px solid var(--border); background: var(--surface); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.6; max-width: 250px; }
+  .footer-col h4 { font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+  .footer-col a { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem; width: 100%; max-width: 440px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--primary), #7c3aed); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+  .social-btns { display: flex; gap: 0.75rem; }
+  .social-btn { flex: 1; padding: 0.65rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-size: 0.85rem; cursor: pointer; }
+  .modal-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">✍ ContentAI</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Templates</a>
+    <a href="#">SEO Tools</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="document.getElementById('loginModal').classList.add('active')">Sign In</button>
+    <button class="btn-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Writing Free</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">✍ AI Content Marketing Platform</div>
+  <h1>Create Content That<br><span>Ranks & Converts</span></h1>
+  <p>ContentAI generates SEO-optimized blog posts, social media copy, email campaigns, and ad creatives — in seconds, not hours.</p>
+  <div class="hero-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Writing Free</button>
+    <button class="btn-lg btn-lg-ghost">See Examples</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>9.2M+</strong><span>Pieces Created</span></div>
+    <div class="hero-stat"><strong>10x</strong><span>Faster Than Manual</span></div>
+    <div class="hero-stat"><strong>87%</strong><span>Rank on Page 1</span></div>
+    <div class="hero-stat"><strong>52K+</strong><span>Active Marketers</span></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Your AI-Powered Content Studio</h2>
+    <p>Write, schedule, optimize, and publish from one intelligent workspace</p>
+  </div>
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-title">✍ ContentAI Studio — Marketing Hub</span>
+      <div class="dash-tabs">
+        <div class="dash-tab active">Editor</div>
+        <div class="dash-tab">Calendar</div>
+        <div class="dash-tab">Analytics</div>
+      </div>
+    </div>
+    <div class="dash-body">
+      <div class="content-sidebar">
+        <h4>Content Queue (8)</h4>
+        <div class="content-item active">
+          <div class="ci-title">10 AI Trends 2025</div>
+          <div class="ci-type">📝 Blog Post · 2,400 words</div>
+          <span class="ci-status cs-review">In Review</span>
+        </div>
+        <div class="content-item">
+          <div class="ci-title">Product Launch Email</div>
+          <div class="ci-type">📧 Email · Subject A/B</div>
+          <span class="ci-status cs-scheduled">Scheduled</span>
+        </div>
+        <div class="content-item">
+          <div class="ci-title">Q3 Social Pack</div>
+          <div class="ci-type">📱 Social · 12 posts</div>
+          <span class="ci-status cs-draft">Draft</span>
+        </div>
+        <div class="content-item">
+          <div class="ci-title">Case Study: TechCorp</div>
+          <div class="ci-type">📄 Case Study · 1,800 words</div>
+          <span class="ci-status cs-published">Published</span>
+        </div>
+        <div class="content-item">
+          <div class="ci-title">PPC Ad Creatives</div>
+          <div class="ci-type">🎯 Ads · 6 variants</div>
+          <span class="ci-status cs-published">Published</span>
+        </div>
+      </div>
+
+      <div class="content-main">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Published This Mo</div>
+            <div class="kpi-value purple">47</div>
+            <div class="kpi-delta">▲ 31% vs last mo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Organic Traffic</div>
+            <div class="kpi-value green">84.2K</div>
+            <div class="kpi-delta">▲ 22% vs last mo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg SEO Score</div>
+            <div class="kpi-value purple">91/100</div>
+            <div class="kpi-delta">▲ 8pts this quarter</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Leads Generated</div>
+            <div class="kpi-value green">1,284</div>
+            <div class="kpi-delta">▲ 18% from content</div>
+          </div>
+        </div>
+
+        <!-- AI Writer Demo -->
+        <div class="ai-writer">
+          <div class="ai-writer-header">
+            <span class="ai-writer-title">✨ AI Content Editor <span class="ai-chip">GPT-4 Powered</span></span>
+            <span style="font-size:0.72rem;color:var(--muted);">SEO Score: <strong style="color:#86efac;">91/100</strong></span>
+          </div>
+          <div class="doc-area">
+            <div class="doc-title">10 AI Trends That Will Transform Business in 2025</div>
+            <div class="doc-body">
+              <span class="highlight">Artificial intelligence is no longer a future concept</span> — it's the present reality reshaping every industry. From automating repetitive workflows to generating hyper-personalized customer experiences, the pace of AI adoption has reached an inflection point that business leaders can no longer afford to ignore.<br><br>
+              In this comprehensive guide, we explore the <span class="highlight">10 most impactful AI trends of 2025</span>, backed by data from 2,400+ enterprise deployments, and show you exactly how to capitalize on each one before your competitors do...
+            </div>
+          </div>
+          <div class="ai-toolbar">
+            <button class="ai-btn">✨ Improve Writing</button>
+            <button class="ai-btn">🔍 SEO Optimize</button>
+            <button class="ai-btn">📝 Expand Section</button>
+            <button class="ai-btn">🎯 Add CTA</button>
+            <button class="ai-btn">🌐 Translate</button>
+            <button class="ai-btn">📱 Repurpose for Social</button>
+          </div>
+        </div>
+
+        <!-- Calendar + Performance -->
+        <div class="bottom-row">
+          <div class="cal-panel">
+            <h4>Content Calendar — June 2025</h4>
+            <div class="cal-grid">
+              <div class="cal-day" style="color:var(--muted)">S</div><div class="cal-day" style="color:var(--muted)">M</div><div class="cal-day" style="color:var(--muted)">T</div><div class="cal-day" style="color:var(--muted)">W</div><div class="cal-day" style="color:var(--muted)">T</div><div class="cal-day" style="color:var(--muted)">F</div><div class="cal-day" style="color:var(--muted)">S</div>
+              <div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day has-content">4</div><div class="cal-day has-content">5</div><div class="cal-day has-content">6</div><div class="cal-day">7</div>
+              <div class="cal-day">8</div><div class="cal-day has-content">9</div><div class="cal-day has-content">10</div><div class="cal-day">11</div><div class="cal-day has-content">12</div><div class="cal-day has-content">13</div><div class="cal-day">14</div>
+              <div class="cal-day">15</div><div class="cal-day has-content">16</div><div class="cal-day today">17</div><div class="cal-day has-content">18</div><div class="cal-day has-content">19</div><div class="cal-day has-content">20</div><div class="cal-day">21</div>
+              <div class="cal-day">22</div><div class="cal-day has-content">23</div><div class="cal-day has-content">24</div><div class="cal-day">25</div><div class="cal-day has-content">26</div><div class="cal-day has-content">27</div><div class="cal-day">28</div>
+              <div class="cal-day">29</div><div class="cal-day has-content">30</div>
+            </div>
+          </div>
+          <div class="perf-panel">
+            <h4>Top Performing Content</h4>
+            <div class="perf-row">
+              <span class="perf-label">AI Trends 2025</span>
+              <div class="perf-bar-bg"><div class="perf-bar" style="width:92%"></div></div>
+              <span class="perf-val">12.4K</span>
+            </div>
+            <div class="perf-row">
+              <span class="perf-label">SaaS Pricing Guide</span>
+              <div class="perf-bar-bg"><div class="perf-bar" style="width:78%"></div></div>
+              <span class="perf-val">9.8K</span>
+            </div>
+            <div class="perf-row">
+              <span class="perf-label">Email Marketing 101</span>
+              <div class="perf-bar-bg"><div class="perf-bar" style="width:65%"></div></div>
+              <span class="perf-val">7.2K</span>
+            </div>
+            <div class="perf-row">
+              <span class="perf-label">Case Study: TechCorp</span>
+              <div class="perf-bar-bg"><div class="perf-bar" style="width:54%"></div></div>
+              <span class="perf-val">5.9K</span>
+            </div>
+            <div class="perf-row">
+              <span class="perf-label">Product Launch Email</span>
+              <div class="perf-bar-bg"><div class="perf-bar" style="width:41%"></div></div>
+              <span class="perf-val">38% OR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="section-header">
+    <h2>Everything a Content Team Needs</h2>
+    <p>AI-powered tools that turn ideas into traffic-driving, lead-generating content at scale</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">✍</div>
+      <h3>AI Long-Form Writer</h3>
+      <p>Generate SEO-optimized blog posts, whitepapers, and case studies in minutes. AI researches, outlines, writes, and formats for you.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>SEO Intelligence</h3>
+      <p>Built-in keyword research, competitor gap analysis, semantic optimization, and real-time SEO scoring as you write. Target Page 1.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Social Media Suite</h3>
+      <p>Repurpose one blog post into 30+ platform-native social posts for LinkedIn, X, Instagram, and TikTok with AI captions and hashtags.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📧</div>
+      <h3>Email Campaigns</h3>
+      <p>AI writes subject lines, body copy, and CTAs for every stage of your funnel. A/B test 10 variants simultaneously to maximize opens.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Content Calendar</h3>
+      <p>AI suggests an optimal publishing schedule based on your audience, competitors, and trending topics. Auto-publishes to every channel.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Content Analytics</h3>
+      <p>Track every piece of content's traffic, rankings, engagement, and leads generated. AI identifies your top performers and replication patterns.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="section-header">
+    <h2>Content at Every Scale</h2>
+    <p>From solo bloggers to enterprise content teams — a plan for every ambition</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Creator</div>
+      <div class="pricing-price">$29<span>/mo</span></div>
+      <div class="pricing-desc">Perfect for individual bloggers and content creators scaling their output</div>
+      <ul class="pricing-features">
+        <li>50,000 AI words/month</li>
+        <li>SEO optimization tools</li>
+        <li>20+ content templates</li>
+        <li>Social media repurposing</li>
+        <li>Content calendar</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="pricing-tier">Team</div>
+      <div class="pricing-price">$99<span>/mo</span></div>
+      <div class="pricing-desc">For marketing teams creating high-volume, multi-channel content programs</div>
+      <ul class="pricing-features">
+        <li>Unlimited AI words</li>
+        <li>Up to 5 team members</li>
+        <li>Full SEO intelligence suite</li>
+        <li>Email campaign builder</li>
+        <li>Social media scheduler</li>
+        <li>Content analytics dashboard</li>
+        <li>Brand voice customization</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Agency</div>
+      <div class="pricing-price">$299<span>/mo</span></div>
+      <div class="pricing-desc">For agencies and enterprises managing content for multiple brands and clients</div>
+      <ul class="pricing-features">
+        <li>Unlimited everything</li>
+        <li>Unlimited team members</li>
+        <li>Multi-brand workspaces</li>
+        <li>White-label reports</li>
+        <li>API access</li>
+        <li>Custom AI fine-tuning</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Start Creating Content That Actually Ranks</h2>
+  <p>Join 52,000+ marketers generating 10x more content with ContentAI</p>
+  <div class="cta-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Writing Free</button>
+    <button class="btn-lg btn-lg-ghost">See All Templates</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">✍ ContentAI</div>
+      <p>AI-powered content marketing that ranks on Google, converts visitors, and scales your team's output.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">AI Writer</a><a href="#">SEO Tools</a><a href="#">Templates</a><a href="#">Analytics</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Help Center</a><a href="#">API Docs</a><a href="#">Privacy</a><a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 ContentAI · AI-Powered Content Marketing Platform · All rights reserved</div>
+</footer>
+
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signupModal').classList.remove('active')">×</button>
+    <h2>Start Writing Free</h2>
+    <p>7-day free trial, no credit card required</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 LinkedIn</button>
+    </div>
+    <div class="modal-divider">— or sign up with email —</div>
+    <div class="form-group"><label>Full Name</label><input type="text" placeholder="Jane Smith"></div>
+    <div class="form-group"><label>Work Email</label><input type="email" placeholder="jane@company.com"></div>
+    <div class="form-group"><label>Company</label><input type="text" placeholder="Acme Marketing Co."></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Start Writing Free</button>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('loginModal').classList.remove('active')">×</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to ContentAI</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 LinkedIn</button>
+    </div>
+    <div class="modal-divider">— or sign in with email —</div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jane@company.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Sign In</button>
+  </div>
+</div>
+
+</body>
+</html>
