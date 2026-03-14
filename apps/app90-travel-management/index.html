@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelAI - AI-Powered Corporate Travel Management</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #0ea5e9;
+    --secondary: #38bdf8;
+    --accent: #7dd3fc;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a2e;
+    --border: #ffffff15;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; color: var(--muted); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 0.75rem; }
+  .btn-ghost { padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: transparent; color: var(--text); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), #0284c7); color: white; font-weight: 600; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(14,165,233,0.4); }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.3); border-radius: 100px; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .btn-lg { padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-lg-primary { background: linear-gradient(135deg, var(--primary), #0284c7); color: white; }
+  .btn-lg-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(14,165,233,0.45); }
+  .btn-lg-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-lg-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat { text-align: center; }
+  .hero-stat strong { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat span { font-size: 0.85rem; color: var(--muted); }
+
+  /* DASHBOARD DEMO */
+  .demo-section { padding: 5rem 2rem; background: var(--surface); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .section-header p { color: var(--muted); font-size: 1.1rem; }
+  .dashboard { max-width: 1200px; margin: 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  .dash-header { background: rgba(14,165,233,0.05); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-weight: 700; font-size: 1rem; }
+  .dash-tabs { display: flex; gap: 0.5rem; }
+  .dash-tab { padding: 0.35rem 0.9rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: var(--muted); }
+  .dash-tab.active { background: rgba(14,165,233,0.2); color: var(--secondary); }
+  .dash-body { display: grid; grid-template-columns: 260px 1fr; min-height: 480px; }
+
+  /* Sidebar */
+  .trip-sidebar { border-right: 1px solid var(--border); padding: 1rem; overflow-y: auto; }
+  .trip-sidebar h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .trip-item { padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .trip-item:hover, .trip-item.active { border-color: var(--primary); background: rgba(14,165,233,0.08); }
+  .trip-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.3rem; }
+  .trip-dest { font-weight: 600; font-size: 0.85rem; }
+  .trip-status { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; }
+  .status-approved { background: rgba(34,197,94,0.15); color: #86efac; }
+  .status-pending { background: rgba(251,191,36,0.15); color: #fde68a; }
+  .status-review { background: rgba(14,165,233,0.15); color: #7dd3fc; }
+  .trip-meta { font-size: 0.75rem; color: var(--muted); }
+  .trip-cost { font-size: 0.85rem; font-weight: 700; color: var(--secondary); margin-top: 0.25rem; }
+
+  /* Main panel */
+  .trip-main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; }
+  .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .kpi-value { font-size: 1.4rem; font-weight: 800; }
+  .kpi-value.sky { color: var(--secondary); }
+  .kpi-value.green { color: #86efac; }
+  .kpi-value.amber { color: #fde68a; }
+  .kpi-value.red { color: #fca5a5; }
+  .kpi-delta { font-size: 0.72rem; color: #86efac; margin-top: 0.2rem; }
+  .kpi-delta.neg { color: #fca5a5; }
+
+  /* Map placeholder */
+  .trip-map { background: rgba(14,165,233,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; position: relative; overflow: hidden; height: 180px; }
+  .map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(14,165,233,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,0.05) 1px, transparent 1px); background-size: 30px 30px; }
+  .map-label { position: absolute; top: 0.75rem; left: 0.75rem; font-size: 0.75rem; color: var(--muted); }
+  .map-route { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .city-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid white; }
+  .city-dot.nyc { top: 70px; left: 60px; }
+  .city-dot.lax { top: 90px; left: 220px; }
+  .city-dot.chi { top: 50px; left: 140px; }
+  .city-dot.lon { top: 30px; left: 340px; }
+  .city-dot.tok { top: 60px; right: 40px; }
+  .city-label { position: absolute; font-size: 0.65rem; color: var(--accent); white-space: nowrap; }
+  .city-label.nyc { top: 82px; left: 44px; }
+  .city-label.lax { top: 102px; left: 204px; }
+  .city-label.chi { top: 36px; left: 128px; }
+  .city-label.lon { top: 18px; left: 326px; }
+  .route-line { position: absolute; height: 2px; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 1px; transform-origin: left center; }
+  .route-line.r1 { width: 100px; top: 76px; left: 68px; transform: rotate(8deg); }
+  .route-line.r2 { width: 80px; top: 57px; left: 148px; transform: rotate(15deg); }
+  .route-line.r3 { width: 170px; top: 38px; left: 350px; transform: rotate(5deg); }
+  .plane-icon { position: absolute; font-size: 1rem; animation: fly 3s linear infinite; }
+  @keyframes fly { 0% { left: 68px; top: 70px; } 100% { left: 220px; top: 82px; } }
+
+  /* Expenses */
+  .expense-section { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .expense-list { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .expense-list h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .expense-row { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+  .expense-row:last-child { border-bottom: none; }
+  .exp-info { display: flex; align-items: center; gap: 0.5rem; }
+  .exp-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+  .exp-flight { background: rgba(14,165,233,0.2); }
+  .exp-hotel { background: rgba(139,92,246,0.2); }
+  .exp-car { background: rgba(34,197,94,0.2); }
+  .exp-meal { background: rgba(251,191,36,0.2); }
+  .exp-name { font-size: 0.8rem; font-weight: 600; }
+  .exp-date { font-size: 0.7rem; color: var(--muted); }
+  .exp-amount { font-size: 0.85rem; font-weight: 700; color: var(--secondary); }
+  .policy-panel { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .policy-panel h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .policy-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; }
+  .policy-icon { font-size: 1rem; }
+  .policy-text { font-size: 0.8rem; }
+  .policy-badge { margin-left: auto; font-size: 0.68rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+  .pb-ok { background: rgba(34,197,94,0.15); color: #86efac; }
+  .pb-warn { background: rgba(251,191,36,0.15); color: #fde68a; }
+  .pb-over { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+  /* FEATURES */
+  .features-section { padding: 5rem 2rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(14,165,233,0.1); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(56,189,248,0.1)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  /* PRICING */
+  .pricing-section { padding: 5rem 2rem; background: var(--surface); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+  .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+  .pricing-card.popular { border-color: var(--primary); box-shadow: 0 0 30px rgba(14,165,233,0.15); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), #0284c7); padding: 0.3rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .pricing-tier { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .pricing-price { font-size: 2.8rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .pricing-features { list-style: none; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pricing-features li { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pricing-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 0.8rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-plan-primary { background: linear-gradient(135deg, var(--primary), #0284c7); color: white; }
+  .btn-plan-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(14,165,233,0.4); }
+  .btn-plan-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* TESTIMONIALS */
+  .testimonials-section { padding: 5rem 2rem; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .testimonial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; }
+  .stars { color: #fbbf24; font-size: 1rem; margin-bottom: 0.75rem; }
+  .testimonial-text { font-size: 0.95rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+  .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+  .author-name { font-weight: 600; font-size: 0.9rem; }
+  .author-role { font-size: 0.78rem; color: var(--muted); }
+
+  /* CTA */
+  .cta-section { padding: 5rem 2rem; text-align: center; background: var(--surface); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; position: relative; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  /* FOOTER */
+  footer { padding: 3rem 2rem 2rem; border-top: 1px solid var(--border); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.6; max-width: 250px; }
+  .footer-col h4 { font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+  .footer-col a { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem; width: 100%; max-width: 440px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--primary), #0284c7); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; transition: all 0.25s; }
+  .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(14,165,233,0.4); }
+  .modal-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; }
+  .social-btns { display: flex; gap: 0.75rem; }
+  .social-btn { flex: 1; padding: 0.65rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+  .social-btn:hover { border-color: var(--primary); background: rgba(14,165,233,0.05); }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">✈ TravelAI</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
+    <a href="#">Integrations</a>
+    <a href="#">Enterprise</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="document.getElementById('loginModal').classList.add('active')">Sign In</button>
+    <button class="btn-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✈ AI-Powered Travel Management</div>
+  <h1>Corporate Travel,<br><span>Intelligently Managed</span></h1>
+  <p>Automate bookings, enforce travel policies, and reduce travel spend by up to 32% with AI-powered corporate travel management.</p>
+  <div class="hero-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    <button class="btn-lg btn-lg-ghost">Watch Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>$2.4B+</strong><span>Travel Spend Managed</span></div>
+    <div class="hero-stat"><strong>32%</strong><span>Average Cost Savings</span></div>
+    <div class="hero-stat"><strong>4,200+</strong><span>Companies Trust Us</span></div>
+    <div class="hero-stat"><strong>99.7%</strong><span>Policy Compliance Rate</span></div>
+  </div>
+</section>
+
+<!-- DASHBOARD DEMO -->
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Your Entire Travel Program in One Place</h2>
+    <p>Real-time visibility into every trip, expense, and policy compliance</p>
+  </div>
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-title">🌍 Travel Command Center — Q2 2025</span>
+      <div class="dash-tabs">
+        <div class="dash-tab active">Trips</div>
+        <div class="dash-tab">Expenses</div>
+        <div class="dash-tab">Reports</div>
+      </div>
+    </div>
+    <div class="dash-body">
+      <!-- Sidebar -->
+      <div class="trip-sidebar">
+        <h4>Active Trips (12)</h4>
+        <div class="trip-item active">
+          <div class="trip-item-header">
+            <span class="trip-dest">✈ NYC → London</span>
+            <span class="trip-status status-approved">Approved</span>
+          </div>
+          <div class="trip-meta">Sarah Chen · Jun 15–20</div>
+          <div class="trip-cost">$3,240</div>
+        </div>
+        <div class="trip-item">
+          <div class="trip-item-header">
+            <span class="trip-dest">✈ LA → Chicago</span>
+            <span class="trip-status status-pending">Pending</span>
+          </div>
+          <div class="trip-meta">Mark Rivera · Jun 16–17</div>
+          <div class="trip-cost">$580</div>
+        </div>
+        <div class="trip-item">
+          <div class="trip-item-header">
+            <span class="trip-dest">✈ SF → Tokyo</span>
+            <span class="trip-status status-approved">Approved</span>
+          </div>
+          <div class="trip-meta">Priya Patel · Jun 18–25</div>
+          <div class="trip-cost">$6,890</div>
+        </div>
+        <div class="trip-item">
+          <div class="trip-item-header">
+            <span class="trip-dest">🚗 NY → Boston</span>
+            <span class="trip-status status-review">Review</span>
+          </div>
+          <div class="trip-meta">James Wu · Jun 17–18</div>
+          <div class="trip-cost">$420</div>
+        </div>
+        <div class="trip-item">
+          <div class="trip-item-header">
+            <span class="trip-dest">✈ Miami → Austin</span>
+            <span class="trip-status status-approved">Approved</span>
+          </div>
+          <div class="trip-meta">Ana Lopez · Jun 19–21</div>
+          <div class="trip-cost">$1,120</div>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div class="trip-main">
+        <!-- KPI Row -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Monthly Spend</div>
+            <div class="kpi-value sky">$284K</div>
+            <div class="kpi-delta neg">▲ 4.2% vs last mo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Policy Compliance</div>
+            <div class="kpi-value green">98.2%</div>
+            <div class="kpi-delta">▲ 1.1% vs last mo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Active Travelers</div>
+            <div class="kpi-value sky">142</div>
+            <div class="kpi-delta">▲ 12 this week</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">AI Savings</div>
+            <div class="kpi-value green">$91K</div>
+            <div class="kpi-delta">▲ 8.3% this month</div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div class="trip-map">
+          <div class="map-grid"></div>
+          <div class="map-label">🌍 Live Travel Map</div>
+          <div class="city-dot nyc"></div>
+          <div class="city-label nyc">NYC</div>
+          <div class="city-dot lax"></div>
+          <div class="city-label lax">LAX</div>
+          <div class="city-dot chi"></div>
+          <div class="city-label chi">ORD</div>
+          <div class="city-dot lon"></div>
+          <div class="city-label lon">LHR</div>
+          <div class="route-line r1"></div>
+          <div class="route-line r2"></div>
+          <div class="route-line r3"></div>
+          <div class="plane-icon">✈</div>
+        </div>
+
+        <!-- Expenses & Policy -->
+        <div class="expense-section">
+          <div class="expense-list">
+            <h4>Recent Expenses</h4>
+            <div class="expense-row">
+              <div class="exp-info">
+                <div class="exp-icon exp-flight">✈</div>
+                <div><div class="exp-name">United Airlines</div><div class="exp-date">Jun 15 · NYC→LHR</div></div>
+              </div>
+              <div class="exp-amount">$2,140</div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-info">
+                <div class="exp-icon exp-hotel">🏨</div>
+                <div><div class="exp-name">Marriott London</div><div class="exp-date">Jun 15–20 · 5 nights</div></div>
+              </div>
+              <div class="exp-amount">$980</div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-info">
+                <div class="exp-icon exp-car">🚗</div>
+                <div><div class="exp-name">Hertz Rental</div><div class="exp-date">Jun 16 · Chicago</div></div>
+              </div>
+              <div class="exp-amount">$210</div>
+            </div>
+            <div class="expense-row">
+              <div class="exp-info">
+                <div class="exp-icon exp-meal">🍽</div>
+                <div><div class="exp-name">Client Dinner</div><div class="exp-date">Jun 16 · 8 guests</div></div>
+              </div>
+              <div class="exp-amount">$640</div>
+            </div>
+          </div>
+          <div class="policy-panel">
+            <h4>AI Policy Checks</h4>
+            <div class="policy-item">
+              <span class="policy-icon">✈</span>
+              <span class="policy-text">Economy class (< 6hrs)</span>
+              <span class="policy-badge pb-ok">✓ Compliant</span>
+            </div>
+            <div class="policy-item">
+              <span class="policy-icon">🏨</span>
+              <span class="policy-text">Hotel rate $196/night</span>
+              <span class="policy-badge pb-ok">✓ In Policy</span>
+            </div>
+            <div class="policy-item">
+              <span class="policy-icon">🍽</span>
+              <span class="policy-text">Meal allowance $80/day</span>
+              <span class="policy-badge pb-warn">⚠ Near Limit</span>
+            </div>
+            <div class="policy-item">
+              <span class="policy-icon">🚕</span>
+              <span class="policy-text">Ground transport</span>
+              <span class="policy-badge pb-ok">✓ Approved</span>
+            </div>
+            <div class="policy-item">
+              <span class="policy-icon">💼</span>
+              <span class="policy-text">Business class request</span>
+              <span class="policy-badge pb-over">✗ Denied</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="section-header">
+    <h2>Everything Your Travel Team Needs</h2>
+    <p>AI-powered tools that make business travel simple, compliant, and cost-effective</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Trip Planning</h3>
+      <p>Automatically books lowest-cost, policy-compliant flights and hotels based on traveler preferences and company rules.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Smart Policy Engine</h3>
+      <p>Define complex travel policies once. AI enforces them in real time across all bookings, approvals, and expense reports.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💳</div>
+      <h3>Expense Automation</h3>
+      <p>Receipts auto-captured via mobile app. AI categorizes, matches to trips, and submits for approval without manual entry.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Spend Analytics</h3>
+      <p>Real-time dashboards show spend by department, route, vendor, and traveler with AI-driven cost optimization recommendations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Duty of Care</h3>
+      <p>Track every traveler in real time. Automated alerts for delays, cancellations, and safety incidents with one-click rebooking.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Global Integrations</h3>
+      <p>Connects to all major GDS systems, Expensify, SAP Concur, NetSuite, Slack, and your HR system for seamless workflows.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="section-header">
+    <h2>Transparent, Scalable Pricing</h2>
+    <p>No per-booking fees. No hidden charges. Pay for what you need.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Startup</div>
+      <div class="pricing-price">$99<span>/mo</span></div>
+      <div class="pricing-desc">For teams up to 25 travelers booking fewer than 50 trips/month</div>
+      <ul class="pricing-features">
+        <li>Up to 25 travelers</li>
+        <li>AI trip booking</li>
+        <li>Basic policy engine</li>
+        <li>Expense capture & reports</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Get Started</button>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="pricing-tier">Business</div>
+      <div class="pricing-price">$399<span>/mo</span></div>
+      <div class="pricing-desc">For growing companies with 25–200 travelers and complex travel policies</div>
+      <ul class="pricing-features">
+        <li>Up to 200 travelers</li>
+        <li>Advanced AI policy engine</li>
+        <li>Full expense automation</li>
+        <li>Spend analytics dashboard</li>
+        <li>Duty of care alerts</li>
+        <li>Slack + ERP integrations</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-desc">For large enterprises with 200+ travelers, global operations, and custom requirements</div>
+      <ul class="pricing-features">
+        <li>Unlimited travelers</li>
+        <li>Custom policy workflows</li>
+        <li>White-label portal</li>
+        <li>Dedicated travel consultant</li>
+        <li>SSO & SAML auth</li>
+        <li>SLA guarantees</li>
+        <li>24/7 phone support</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="section-header">
+    <h2>Loved by Travel Managers Worldwide</h2>
+    <p>See why thousands of companies trust TravelAI for their travel programs</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"TravelAI reduced our corporate travel spend by 28% in the first quarter. The policy enforcement alone saved us from dozens of out-of-policy bookings."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">JK</div>
+        <div><div class="author-name">Jennifer Kim</div><div class="author-role">VP Finance · TechNova Inc</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"The duty of care feature is invaluable. When our team was caught in a storm in Frankfurt, TravelAI automatically reboooked everyone within 20 minutes."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">MR</div>
+        <div><div class="author-name">Marcus Reid</div><div class="author-role">Director of Operations · GlobalPharma</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Setup was effortless. We connected to our ERP in two hours and our travelers adopted the app overnight. Best investment our travel team has ever made."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">AS</div>
+        <div><div class="author-name">Aisha Soto</div><div class="author-role">Travel Manager · Meridian Capital</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to Transform Your Corporate Travel?</h2>
+  <p>Join 4,200+ companies saving millions on business travel with AI</p>
+  <div class="cta-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free 14-Day Trial</button>
+    <button class="btn-lg btn-lg-ghost">Schedule a Demo</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">✈ TravelAI</div>
+      <p>AI-powered corporate travel management that saves money and keeps your team safe.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">Features</a>
+      <a href="#">Pricing</a>
+      <a href="#">Integrations</a>
+      <a href="#">Changelog</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Careers</a>
+      <a href="#">Blog</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 TravelAI · AI-Powered Corporate Travel Management · All rights reserved</div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signupModal').classList.remove('active')">×</button>
+    <h2>Start Free Trial</h2>
+    <p>14 days free, no credit card required</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 Microsoft</button>
+    </div>
+    <div class="modal-divider">— or sign up with email —</div>
+    <div class="form-group"><label>Full Name</label><input type="text" placeholder="Jane Smith"></div>
+    <div class="form-group"><label>Work Email</label><input type="email" placeholder="jane@company.com"></div>
+    <div class="form-group"><label>Company</label><input type="text" placeholder="Acme Corp"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Create Free Account</button>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('loginModal').classList.remove('active')">×</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to your TravelAI account</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 Microsoft</button>
+    </div>
+    <div class="modal-divider">— or sign in with email —</div>
+    <div class="form-group"><label>Work Email</label><input type="email" placeholder="jane@company.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Sign In</button>
+  </div>
+</div>
+
+</body>
+</html>
