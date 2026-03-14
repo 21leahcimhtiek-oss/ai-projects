@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RetailAI - AI-Powered Omnichannel Retail Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --rose:#e11d48;--rose2:#f43f5e;--rose3:#fda4af;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--purple:#8b5cf6
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--rose),var(--rose2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--rose),var(--rose2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#fff;font-weight:600}
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(225,29,72,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(225,29,72,0.1);border:1px solid rgba(225,29,72,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--rose2);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--rose),var(--rose2),var(--rose3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--rose),var(--rose2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#fff;font-weight:700}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--rose),var(--rose2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:260px 1fr 290px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* STORE SIDEBAR */
+.store-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:680px;overflow-y:auto}
+.store-sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.store-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.store-item.active{background:rgba(225,29,72,0.1);border-color:rgba(225,29,72,0.3)}
+.store-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.st-name{font-size:0.88rem;font-weight:600;margin-bottom:2px}
+.st-loc{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.st-meta{display:flex;justify-content:space-between;align-items:center}
+.st-rev{font-size:0.82rem;font-weight:700;color:var(--rose2)}
+.st-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.ss-open{background:rgba(34,197,94,0.15);color:var(--green)}
+.ss-busy{background:rgba(245,158,11,0.15);color:var(--amber)}
+.ss-closed{background:rgba(100,116,139,0.15);color:var(--muted)}
+
+/* MAIN */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.store-header{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.sh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.sh-name{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.sh-sub{font-size:0.82rem;color:var(--muted)}
+.sh-actions{display:flex;gap:8px}
+.act-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.act-btn:hover{border-color:var(--rose2);color:var(--rose2)}
+.act-btn.primary{background:linear-gradient(135deg,var(--rose),var(--rose2));border:none;color:#fff;font-weight:600}
+.store-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* TOP PRODUCTS */
+.products-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-hdr h3{font-size:0.95rem;font-weight:600}
+.product-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.product-table th{text-align:left;color:var(--muted);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border)}
+.product-table td{padding:10px 12px;border-bottom:1px solid rgba(42,42,62,0.5)}
+.product-table tr:last-child td{border-bottom:none}
+.product-table tr:hover td{background:rgba(255,255,255,0.02)}
+.trend-up{color:var(--green);font-size:0.78rem}
+.trend-dn{color:var(--red);font-size:0.78rem}
+.stock-badge{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.sb-ok{background:rgba(34,197,94,0.15);color:var(--green)}
+.sb-low{background:rgba(245,158,11,0.15);color:var(--amber)}
+.sb-out{background:rgba(239,68,68,0.15);color:var(--red)}
+
+/* SALES CHART */
+.sales-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+
+/* HEATMAP */
+.heatmap-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.hm-cell{height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .2s}
+.hm-cell:hover{opacity:0.8;transform:scale(1.05)}
+.hm-label{font-size:0.65rem;color:var(--muted);text-align:center;margin-top:4px}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-card{background:var(--surface2);border:1px solid rgba(225,29,72,0.3);border-radius:16px;padding:20px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--rose2);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ai-hdr span{font-size:0.85rem;font-weight:600;color:var(--rose2)}
+.ai-item{background:rgba(225,29,72,0.05);border:1px solid rgba(225,29,72,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-item-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-item-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green)}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.b-rose{background:rgba(225,29,72,0.15);color:var(--rose2)}
+
+.channel-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.channel-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.channel-item:last-child{border-bottom:none}
+.ch-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.ch-info{flex:1}
+.ch-name{font-size:0.82rem;font-weight:600}
+.ch-rev{font-size:0.72rem;color:var(--muted)}
+.ch-bar{width:70px}
+.chbar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.chbar-fill{height:100%;border-radius:3px}
+.ch-pct{font-size:0.7rem;color:var(--muted);text-align:right;margin-top:2px}
+
+.customer-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.cust-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.cust-item:last-child{border-bottom:none}
+.cust-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.cust-info{flex:1}
+.cust-name{font-size:0.82rem;font-weight:600}
+.cust-seg{font-size:0.7rem;color:var(--muted)}
+.cust-ltv{font-size:0.82rem;font-weight:700;color:var(--rose2)}
+
+/* FEATURES / PRICING */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(225,29,72,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(225,29,72,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(225,29,72,0.2),rgba(244,63,94,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+.price-card.popular{border-color:var(--rose2);box-shadow:0 0 40px rgba(225,29,72,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--rose),var(--rose2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--rose2);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--rose2);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--rose),var(--rose2));border:none;color:#fff}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-icon">🛍️</div><span>RetailAI</span></div>
+  <div class="nav-links">
+    <a href="#">Analytics</a><a href="#">Inventory</a><a href="#">Personalization</a><a href="#">Pricing AI</a><a href="#">Omnichannel</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🛍️ AI-Powered Omnichannel Retail Intelligence</div>
+  <h1>Sell More with<br><span>AI Retail Intelligence</span></h1>
+  <p>Personalize every customer interaction, optimize pricing in real time, predict demand accurately, and unify your in-store and online channels — all powered by retail AI.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Start Free Trial</button>
+    <button class="btn-hero-outline">View Demo Store</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">8,400+</div><div class="stat-label">Retail Brands</div></div>
+    <div class="stat"><div class="stat-num">32%</div><div class="stat-label">Revenue Increase Avg</div></div>
+    <div class="stat"><div class="stat-num">$12B+</div><div class="stat-label">GMV Processed</div></div>
+    <div class="stat"><div class="stat-num">4.1x</div><div class="stat-label">Avg ROAS Improvement</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live Retail Operations Dashboard</h2>
+    <p>Real-time omnichannel performance across all stores and channels</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- STORE SIDEBAR -->
+    <div class="store-sidebar">
+      <h3>Locations (6)</h3>
+      <div class="store-item active">
+        <div class="st-name">NYC Flagship — 5th Ave</div>
+        <div class="st-loc">New York, NY • 12,000 sq ft</div>
+        <div class="st-meta"><span class="st-rev">$84,200 today</span><span class="st-status ss-busy">BUSY</span></div>
+      </div>
+      <div class="store-item">
+        <div class="st-name">LA Beverly Hills</div>
+        <div class="st-loc">Los Angeles, CA • 8,400 sq ft</div>
+        <div class="st-meta"><span class="st-rev">$61,800 today</span><span class="st-status ss-open">OPEN</span></div>
+      </div>
+      <div class="store-item">
+        <div class="st-name">Chicago Magnificent Mile</div>
+        <div class="st-loc">Chicago, IL • 9,200 sq ft</div>
+        <div class="st-meta"><span class="st-rev">$48,400 today</span><span class="st-status ss-open">OPEN</span></div>
+      </div>
+      <div class="store-item">
+        <div class="st-name">Miami Design District</div>
+        <div class="st-loc">Miami, FL • 6,800 sq ft</div>
+        <div class="st-meta"><span class="st-rev">$39,600 today</span><span class="st-status ss-open">OPEN</span></div>
+      </div>
+      <div class="store-item">
+        <div class="st-name">Dallas NorthPark Mall</div>
+        <div class="st-loc">Dallas, TX • 7,200 sq ft</div>
+        <div class="st-meta"><span class="st-rev">$35,100 today</span><span class="st-status ss-busy">BUSY</span></div>
+      </div>
+      <div class="store-item">
+        <div class="st-name">Online Store</div>
+        <div class="st-loc">E-Commerce • Global</div>
+        <div class="st-meta"><span class="st-rev">$128,400 today</span><span class="st-status ss-open">LIVE</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <div class="store-header">
+        <div class="sh-top">
+          <div>
+            <div class="sh-name">NYC Flagship — 5th Avenue</div>
+            <div class="sh-sub">12,000 sq ft • 42 staff on floor • Store Manager: A. Rivera • Foot Traffic: 2,840 today</div>
+          </div>
+          <div class="sh-actions">
+            <button class="act-btn">📊 Report</button>
+            <button class="act-btn">🏷️ Pricing</button>
+            <button class="act-btn primary">⚡ AI Insights</button>
+          </div>
+        </div>
+        <div class="store-kpis">
+          <div class="kpi">
+            <div class="kpi-label">Revenue Today</div>
+            <div class="kpi-val" style="color:var(--rose2)">$84,200</div>
+            <div class="kpi-sub">+18% vs last Tue</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Avg Transaction</div>
+            <div class="kpi-val" style="color:var(--green)">$284</div>
+            <div class="kpi-sub">Basket size</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Conversion Rate</div>
+            <div class="kpi-val" style="color:var(--blue)">10.4%</div>
+            <div class="kpi-sub">296 transactions</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">NPS Score</div>
+            <div class="kpi-val" style="color:var(--amber)">72</div>
+            <div class="kpi-sub">+4 vs last month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="products-card">
+        <div class="card-hdr"><h3>🏆 Top Products Today</h3><button class="act-btn primary">View All</button></div>
+        <table class="product-table">
+          <thead><tr><th>Product</th><th>Category</th><th>Units Sold</th><th>Revenue</th><th>vs Yesterday</th><th>Stock</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600">Aria Silk Blouse — Ivory</td>
+              <td style="color:var(--muted)">Women's Tops</td>
+              <td>48</td>
+              <td style="color:var(--green)">$7,152</td>
+              <td><span class="trend-up">▲ +34%</span></td>
+              <td><span class="stock-badge sb-ok">In Stock</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Metro Slim Chino — Navy</td>
+              <td style="color:var(--muted)">Men's Pants</td>
+              <td>36</td>
+              <td style="color:var(--green)">$4,284</td>
+              <td><span class="trend-up">▲ +12%</span></td>
+              <td><span class="stock-badge sb-ok">In Stock</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Luna Leather Bag — Camel</td>
+              <td style="color:var(--muted)">Accessories</td>
+              <td>22</td>
+              <td style="color:var(--green)">$8,778</td>
+              <td><span class="trend-up">▲ +58%</span></td>
+              <td><span class="stock-badge sb-low">Low Stock (8)</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Classic Oxford — Black</td>
+              <td style="color:var(--muted)">Footwear</td>
+              <td>18</td>
+              <td style="color:var(--green)">$3,420</td>
+              <td><span class="trend-dn">▼ -8%</span></td>
+              <td><span class="stock-badge sb-ok">In Stock</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600">Cashmere V-Neck — Oat</td>
+              <td style="color:var(--muted)">Knitwear</td>
+              <td>14</td>
+              <td style="color:var(--green)">$5,586</td>
+              <td><span class="trend-up">▲ +22%</span></td>
+              <td><span class="stock-badge sb-out">Out of Stock</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Hourly Sales Chart -->
+      <div class="sales-card">
+        <div class="card-hdr"><h3>📈 Hourly Sales — Today vs Last Week</h3><span style="font-size:0.8rem;color:var(--green)">+18% overall</span></div>
+        <div style="display:flex;align-items:flex-end;gap:5px;height:110px;margin-top:16px">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;height:110px;margin-right:8px">
+            <span style="font-size:0.6rem;color:var(--muted)">$12K</span>
+            <span style="font-size:0.6rem;color:var(--muted)">$8K</span>
+            <span style="font-size:0.6rem;color:var(--muted)">$4K</span>
+          </div>
+          <div style="display:flex;gap:4px;align-items:flex-end;flex:1">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:38px;background:rgba(225,29,72,0.4);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">10</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:48px;background:rgba(225,29,72,0.5);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">11</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:70px;background:rgba(225,29,72,0.6);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">12</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:88px;background:rgba(225,29,72,0.7);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">13</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:95px;background:rgba(225,29,72,0.8);border-radius:3px 3px 0 0;border:1px solid var(--rose2)"></div><span style="font-size:0.55rem;color:var(--rose2);font-weight:600">14</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:82px;background:rgba(225,29,72,0.6);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">15</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:72px;background:rgba(225,29,72,0.5);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">16</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:60px;background:rgba(225,29,72,0.4);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">17</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:76px;background:rgba(225,29,72,0.6);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">18</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:68px;background:rgba(225,29,72,0.5);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">19</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:42px;background:rgba(225,29,72,0.3);border-radius:3px 3px 0 0"></div><span style="font-size:0.55rem;color:var(--muted)">20</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Store Heatmap -->
+      <div class="heatmap-card">
+        <div class="card-hdr"><h3>🗺️ Store Traffic Heatmap — Today</h3><span style="font-size:0.78rem;color:var(--muted)">Peak: 14:00–15:00</span></div>
+        <div class="heatmap-grid">
+          <div class="hm-cell" style="background:rgba(225,29,72,0.15)">Mon</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.25)">Tue</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.40)">Wed</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.55)">Thu</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.80)">Fri</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.90)">Sat</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.45)">Sun</div>
+
+          <div class="hm-cell" style="background:rgba(225,29,72,0.10)">10am</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.20)">10am</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.35)">10am</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.50)">10am</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.70)">10am</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.85)">10am</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.40)">10am</div>
+
+          <div class="hm-cell" style="background:rgba(225,29,72,0.30)">12pm</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.45)">12pm</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.60)">12pm</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.75)">12pm</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.95)">12pm</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,1.0);color:#fff;font-weight:700">12pm</div>
+          <div class="hm-cell" style="background:rgba(225,29,72,0.60)">12pm</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px">
+          <span style="font-size:0.68rem;color:var(--muted)">Low Traffic</span>
+          <div style="display:flex;gap:2px;align-items:center">
+            <div style="width:10px;height:10px;border-radius:2px;background:rgba(225,29,72,0.15)"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:rgba(225,29,72,0.40)"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:rgba(225,29,72,0.70)"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:rgba(225,29,72,0.95)"></div>
+          </div>
+          <span style="font-size:0.68rem;color:var(--muted)">High Traffic</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="ai-card">
+        <div class="ai-hdr"><div class="ai-dot"></div><span>AI Retail Advisor</span></div>
+        <div class="ai-item">
+          <div class="ai-item-title">🚨 Restock Alert</div>
+          <div class="ai-item-text">Cashmere V-Neck (Oat) sold out — this SKU drives $5,586/day. NYC warehouse has 48 units. AI recommends emergency transfer today to capture weekend demand (+$22K opportunity).</div>
+          <span class="badge b-rose">ACT NOW</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">💡 Dynamic Pricing Opportunity</div>
+          <div class="ai-item-text">Luna Leather Bag trending +58%. Competitor price analysis shows you're 12% below market. AI recommends $10 price increase — projected additional $2,200 revenue at current sell-through rate.</div>
+          <span class="badge b-green">+$2,200 REV</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">👥 VIP Customer In-Store</div>
+          <div class="ai-item-text">Customer Emma Hartley (LTV: $18,400) entered store 8 min ago. AI recommends staff alert: she last bought accessories — new Aria Silk collection and Luna Bag are top affinity matches.</div>
+          <span class="badge b-amber">PERSONALIZE</span>
+        </div>
+      </div>
+
+      <div class="channel-card">
+        <div class="card-hdr"><h3>📡 Channel Performance</h3></div>
+        <div class="channel-item">
+          <div class="ch-icon" style="background:rgba(225,29,72,0.1)">🌐</div>
+          <div class="ch-info"><div class="ch-name">Online Store</div><div class="ch-rev">$128,400 today</div></div>
+          <div class="ch-bar"><div class="chbar"><div class="chbar-fill" style="width:100%;background:var(--rose2)"></div></div><div class="ch-pct">33%</div></div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-icon" style="background:rgba(59,130,246,0.1)">🏪</div>
+          <div class="ch-info"><div class="ch-name">NYC Flagship</div><div class="ch-rev">$84,200 today</div></div>
+          <div class="ch-bar"><div class="chbar"><div class="chbar-fill" style="width:66%;background:var(--blue)"></div></div><div class="ch-pct">22%</div></div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-icon" style="background:rgba(34,197,94,0.1)">📱</div>
+          <div class="ch-info"><div class="ch-name">Mobile App</div><div class="ch-rev">$58,600 today</div></div>
+          <div class="ch-bar"><div class="chbar"><div class="chbar-fill" style="width:46%;background:var(--green)"></div></div><div class="ch-pct">15%</div></div>
+        </div>
+        <div class="channel-item">
+          <div class="ch-icon" style="background:rgba(245,158,11,0.1)">🛒</div>
+          <div class="ch-info"><div class="ch-name">Other Stores</div><div class="ch-rev">$113,100 today</div></div>
+          <div class="ch-bar"><div class="chbar"><div class="chbar-fill" style="width:89%;background:var(--amber)"></div></div><div class="ch-pct">30%</div></div>
+        </div>
+      </div>
+
+      <div class="customer-card">
+        <div class="card-hdr"><h3>💎 Top Customers Today</h3></div>
+        <div class="cust-item">
+          <div class="cust-avatar" style="background:#e11d48">EH</div>
+          <div class="cust-info"><div class="cust-name">Emma Hartley</div><div class="cust-seg">VIP • In-Store Now</div></div>
+          <span class="cust-ltv">$18,400 LTV</span>
+        </div>
+        <div class="cust-item">
+          <div class="cust-avatar" style="background:#3b82f6">JM</div>
+          <div class="cust-info"><div class="cust-name">James Morrison</div><div class="cust-seg">Gold • Online</div></div>
+          <span class="cust-ltv">$12,840 LTV</span>
+        </div>
+        <div class="cust-item">
+          <div class="cust-avatar" style="background:#8b5cf6">SC</div>
+          <div class="cust-info"><div class="cust-name">Sophia Chen</div><div class="cust-seg">VIP • In-Store</div></div>
+          <span class="cust-ltv">$9,620 LTV</span>
+        </div>
+        <div class="cust-item">
+          <div class="cust-avatar" style="background:#10b981">RL</div>
+          <div class="cust-info"><div class="cust-name">Ryan Lee</div><div class="cust-seg">Gold • Mobile</div></div>
+          <span class="cust-ltv">$7,280 LTV</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-header">
+    <h2>AI Retail Tools That Drive Revenue</h2>
+    <p>Everything you need to compete and win in modern retail</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>1:1 Personalization</h3>
+      <p>AI-powered product recommendations, personalized emails, and dynamic homepage content that adapts to each customer's browsing and purchase history — increasing basket size by 38%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Dynamic Pricing AI</h3>
+      <p>Real-time competitive pricing analysis across 50+ retailers. AI recommends optimal price points that maximize margin while maintaining market share and conversion rate.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <h3>Demand Forecasting</h3>
+      <p>ML models predict demand at SKU level 90 days out, considering seasonality, trends, local events, and weather. Reduce overstock by 28% and stockouts by 44%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏪</div>
+      <h3>Store Intelligence</h3>
+      <p>Computer vision foot traffic analysis, heat mapping, and conversion funnel tracking for physical stores. Optimize floor layouts and staff deployment based on real data.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>Unified Commerce</h3>
+      <p>Single platform connecting all channels — in-store POS, e-commerce, mobile app, and marketplace. Unified inventory, customer profiles, and order management across every touchpoint.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Retail Analytics Suite</h3>
+      <p>Deep insights on customer lifetime value, cohort analysis, category performance, and competitive benchmarking. Executive dashboards for daily, weekly, and seasonal business reviews.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-header">
+    <h2>Retail Platform Pricing</h2>
+    <p>Scalable plans for every retail brand</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">BOUTIQUE</div>
+      <div class="price-amount">$149<span>/mo</span></div>
+      <div class="price-desc">For small retailers with 1–3 locations</div>
+      <ul class="price-features">
+        <li>Up to 3 locations</li>
+        <li>Sales analytics dashboard</li>
+        <li>Basic demand forecasting</li>
+        <li>Inventory management</li>
+        <li>Email personalization</li>
+        <li>Customer profiles</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">RETAIL BRAND</div>
+      <div class="price-amount">$599<span>/mo</span></div>
+      <div class="price-desc">For growing brands with multiple channels</div>
+      <ul class="price-features">
+        <li>Up to 20 locations</li>
+        <li>AI personalization engine</li>
+        <li>Dynamic pricing AI</li>
+        <li>Omnichannel order management</li>
+        <li>Store intelligence & heatmaps</li>
+        <li>Advanced customer analytics</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large retailers and retail chains</div>
+      <ul class="price-features">
+        <li>Unlimited locations</li>
+        <li>Custom AI model training</li>
+        <li>ERP & WMS integrations</li>
+        <li>White-label platform</li>
+        <li>Dedicated retail consultant</li>
+        <li>Custom reporting & APIs</li>
+        <li>SLA guarantees</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">🛍️</div><span>RetailAI</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Integrations</a><a href="#">API</a><a href="#">Support</a>
+  </div>
+  <div>© 2024 RetailAI Inc. • App #107</div>
+</footer>
+
+</body>
+</html>
