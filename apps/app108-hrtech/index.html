@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRTechAI - AI-Powered People Analytics Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --indigo:#4f46e5;--indigo2:#6366f1;--indigo3:#a5b4fc;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--pink:#ec4899
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--indigo),var(--indigo2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--indigo),var(--indigo2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#fff;font-weight:600}
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(79,70,229,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,70,229,0.1);border:1px solid rgba(79,70,229,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--indigo2);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--indigo),var(--indigo2),var(--indigo3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--indigo),var(--indigo2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#fff;font-weight:700}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--indigo),var(--indigo2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:260px 1fr 290px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* DEPT SIDEBAR */
+.dept-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:680px;overflow-y:auto}
+.dept-sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.dept-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.dept-item.active{background:rgba(79,70,229,0.1);border-color:rgba(79,70,229,0.3)}
+.dept-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.d-name{font-size:0.88rem;font-weight:600;margin-bottom:2px}
+.d-head{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.d-meta{display:flex;justify-content:space-between;align-items:center}
+.d-count{font-size:0.78rem;font-weight:700;color:var(--indigo2)}
+.d-score{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.ds-high{background:rgba(34,197,94,0.15);color:var(--green)}
+.ds-med{background:rgba(245,158,11,0.15);color:var(--amber)}
+.ds-low{background:rgba(239,68,68,0.15);color:var(--red)}
+
+/* MAIN */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.dept-header{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.dh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.dh-name{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.dh-sub{font-size:0.82rem;color:var(--muted)}
+.dh-actions{display:flex;gap:8px}
+.act-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.act-btn:hover{border-color:var(--indigo2);color:var(--indigo2)}
+.act-btn.primary{background:linear-gradient(135deg,var(--indigo),var(--indigo2));border:none;color:#fff;font-weight:600}
+.dept-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* EMPLOYEE TABLE */
+.emp-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-hdr h3{font-size:0.95rem;font-weight:600}
+.emp-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.emp-table th{text-align:left;color:var(--muted);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border)}
+.emp-table td{padding:10px 12px;border-bottom:1px solid rgba(42,42,62,0.5)}
+.emp-table tr:last-child td{border-bottom:none}
+.emp-table tr:hover td{background:rgba(255,255,255,0.02)}
+.emp-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#fff}
+.perf-badge{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.pb-star{background:rgba(245,158,11,0.15);color:var(--amber)}
+.pb-good{background:rgba(34,197,94,0.15);color:var(--green)}
+.pb-avg{background:rgba(59,130,246,0.15);color:var(--blue)}
+.pb-risk{background:rgba(239,68,68,0.15);color:var(--red)}
+.flight-risk{font-size:0.7rem;padding:2px 6px;border-radius:4px}
+.fr-high{background:rgba(239,68,68,0.15);color:var(--red)}
+.fr-med{background:rgba(245,158,11,0.15);color:var(--amber)}
+.fr-low{background:rgba(34,197,94,0.15);color:var(--green)}
+
+/* ENGAGEMENT CHART */
+.engage-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+
+/* SKILLS HEATMAP */
+.skills-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.skills-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+.skill-cell{padding:8px 4px;border-radius:6px;text-align:center;cursor:pointer;transition:all .2s}
+.skill-cell:hover{opacity:0.8}
+.skill-name{font-size:0.6rem;color:var(--text);margin-bottom:2px}
+.skill-score{font-size:0.72rem;font-weight:700}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-card{background:var(--surface2);border:1px solid rgba(79,70,229,0.3);border-radius:16px;padding:20px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--indigo2);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ai-hdr span{font-size:0.85rem;font-weight:600;color:var(--indigo2)}
+.ai-item{background:rgba(79,70,229,0.05);border:1px solid rgba(79,70,229,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-item-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-item-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.b-red{background:rgba(239,68,68,0.15);color:var(--red)}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green)}
+
+.hiring-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.hire-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.hire-item:last-child{border-bottom:none}
+.hire-role{flex:1}
+.hire-title{font-size:0.82rem;font-weight:600}
+.hire-dept{font-size:0.72rem;color:var(--muted)}
+.hire-meta{text-align:right}
+.hire-apps{font-size:0.72rem;color:var(--indigo2);font-weight:600}
+.hire-stage{font-size:0.68rem;color:var(--muted)}
+
+.pulse-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.pulse-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.pulse-item:last-child{border-bottom:none}
+.pulse-label{font-size:0.82rem;color:var(--muted)}
+.pulse-score{display:flex;align-items:center;gap:8px}
+.pulse-bar{width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.pulse-fill{height:100%;border-radius:3px}
+.pulse-val{font-size:0.78rem;font-weight:700;width:32px;text-align:right}
+
+/* FEATURES / PRICING */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(79,70,229,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(79,70,229,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(79,70,229,0.2),rgba(99,102,241,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+.price-card.popular{border-color:var(--indigo2);box-shadow:0 0 40px rgba(79,70,229,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--indigo),var(--indigo2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--indigo2);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--indigo2);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--indigo),var(--indigo2));border:none;color:#fff}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-icon">👥</div><span>HRTechAI</span></div>
+  <div class="nav-links">
+    <a href="#">People Analytics</a><a href="#">Recruitment</a><a href="#">Performance</a><a href="#">Engagement</a><a href="#">Workforce Planning</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">👥 AI-Powered People Intelligence Platform</div>
+  <h1>Build High-Performance Teams<br><span>with AI People Analytics</span></h1>
+  <p>Predict employee flight risk, identify top talent, optimize workforce planning, and build an exceptional culture — all powered by AI that understands your people data.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Start Free Trial</button>
+    <button class="btn-hero-outline">See Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">6,200+</div><div class="stat-label">Companies</div></div>
+    <div class="stat"><div class="stat-num">48%</div><div class="stat-label">Turnover Reduction</div></div>
+    <div class="stat"><div class="stat-num">3.2M+</div><div class="stat-label">Employees Managed</div></div>
+    <div class="stat"><div class="stat-num">62%</div><div class="stat-label">Faster Hiring</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live People Analytics Dashboard</h2>
+    <p>AI-powered insights across your entire workforce</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- DEPT SIDEBAR -->
+    <div class="dept-sidebar">
+      <h3>Departments (8)</h3>
+      <div class="dept-item active">
+        <div class="d-name">Engineering</div>
+        <div class="d-head">VP: Sarah Kim</div>
+        <div class="d-meta"><span class="d-count">148 employees</span><span class="d-score ds-high">Eng. 8.4</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">Sales</div>
+        <div class="d-head">VP: Mike Torres</div>
+        <div class="d-meta"><span class="d-count">84 employees</span><span class="d-score ds-med">Eng. 7.1</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">Marketing</div>
+        <div class="d-head">VP: Lisa Chen</div>
+        <div class="d-meta"><span class="d-count">42 employees</span><span class="d-score ds-high">Eng. 8.8</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">Customer Success</div>
+        <div class="d-head">VP: James Park</div>
+        <div class="d-meta"><span class="d-count">62 employees</span><span class="d-score ds-low">Eng. 6.2</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">Product</div>
+        <div class="d-head">VP: Nina Okafor</div>
+        <div class="d-meta"><span class="d-count">28 employees</span><span class="d-score ds-high">Eng. 9.1</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">Finance</div>
+        <div class="d-head">CFO: R. Patel</div>
+        <div class="d-meta"><span class="d-count">24 employees</span><span class="d-score ds-med">Eng. 7.8</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">Operations</div>
+        <div class="d-head">COO: D. Williams</div>
+        <div class="d-meta"><span class="d-count">56 employees</span><span class="d-score ds-med">Eng. 7.4</span></div>
+      </div>
+      <div class="dept-item">
+        <div class="d-name">HR & People</div>
+        <div class="d-head">CHRO: A. Martinez</div>
+        <div class="d-meta"><span class="d-count">18 employees</span><span class="d-score ds-high">Eng. 8.9</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <div class="dept-header">
+        <div class="dh-top">
+          <div>
+            <div class="dh-name">Engineering Department — 148 Employees</div>
+            <div class="dh-sub">VP: Sarah Kim • Avg Tenure: 2.8 years • Avg Comp: $142K • Open Roles: 12</div>
+          </div>
+          <div class="dh-actions">
+            <button class="act-btn">📊 Report</button>
+            <button class="act-btn">📋 Reviews</button>
+            <button class="act-btn primary">⚡ AI Insights</button>
+          </div>
+        </div>
+        <div class="dept-kpis">
+          <div class="kpi">
+            <div class="kpi-label">Engagement Score</div>
+            <div class="kpi-val" style="color:var(--indigo2)">8.4/10</div>
+            <div class="kpi-sub">+0.3 vs last qtr</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Retention Rate</div>
+            <div class="kpi-val" style="color:var(--green)">91.2%</div>
+            <div class="kpi-sub">12-month rolling</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Flight Risk</div>
+            <div class="kpi-val" style="color:var(--amber)">14</div>
+            <div class="kpi-sub">Employees flagged</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Perf. Rating Avg</div>
+            <div class="kpi-val" style="color:var(--blue)">3.8/5.0</div>
+            <div class="kpi-sub">Last review cycle</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Table -->
+      <div class="emp-card">
+        <div class="card-hdr"><h3>👤 High-Impact Employees — Engineering</h3><button class="act-btn primary">View All 148</button></div>
+        <table class="emp-table">
+          <thead><tr><th>Employee</th><th>Role</th><th>Tenure</th><th>Performance</th><th>Flight Risk</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="emp-avatar" style="background:#4f46e5">AK</div>
+                  <span>Aisha Khan</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">Sr. Staff Engineer</td>
+              <td style="color:var(--muted)">4.2 yrs</td>
+              <td><span class="perf-badge pb-star">⭐ Top Performer</span></td>
+              <td><span class="flight-risk fr-high">HIGH 78%</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Retain</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="emp-avatar" style="background:#0ea5e9">JL</div>
+                  <span>Jason Liu</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">Principal Engineer</td>
+              <td style="color:var(--muted)">6.1 yrs</td>
+              <td><span class="perf-badge pb-star">⭐ Top Performer</span></td>
+              <td><span class="flight-risk fr-low">LOW 12%</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Promote</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="emp-avatar" style="background:#ec4899">MR</div>
+                  <span>Maria Rodriguez</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">Engineering Manager</td>
+              <td style="color:var(--muted)">2.8 yrs</td>
+              <td><span class="perf-badge pb-good">Exceeds</span></td>
+              <td><span class="flight-risk fr-med">MED 41%</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Review</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="emp-avatar" style="background:#10b981">DW</div>
+                  <span>David Wang</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">Backend Engineer</td>
+              <td style="color:var(--muted)">1.4 yrs</td>
+              <td><span class="perf-badge pb-avg">Meets</span></td>
+              <td><span class="flight-risk fr-med">MED 38%</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Develop</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="emp-avatar" style="background:#f59e0b">SP</div>
+                  <span>Sara Patel</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">Frontend Engineer</td>
+              <td style="color:var(--muted)">0.8 yrs</td>
+              <td><span class="perf-badge pb-good">Exceeds</span></td>
+              <td><span class="flight-risk fr-low">LOW 8%</span></td>
+              <td><button class="act-btn" style="padding:3px 8px;font-size:0.72rem">Mentor</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Engagement Chart -->
+      <div class="engage-card">
+        <div class="card-hdr"><h3>📈 Engagement Score Trend — Engineering</h3><span style="font-size:0.8rem;color:var(--green)">+0.3 this quarter</span></div>
+        <div style="display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:16px">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;height:100px;margin-right:8px">
+            <span style="font-size:0.6rem;color:var(--muted)">10</span>
+            <span style="font-size:0.6rem;color:var(--muted)">8</span>
+            <span style="font-size:0.6rem;color:var(--muted)">6</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:flex-end;flex:1">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:72px;background:linear-gradient(to top,rgba(79,70,229,0.4),rgba(99,102,241,0.7));border-radius:4px 4px 0 0"></div><span style="font-size:0.62rem;color:var(--muted)">Q1'23</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:68px;background:linear-gradient(to top,rgba(79,70,229,0.4),rgba(99,102,241,0.7));border-radius:4px 4px 0 0"></div><span style="font-size:0.62rem;color:var(--muted)">Q2'23</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:74px;background:linear-gradient(to top,rgba(79,70,229,0.4),rgba(99,102,241,0.7));border-radius:4px 4px 0 0"></div><span style="font-size:0.62rem;color:var(--muted)">Q3'23</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:78px;background:linear-gradient(to top,rgba(79,70,229,0.5),rgba(99,102,241,0.8));border-radius:4px 4px 0 0"></div><span style="font-size:0.62rem;color:var(--muted)">Q4'23</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:76px;background:linear-gradient(to top,rgba(79,70,229,0.5),rgba(99,102,241,0.8));border-radius:4px 4px 0 0"></div><span style="font-size:0.62rem;color:var(--muted)">Q1'24</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:80px;background:linear-gradient(to top,rgba(79,70,229,0.5),rgba(99,102,241,0.8));border-radius:4px 4px 0 0"></div><span style="font-size:0.62rem;color:var(--muted)">Q2'24</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:84px;background:linear-gradient(to top,rgba(79,70,229,0.6),rgba(99,102,241,0.9));border-radius:4px 4px 0 0;border:1px solid var(--indigo2)"></div><span style="font-size:0.62rem;color:var(--indigo2);font-weight:600">Q3'24</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills Gap -->
+      <div class="skills-card">
+        <div class="card-hdr"><h3>🎯 Skills Coverage — Engineering</h3></div>
+        <div class="skills-grid">
+          <div class="skill-cell" style="background:rgba(34,197,94,0.15)"><div class="skill-name">Python</div><div class="skill-score" style="color:var(--green)">94%</div></div>
+          <div class="skill-cell" style="background:rgba(34,197,94,0.15)"><div class="skill-name">React</div><div class="skill-score" style="color:var(--green)">88%</div></div>
+          <div class="skill-cell" style="background:rgba(34,197,94,0.15)"><div class="skill-name">AWS</div><div class="skill-score" style="color:var(--green)">82%</div></div>
+          <div class="skill-cell" style="background:rgba(245,158,11,0.15)"><div class="skill-name">Kubernetes</div><div class="skill-score" style="color:var(--amber)">61%</div></div>
+          <div class="skill-cell" style="background:rgba(239,68,68,0.15)"><div class="skill-name">ML/AI</div><div class="skill-score" style="color:var(--red)">38%</div></div>
+          <div class="skill-cell" style="background:rgba(34,197,94,0.15)"><div class="skill-name">TypeScript</div><div class="skill-score" style="color:var(--green)">79%</div></div>
+          <div class="skill-cell" style="background:rgba(245,158,11,0.15)"><div class="skill-name">GraphQL</div><div class="skill-score" style="color:var(--amber)">54%</div></div>
+          <div class="skill-cell" style="background:rgba(239,68,68,0.15)"><div class="skill-name">Rust</div><div class="skill-score" style="color:var(--red)">22%</div></div>
+          <div class="skill-cell" style="background:rgba(34,197,94,0.15)"><div class="skill-name">PostgreSQL</div><div class="skill-score" style="color:var(--green)">86%</div></div>
+          <div class="skill-cell" style="background:rgba(245,158,11,0.15)"><div class="skill-name">Terraform</div><div class="skill-score" style="color:var(--amber)">58%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="ai-card">
+        <div class="ai-hdr"><div class="ai-dot"></div><span>AI People Advisor</span></div>
+        <div class="ai-item">
+          <div class="ai-item-title">🚨 Flight Risk: Aisha Khan</div>
+          <div class="ai-item-text">Top performer (Staff Engineer) shows 78% flight risk. Signals: 3 LinkedIn profile updates, 2 recruiter contacts, below-market comp ($142K vs $168K market). Recommend immediate retention conversation + comp adjustment.</div>
+          <span class="badge b-red">URGENT</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">📚 Skills Gap: ML/AI Coverage</div>
+          <div class="ai-item-text">Only 38% of engineers have ML/AI skills. With your product roadmap, this creates a critical bottleneck by Q1 2025. AI recommends upskilling program (12 engineers) + 2 targeted hires to close gap.</div>
+          <span class="badge b-amber">PLAN NOW</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">⭐ Promotion Ready: Jason Liu</div>
+          <div class="ai-item-text">Jason Liu has exceeded expectations for 6 consecutive quarters, mentored 4 engineers, and led 2 major product launches. AI recommends Director of Engineering promotion — 94% retention probability post-promotion.</div>
+          <span class="badge b-green">PROMOTE</span>
+        </div>
+      </div>
+
+      <div class="hiring-card">
+        <div class="card-hdr"><h3>💼 Open Roles — Engineering</h3></div>
+        <div class="hire-item">
+          <div class="hire-role"><div class="hire-title">Sr. ML Engineer</div><div class="hire-dept">AI/ML Team</div></div>
+          <div class="hire-meta"><div class="hire-apps" style="color:var(--green)">48 apps</div><div class="hire-stage">Final Round</div></div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-role"><div class="hire-title">Backend Engineer (Rust)</div><div class="hire-dept">Platform Team</div></div>
+          <div class="hire-meta"><div class="hire-apps" style="color:var(--indigo2)">22 apps</div><div class="hire-stage">Screening</div></div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-role"><div class="hire-title">Staff Engineer</div><div class="hire-dept">Core Infra</div></div>
+          <div class="hire-meta"><div class="hire-apps" style="color:var(--amber)">12 apps</div><div class="hire-stage">Sourcing</div></div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-role"><div class="hire-title">DevOps Engineer</div><div class="hire-dept">Platform Team</div></div>
+          <div class="hire-meta"><div class="hire-apps" style="color:var(--indigo2)">31 apps</div><div class="hire-stage">Technical</div></div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-role"><div class="hire-title">Engineering Manager</div><div class="hire-dept">Growth Eng.</div></div>
+          <div class="hire-meta"><div class="hire-apps" style="color:var(--green)">67 apps</div><div class="hire-stage">Offer Stage</div></div>
+        </div>
+      </div>
+
+      <div class="pulse-card">
+        <div class="card-hdr"><h3>💓 Pulse Survey — Engineering</h3></div>
+        <div class="pulse-item">
+          <span class="pulse-label">Work-Life Balance</span>
+          <div class="pulse-score">
+            <div class="pulse-bar"><div class="pulse-fill" style="width:84%;background:var(--green)"></div></div>
+            <span class="pulse-val" style="color:var(--green)">8.4</span>
+          </div>
+        </div>
+        <div class="pulse-item">
+          <span class="pulse-label">Manager Effectiveness</span>
+          <div class="pulse-score">
+            <div class="pulse-bar"><div class="pulse-fill" style="width:82%;background:var(--green)"></div></div>
+            <span class="pulse-val" style="color:var(--green)">8.2</span>
+          </div>
+        </div>
+        <div class="pulse-item">
+          <span class="pulse-label">Career Growth</span>
+          <div class="pulse-score">
+            <div class="pulse-bar"><div class="pulse-fill" style="width:71%;background:var(--amber)"></div></div>
+            <span class="pulse-val" style="color:var(--amber)">7.1</span>
+          </div>
+        </div>
+        <div class="pulse-item">
+          <span class="pulse-label">Compensation Fairness</span>
+          <div class="pulse-score">
+            <div class="pulse-bar"><div class="pulse-fill" style="width:64%;background:var(--amber)"></div></div>
+            <span class="pulse-val" style="color:var(--amber)">6.4</span>
+          </div>
+        </div>
+        <div class="pulse-item">
+          <span class="pulse-label">Team Collaboration</span>
+          <div class="pulse-score">
+            <div class="pulse-bar"><div class="pulse-fill" style="width:91%;background:var(--green)"></div></div>
+            <span class="pulse-val" style="color:var(--green)">9.1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-header">
+    <h2>AI-Powered People Management</h2>
+    <p>Tools that help you attract, develop, and retain top talent</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>Flight Risk Prediction</h3>
+      <p>AI analyzes 80+ behavioral signals — engagement scores, LinkedIn activity, performance trends, and compensation gaps — to identify employees likely to leave 90 days before they resign.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>AI Talent Acquisition</h3>
+      <p>Automated resume screening, AI interview scheduling, and culture-fit scoring reduce time-to-hire by 62%. Bias-free candidate ranking ensures diverse, high-quality candidate slates.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Performance Intelligence</h3>
+      <p>Continuous feedback loops, 360° reviews, and OKR tracking all in one place. AI identifies top performers and high-potential employees for succession planning and promotion readiness.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💓</div>
+      <h3>Pulse Surveys & Sentiment</h3>
+      <p>Weekly micro-surveys with AI-powered sentiment analysis identify engagement issues before they become turnover. Anonymous feedback drives actionable manager and executive insights.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺️</div>
+      <h3>Workforce Planning</h3>
+      <p>AI-driven headcount modeling, skills gap analysis, and succession planning tools help HR teams build future-proof organizational structures aligned with business strategy.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Compensation Analytics</h3>
+      <p>Real-time market compensation benchmarking against 5M+ data points. AI flags pay equity issues, identifies retention risks from underpayment, and models the cost of turnover.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-header">
+    <h2>HR Platform Pricing</h2>
+    <p>Flexible plans for startups to global enterprises</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">STARTUP</div>
+      <div class="price-amount">$8<span>/employee/mo</span></div>
+      <div class="price-desc">For teams of 10–100 employees</div>
+      <ul class="price-features">
+        <li>Core people analytics</li>
+        <li>Pulse surveys</li>
+        <li>Performance reviews</li>
+        <li>Basic ATS integration</li>
+        <li>Onboarding workflows</li>
+        <li>Slack integration</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">GROWTH</div>
+      <div class="price-amount">$18<span>/employee/mo</span></div>
+      <div class="price-desc">For companies of 100–1,000 employees</div>
+      <ul class="price-features">
+        <li>Full AI people analytics</li>
+        <li>Flight risk prediction</li>
+        <li>Compensation benchmarking</li>
+        <li>Skills gap analysis</li>
+        <li>Succession planning tools</li>
+        <li>HRIS integrations (Workday, etc.)</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For organizations with 1,000+ employees</div>
+      <ul class="price-features">
+        <li>Custom AI model training</li>
+        <li>Workforce planning suite</li>
+        <li>Executive dashboards</li>
+        <li>Multi-country compliance</li>
+        <li>Dedicated people scientist</li>
+        <li>SSO & security controls</li>
+        <li>Custom SLA guarantees</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">👥</div><span>HRTechAI</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">GDPR</a><a href="#">Security</a><a href="#">Integrations</a><a href="#">Support</a>
+  </div>
+  <div>© 2024 HRTechAI Inc. • App #108</div>
+</footer>
+
+</body>
+</html>
