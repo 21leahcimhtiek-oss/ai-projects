@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropTech AI - AI-Powered Property Management Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #8b5cf6;
+    --secondary: #a78bfa;
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --card2: #1a1a2e;
+    --border: rgba(139,92,246,0.2);
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color 0.3s; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-cta { display: flex; gap: 1rem; align-items: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: #fff; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
+  .btn-large { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 12px; }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.15) 0%, transparent 70%); }
+  .hero-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(139,92,246,0.1); border: 1px solid var(--border); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 620px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--secondary); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+
+  .section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.7; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(139,92,246,0.1); }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .demo-section { padding: 6rem 2rem; background: linear-gradient(180deg, transparent, rgba(139,92,246,0.03), transparent); }
+  .demo-container { max-width: 1200px; margin: 0 auto; }
+  .demo-app { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .demo-header { background: var(--card2); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
+  .demo-dots { display: flex; gap: 0.4rem; }
+  .demo-dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .demo-dots span:nth-child(1) { background: #ef4444; }
+  .demo-dots span:nth-child(2) { background: #f59e0b; }
+  .demo-dots span:nth-child(3) { background: #22c55e; }
+  .demo-title { font-size: 0.85rem; color: var(--muted); }
+  .demo-body { display: grid; grid-template-columns: 260px 1fr 260px; min-height: 520px; }
+
+  .prop-sidebar { background: var(--card2); border-right: 1px solid var(--border); padding: 1.2rem; }
+  .sidebar-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.8rem; }
+  .prop-item { padding: 0.8rem; border-radius: 8px; cursor: pointer; margin-bottom: 0.4rem; border: 1px solid transparent; transition: all 0.2s; }
+  .prop-item.active { background: rgba(139,92,246,0.1); border-color: var(--border); }
+  .prop-item:hover { background: rgba(139,92,246,0.05); }
+  .prop-name { font-size: 0.82rem; font-weight: 600; }
+  .prop-addr { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; }
+  .prop-stats { display: flex; gap: 0.8rem; margin-top: 0.4rem; }
+  .prop-stat { font-size: 0.68rem; color: var(--muted); }
+  .prop-stat span { color: var(--secondary); font-weight: 600; }
+  .occ-badge { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.62rem; font-weight: 600; }
+  .occ-full { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .occ-partial { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .occ-vacant { background: rgba(239,68,68,0.15); color: #f87171; }
+  .sidebar-kpis { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .sidebar-kpi { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 6px; }
+  .sidebar-kpi-val { color: var(--secondary); font-weight: 700; }
+
+  .demo-main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .prop-overview { display: flex; align-items: flex-start; justify-content: space-between; }
+  .prop-title-block h3 { font-size: 1.1rem; font-weight: 700; }
+  .prop-title-block p { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+  .prop-actions { display: flex; gap: 0.5rem; }
+  .prop-btn { padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.75rem; cursor: pointer; }
+  .prop-btn.primary { background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: #fff; border: none; }
+
+  .unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.7rem; }
+  .unit-card { background: var(--card2); border-radius: 10px; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: all 0.2s; }
+  .unit-card:hover { border-color: var(--primary); }
+  .unit-card.occupied { border-left: 3px solid #22c55e; }
+  .unit-card.vacant { border-left: 3px solid #ef4444; }
+  .unit-card.maintenance { border-left: 3px solid #f59e0b; }
+  .unit-num { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .unit-tenant { font-size: 0.72rem; color: var(--muted); }
+  .unit-rent { font-size: 0.78rem; color: var(--secondary); font-weight: 600; margin-top: 0.3rem; }
+  .unit-status { font-size: 0.62rem; padding: 0.1rem 0.4rem; border-radius: 4px; margin-top: 0.3rem; display: inline-block; }
+  .us-occupied { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .us-vacant { background: rgba(239,68,68,0.15); color: #f87171; }
+  .us-maintenance { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+  .maintenance-panel { background: var(--card2); border-radius: 12px; padding: 1rem; }
+  .maintenance-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .ticket-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .ticket { display: flex; gap: 0.8rem; align-items: center; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px; }
+  .ticket-icon { font-size: 1rem; }
+  .ticket-info { flex: 1; }
+  .ticket-title { font-size: 0.78rem; font-weight: 600; }
+  .ticket-meta { font-size: 0.68rem; color: var(--muted); }
+  .ticket-priority { font-size: 0.62rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 600; }
+  .tp-high { background: rgba(239,68,68,0.15); color: #f87171; }
+  .tp-med { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .tp-low { background: rgba(34,197,94,0.15); color: #4ade80; }
+
+  .demo-right { border-left: 1px solid var(--border); padding: 1.2rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .ai-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .ai-insight { background: rgba(139,92,246,0.08); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem; font-size: 0.78rem; line-height: 1.6; margin-bottom: 0.6rem; }
+  .revenue-chart { }
+  .revenue-chart h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .rev-bars { display: flex; gap: 0.4rem; align-items: flex-end; height: 80px; }
+  .rev-bar { flex: 1; border-radius: 3px 3px 0 0; }
+  .rev-bar.current { background: linear-gradient(0deg, #8b5cf6, #a78bfa); }
+  .rev-bar.past { background: rgba(139,92,246,0.3); }
+  .rev-labels { display: flex; gap: 0.4rem; margin-top: 0.3rem; }
+  .rev-label { flex: 1; font-size: 0.6rem; text-align: center; color: var(--muted); }
+  .payment-list { }
+  .payment-list h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .payment-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.76rem; }
+  .pay-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
+  .pay-info { flex: 1; }
+  .pay-name { font-weight: 600; }
+  .pay-unit { font-size: 0.68rem; color: var(--muted); }
+  .pay-amount { font-weight: 700; }
+  .pay-status { font-size: 0.62rem; padding: 0.1rem 0.4rem; border-radius: 4px; }
+  .ps-paid { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .ps-late { background: rgba(239,68,68,0.15); color: #f87171; }
+  .ps-pending { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+  .pricing-section { padding: 6rem 2rem; }
+  .pricing-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; }
+  .price-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(139,92,246,0.05), rgba(167,139,250,0.05)); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .price-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--muted); }
+  .price-amount { font-size: 3rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .price-amount span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .price-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .price-btn { width: 100%; padding: 0.8rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .price-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .price-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .price-btn-fill { background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: #fff; }
+  .price-btn-fill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
+
+  footer { background: var(--card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer .footer-logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; position: relative; }
+  .modal h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .social-btn { width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; }
+  .social-btn:hover { border-color: var(--primary); background: rgba(139,92,246,0.05); }
+  .divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; position: relative; }
+  .divider::before,.divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .divider::before { left:0; } .divider::after { right:0; }
+  .form-input { width: 100%; padding: 0.75rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem; outline: none; }
+  .form-input:focus { border-color: var(--primary); }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🏢 PropTech AI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-ghost" onclick="document.getElementById('modal').classList.add('active')">Log In</button>
+    <button class="btn btn-primary" onclick="document.getElementById('modal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🏢 AI-First Property Management</div>
+    <h1>Manage Every Property<br>with <span>AI Intelligence</span></h1>
+    <p>Automate rent collection, predict maintenance issues, screen tenants with AI, and optimize your portfolio ROI — all from one intelligent platform.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-large" onclick="document.getElementById('modal').classList.add('active')">Start Free Trial →</button>
+      <button class="btn btn-ghost btn-large">Watch Demo</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">28K+</div><div class="stat-label">Properties Managed</div></div>
+      <div class="stat"><div class="stat-num">98.2%</div><div class="stat-label">Rent Collection Rate</div></div>
+      <div class="stat"><div class="stat-num">3x</div><div class="stat-label">Faster Maintenance</div></div>
+      <div class="stat"><div class="stat-num">$1.2B+</div><div class="stat-label">Rent Collected</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">Platform</div>
+  <h2 class="section-title">Everything You Need to <span style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Scale Your Portfolio</span></h2>
+  <p class="section-sub">From single-family homes to large multifamily portfolios — AI that works as hard as you do.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">💳</div>
+      <h3>Automated Rent Collection</h3>
+      <p>AI-powered payment reminders, autopay setup, late fee automation, and eviction workflow management — 98.2% collection rate guaranteed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <h3>Predictive Maintenance</h3>
+      <p>AI predicts maintenance failures before they happen. Automated work order routing, contractor management, and cost tracking all in one place.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>AI Tenant Screening</h3>
+      <p>Comprehensive background checks, credit scoring, income verification, and AI risk scoring — find the best tenants 3x faster than manual review.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Portfolio Analytics</h3>
+      <p>Real-time NOI tracking, vacancy rate optimization, market rent benchmarking, and AI-powered investment recommendations across your portfolio.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Tenant Portal & App</h3>
+      <p>White-labeled tenant app for rent payments, maintenance requests, document signing, and community announcements — zero friction living experience.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>AI Lease Management</h3>
+      <p>Automated lease generation, e-signature workflows, renewal reminders, and clause compliance monitoring across all your leases.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-container">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div class="section-label">Live Preview</div>
+      <h2 class="section-title">Property Management Dashboard</h2>
+    </div>
+    <div class="demo-app">
+      <div class="demo-header">
+        <div class="demo-dots"><span></span><span></span><span></span></div>
+        <div class="demo-title">PropTech AI — Sunrise Properties LLC · Portfolio Overview</div>
+      </div>
+      <div class="demo-body">
+        <div class="prop-sidebar">
+          <div class="sidebar-label">Properties</div>
+          <div class="prop-item active">
+            <div class="prop-name">Maple Heights Apts</div>
+            <div class="prop-addr">42 Maple St, Austin TX</div>
+            <div class="prop-stats"><span class="prop-stat">Units: <span>24</span></span><span class="prop-stat">Occ: <span>96%</span></span></div>
+            <span class="occ-badge occ-full">Full</span>
+          </div>
+          <div class="prop-item">
+            <div class="prop-name">Riverside Condos</div>
+            <div class="prop-addr">88 River Rd, Denver CO</div>
+            <div class="prop-stats"><span class="prop-stat">Units: <span>16</span></span><span class="prop-stat">Occ: <span>81%</span></span></div>
+            <span class="occ-badge occ-partial">Partial</span>
+          </div>
+          <div class="prop-item">
+            <div class="prop-name">Oakwood Townhomes</div>
+            <div class="prop-addr">15 Oak Ave, Dallas TX</div>
+            <div class="prop-stats"><span class="prop-stat">Units: <span>8</span></span><span class="prop-stat">Occ: <span>100%</span></span></div>
+            <span class="occ-badge occ-full">Full</span>
+          </div>
+          <div class="prop-item">
+            <div class="prop-name">Sunset Studios</div>
+            <div class="prop-addr">200 Sunset Blvd, LA CA</div>
+            <div class="prop-stats"><span class="prop-stat">Units: <span>32</span></span><span class="prop-stat">Occ: <span>72%</span></span></div>
+            <span class="occ-badge occ-partial">Partial</span>
+          </div>
+          <div class="sidebar-kpis">
+            <div class="sidebar-label" style="margin-top:0.5rem;">Portfolio KPIs</div>
+            <div class="sidebar-kpi"><span>Total Units</span><span class="sidebar-kpi-val">80</span></div>
+            <div class="sidebar-kpi"><span>Occupancy</span><span class="sidebar-kpi-val">88.7%</span></div>
+            <div class="sidebar-kpi"><span>Monthly Revenue</span><span class="sidebar-kpi-val">$142K</span></div>
+            <div class="sidebar-kpi"><span>NOI Margin</span><span class="sidebar-kpi-val">64.2%</span></div>
+          </div>
+        </div>
+        <div class="demo-main">
+          <div class="prop-overview">
+            <div class="prop-title-block">
+              <h3>🏢 Maple Heights Apartments — 24 Units</h3>
+              <p>42 Maple Street, Austin, TX 78701 · Built 2018 · Class A</p>
+            </div>
+            <div class="prop-actions">
+              <button class="prop-btn">+ Maintenance</button>
+              <button class="prop-btn">📄 Leases</button>
+              <button class="prop-btn primary">+ New Tenant</button>
+            </div>
+          </div>
+          <div class="unit-grid">
+            <div class="unit-card occupied"><div class="unit-num">101</div><div class="unit-tenant">Sarah K.</div><div class="unit-rent">$1,850/mo</div><span class="unit-status us-occupied">Occupied</span></div>
+            <div class="unit-card occupied"><div class="unit-num">102</div><div class="unit-tenant">Mike R.</div><div class="unit-rent">$1,900/mo</div><span class="unit-status us-occupied">Occupied</span></div>
+            <div class="unit-card vacant"><div class="unit-num">103</div><div class="unit-tenant">Vacant</div><div class="unit-rent">$1,875/mo</div><span class="unit-status us-vacant">Available</span></div>
+            <div class="unit-card occupied"><div class="unit-num">201</div><div class="unit-tenant">Chen F.</div><div class="unit-rent">$2,100/mo</div><span class="unit-status us-occupied">Occupied</span></div>
+            <div class="unit-card maintenance"><div class="unit-num">202</div><div class="unit-tenant">Jones T.</div><div class="unit-rent">$2,050/mo</div><span class="unit-status us-maintenance">Maint.</span></div>
+            <div class="unit-card occupied"><div class="unit-num">203</div><div class="unit-tenant">Patel A.</div><div class="unit-rent">$2,100/mo</div><span class="unit-status us-occupied">Occupied</span></div>
+            <div class="unit-card occupied"><div class="unit-num">301</div><div class="unit-tenant">Williams J.</div><div class="unit-rent">$2,300/mo</div><span class="unit-status us-occupied">Occupied</span></div>
+            <div class="unit-card occupied"><div class="unit-num">302</div><div class="unit-tenant">Brown L.</div><div class="unit-rent">$2,250/mo</div><span class="unit-status us-occupied">Occupied</span></div>
+          </div>
+          <div class="maintenance-panel">
+            <h4>🔧 Open Maintenance Tickets</h4>
+            <div class="ticket-list">
+              <div class="ticket"><div class="ticket-icon">🚿</div><div class="ticket-info"><div class="ticket-title">Unit 202 — Shower leak</div><div class="ticket-meta">Reported 2h ago · Plumber assigned</div></div><span class="ticket-priority tp-high">High</span></div>
+              <div class="ticket"><div class="ticket-icon">❄️</div><div class="ticket-info"><div class="ticket-title">Unit 301 — AC not cooling</div><div class="ticket-meta">Reported yesterday · HVAC scheduled</div></div><span class="ticket-priority tp-med">Medium</span></div>
+              <div class="ticket"><div class="ticket-icon">💡</div><div class="ticket-info"><div class="ticket-title">Common Area — Hallway light</div><div class="ticket-meta">Reported 3d ago · Parts ordered</div></div><span class="ticket-priority tp-low">Low</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-right">
+          <div class="ai-panel">
+            <h4><div class="ai-dot"></div> AI Property Insights</h4>
+            <div class="ai-insight">"Unit 103 has been vacant 14 days. Reduce asking rent by 3% to $1,820/mo — AI predicts this will fill the unit within 7 days."</div>
+            <div class="ai-insight" style="background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.2);">"Maple Heights NOI up 8.2% YoY. Recommend renewing all leases expiring in Q2 at +4% rate increase."</div>
+          </div>
+          <div class="revenue-chart">
+            <h4>💰 Monthly Revenue</h4>
+            <div class="rev-bars">
+              <div class="rev-bar past" style="height:70%;"></div>
+              <div class="rev-bar past" style="height:75%;"></div>
+              <div class="rev-bar past" style="height:72%;"></div>
+              <div class="rev-bar past" style="height:80%;"></div>
+              <div class="rev-bar past" style="height:85%;"></div>
+              <div class="rev-bar current" style="height:90%;"></div>
+            </div>
+            <div class="rev-labels">
+              <span class="rev-label">Oct</span><span class="rev-label">Nov</span><span class="rev-label">Dec</span><span class="rev-label">Jan</span><span class="rev-label">Feb</span><span class="rev-label">Mar</span>
+            </div>
+          </div>
+          <div class="payment-list">
+            <h4>💳 Recent Payments</h4>
+            <div class="payment-item">
+              <div class="pay-avatar" style="background:rgba(139,92,246,0.2);color:#a78bfa;">SK</div>
+              <div class="pay-info"><div class="pay-name">Sarah K.</div><div class="pay-unit">Unit 101</div></div>
+              <div style="text-align:right;"><div class="pay-amount">$1,850</div><span class="pay-status ps-paid">Paid</span></div>
+            </div>
+            <div class="payment-item">
+              <div class="pay-avatar" style="background:rgba(34,197,94,0.2);color:#4ade80;">CF</div>
+              <div class="pay-info"><div class="pay-name">Chen F.</div><div class="pay-unit">Unit 201</div></div>
+              <div style="text-align:right;"><div class="pay-amount">$2,100</div><span class="pay-status ps-paid">Paid</span></div>
+            </div>
+            <div class="payment-item">
+              <div class="pay-avatar" style="background:rgba(245,158,11,0.2);color:#fbbf24;">JT</div>
+              <div class="pay-info"><div class="pay-name">Jones T.</div><div class="pay-unit">Unit 202</div></div>
+              <div style="text-align:right;"><div class="pay-amount">$2,050</div><span class="pay-status ps-pending">Pending</span></div>
+            </div>
+            <div class="payment-item">
+              <div class="pay-avatar" style="background:rgba(239,68,68,0.2);color:#f87171;">MR</div>
+              <div class="pay-info"><div class="pay-name">Mike R.</div><div class="pay-unit">Unit 102</div></div>
+              <div style="text-align:right;"><div class="pay-amount">$1,900</div><span class="pay-status ps-late">Late</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div style="text-align:center;max-width:600px;margin:0 auto 3rem;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Pricing That <span style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Scales With You</span></h2>
+    <p style="color:var(--muted);">From 1 unit to 10,000+ — transparent pricing with no hidden fees.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Landlord</div>
+      <div class="price-amount">$19<span>/mo</span></div>
+      <div class="price-desc">For small landlords (1–10 units)</div>
+      <ul class="price-features">
+        <li>Up to 10 units</li>
+        <li>Online rent collection</li>
+        <li>Maintenance tracking</li>
+        <li>Basic tenant screening</li>
+        <li>Lease document storage</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Start Free</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">🏆 Most Popular</div>
+      <div class="price-name">Portfolio</div>
+      <div class="price-amount">$79<span>/mo</span></div>
+      <div class="price-desc">For growing portfolios (11–100 units)</div>
+      <ul class="price-features">
+        <li>Up to 100 units</li>
+        <li>AI tenant screening</li>
+        <li>Predictive maintenance</li>
+        <li>Portfolio analytics</li>
+        <li>Tenant portal & app</li>
+        <li>AI lease management</li>
+      </ul>
+      <button class="price-btn price-btn-fill" onclick="document.getElementById('modal').classList.add('active')">Start Portfolio Plan</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large portfolios (100+ units)</div>
+      <ul class="price-features">
+        <li>Unlimited units</li>
+        <li>White-label tenant app</li>
+        <li>Custom integrations</li>
+        <li>Dedicated account manager</li>
+        <li>Advanced AI analytics</li>
+        <li>API access</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🏢 PropTech AI</div>
+  <p>© 2025 PropTech AI · Intelligent property management for the modern real estate investor.</p>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕</button>
+    <h2>Start Your Free Trial</h2>
+    <p>14-day free trial · No credit card required</p>
+    <button class="social-btn">🔵 Continue with Google</button>
+    <button class="social-btn">🍎 Continue with Apple</button>
+    <div class="divider">or use email</div>
+    <input type="email" class="form-input" placeholder="Email address">
+    <input type="password" class="form-input" placeholder="Password">
+    <button class="btn btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;">Create Account</button>
+  </div>
+</div>
+
+</body>
+</html>
