@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FleetAI - AI-Powered Fleet Management Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #f59e0b;
+    --secondary: #fbbf24;
+    --accent: #fde68a;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a2e;
+    --border: #ffffff15;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; color: var(--muted); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 0.75rem; }
+  .btn-ghost { padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: transparent; color: var(--text); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), #d97706); color: white; font-weight: 600; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,158,11,0.4); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 100px; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .btn-lg { padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-lg-primary { background: linear-gradient(135deg, var(--primary), #d97706); color: white; }
+  .btn-lg-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,158,11,0.45); }
+  .btn-lg-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-lg-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat strong { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat span { font-size: 0.85rem; color: var(--muted); }
+
+  .demo-section { padding: 5rem 2rem; background: var(--surface); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .section-header p { color: var(--muted); font-size: 1.1rem; }
+  .dashboard { max-width: 1200px; margin: 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  .dash-header { background: rgba(245,158,11,0.05); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-weight: 700; font-size: 1rem; }
+  .live-badge { font-size: 0.72rem; color: #86efac; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); padding: 0.25rem 0.6rem; border-radius: 100px; }
+  .dash-body { display: grid; grid-template-columns: 250px 1fr; min-height: 520px; }
+
+  .vehicle-sidebar { border-right: 1px solid var(--border); padding: 1rem; overflow-y: auto; }
+  .vehicle-sidebar h4 { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .vehicle-item { padding: 0.7rem; border-radius: 8px; margin-bottom: 0.4rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .vehicle-item:hover, .vehicle-item.active { border-color: var(--primary); background: rgba(245,158,11,0.07); }
+  .vehicle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem; }
+  .vehicle-id { font-weight: 700; font-size: 0.82rem; }
+  .vehicle-status { width: 8px; height: 8px; border-radius: 50%; }
+  .vs-active { background: #86efac; box-shadow: 0 0 6px #86efac; }
+  .vs-idle { background: #fde68a; }
+  .vs-maint { background: #fca5a5; }
+  .vehicle-driver { font-size: 0.72rem; color: var(--muted); }
+  .vehicle-meta { display: flex; justify-content: space-between; margin-top: 0.3rem; font-size: 0.7rem; }
+  .vehicle-speed { color: var(--secondary); font-weight: 600; }
+  .vehicle-fuel { color: var(--muted); }
+
+  .fleet-main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; }
+  .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .kpi-value { font-size: 1.4rem; font-weight: 800; }
+  .kpi-value.amber { color: var(--secondary); }
+  .kpi-value.green { color: #86efac; }
+  .kpi-value.red { color: #fca5a5; }
+  .kpi-delta { font-size: 0.72rem; color: #86efac; margin-top: 0.2rem; }
+  .kpi-delta.neg { color: #fca5a5; }
+
+  /* Map */
+  .fleet-map { background: rgba(245,158,11,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; position: relative; overflow: hidden; height: 180px; }
+  .map-label { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .map-area { position: relative; height: 140px; background: rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden; }
+  .road-h { position: absolute; height: 2px; background: rgba(245,158,11,0.2); width: 100%; }
+  .road-v { position: absolute; width: 2px; background: rgba(245,158,11,0.2); height: 100%; }
+  .road-h.r1 { top: 33%; } .road-h.r2 { top: 66%; }
+  .road-v.r3 { left: 25%; } .road-v.r4 { left: 50%; } .road-v.r5 { left: 75%; }
+  .truck-pin { position: absolute; font-size: 1rem; animation: drive 4s linear infinite; }
+  .truck-pin.t1 { top: 30%; animation-duration: 5s; }
+  .truck-pin.t2 { top: 62%; animation-duration: 7s; animation-delay: -2s; }
+  .truck-pin.t3 { top: 45%; animation-duration: 6s; animation-delay: -3s; }
+  @keyframes drive { 0% { left: 0; } 100% { left: 95%; } }
+
+  /* Maintenance + fuel */
+  .mid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .maint-table { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .maint-table h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .maint-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+  .maint-row:last-child { border-bottom: none; }
+  .maint-vehicle { font-weight: 600; min-width: 55px; }
+  .maint-type { flex: 1; color: var(--muted); font-size: 0.75rem; }
+  .maint-due { font-size: 0.72rem; }
+  .due-soon { color: #fde68a; }
+  .due-ok { color: #86efac; }
+  .due-overdue { color: #fca5a5; }
+  .fuel-panel { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .fuel-panel h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .fuel-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .fuel-id { font-size: 0.75rem; font-weight: 600; min-width: 48px; }
+  .fuel-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+  .fuel-bar { height: 100%; border-radius: 4px; }
+  .fb-high { background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+  .fb-med { background: linear-gradient(90deg, #f97316, #fb923c); }
+  .fb-low { background: linear-gradient(90deg, #ef4444, #f87171); }
+  .fuel-pct { font-size: 0.72rem; font-weight: 700; min-width: 32px; text-align: right; color: var(--secondary); }
+
+  /* AI Alerts */
+  .ai-alerts { background: rgba(245,158,11,0.04); border: 1px solid rgba(245,158,11,0.15); border-radius: 10px; padding: 0.9rem; }
+  .ai-alerts h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-tag { background: linear-gradient(135deg, var(--primary), #d97706); color: white; font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+  .alert-row { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.45rem 0; border-bottom: 1px solid var(--border); }
+  .alert-row:last-child { border-bottom: none; }
+  .alert-icon { font-size: 1rem; min-width: 20px; }
+  .alert-text { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+  .alert-text strong { color: var(--secondary); }
+
+  .features-section { padding: 5rem 2rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(245,158,11,0.1); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(251,191,36,0.1)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  .pricing-section { padding: 5rem 2rem; background: var(--surface); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1050px; margin: 0 auto; }
+  .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+  .pricing-card.popular { border-color: var(--primary); box-shadow: 0 0 30px rgba(245,158,11,0.15); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), #d97706); padding: 0.3rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; color: white; }
+  .pricing-tier { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .pricing-price { font-size: 2.8rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .pricing-features { list-style: none; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pricing-features li { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pricing-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 0.8rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-plan-primary { background: linear-gradient(135deg, var(--primary), #d97706); color: white; }
+  .btn-plan-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(245,158,11,0.4); }
+  .btn-plan-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+  .cta-section { padding: 5rem 2rem; text-align: center; background: var(--bg); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; position: relative; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  footer { padding: 3rem 2rem 2rem; border-top: 1px solid var(--border); background: var(--surface); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.6; max-width: 250px; }
+  .footer-col h4 { font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+  .footer-col a { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem; width: 100%; max-width: 440px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--primary), #d97706); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+  .social-btns { display: flex; gap: 0.75rem; }
+  .social-btn { flex: 1; padding: 0.65rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-size: 0.85rem; cursor: pointer; }
+  .modal-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🚛 FleetAI</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
+    <a href="#">Telematics</a>
+    <a href="#">Enterprise</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="document.getElementById('loginModal').classList.add('active')">Sign In</button>
+    <button class="btn-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🚛 AI-Powered Fleet Management</div>
+  <h1>Every Vehicle. Every Mile.<br><span>Optimized by AI</span></h1>
+  <p>Reduce fuel costs by 28%, prevent breakdowns before they happen, and keep every driver safe with AI-powered fleet intelligence.</p>
+  <div class="hero-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    <button class="btn-lg btn-lg-ghost">Watch Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>180K+</strong><span>Vehicles Tracked</span></div>
+    <div class="hero-stat"><strong>28%</strong><span>Fuel Cost Reduction</span></div>
+    <div class="hero-stat"><strong>99.9%</strong><span>GPS Uptime</span></div>
+    <div class="hero-stat"><strong>62%</strong><span>Fewer Breakdowns</span></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Total Fleet Visibility at a Glance</h2>
+    <p>Real-time tracking, predictive maintenance, and AI-driven route optimization in one platform</p>
+  </div>
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-title">🚛 FleetAI Dashboard — Acme Logistics Fleet</span>
+      <span class="live-badge">● LIVE TRACKING</span>
+    </div>
+    <div class="dash-body">
+      <div class="vehicle-sidebar">
+        <h4>Fleet (48 Vehicles)</h4>
+        <div class="vehicle-item active">
+          <div class="vehicle-header"><span class="vehicle-id">TRK-001</span><div class="vehicle-status vs-active"></div></div>
+          <div class="vehicle-driver">👤 Mike Johnson</div>
+          <div class="vehicle-meta"><span class="vehicle-speed">62 mph</span><span class="vehicle-fuel">⛽ 74%</span></div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-header"><span class="vehicle-id">TRK-002</span><div class="vehicle-status vs-active"></div></div>
+          <div class="vehicle-driver">👤 Sarah Williams</div>
+          <div class="vehicle-meta"><span class="vehicle-speed">55 mph</span><span class="vehicle-fuel">⛽ 58%</span></div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-header"><span class="vehicle-id">VAN-007</span><div class="vehicle-status vs-idle"></div></div>
+          <div class="vehicle-driver">👤 Carlos Rivera</div>
+          <div class="vehicle-meta"><span class="vehicle-speed">0 mph</span><span class="vehicle-fuel">⛽ 91%</span></div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-header"><span class="vehicle-id">TRK-015</span><div class="vehicle-status vs-maint"></div></div>
+          <div class="vehicle-driver">👤 Lisa Park</div>
+          <div class="vehicle-meta"><span class="vehicle-speed">0 mph</span><span class="vehicle-fuel">⛽ 43%</span></div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-header"><span class="vehicle-id">TRK-022</span><div class="vehicle-status vs-active"></div></div>
+          <div class="vehicle-driver">👤 Tom Baker</div>
+          <div class="vehicle-meta"><span class="vehicle-speed">71 mph</span><span class="vehicle-fuel">⛽ 82%</span></div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-header"><span class="vehicle-id">VAN-031</span><div class="vehicle-status vs-active"></div></div>
+          <div class="vehicle-driver">👤 Ana Martinez</div>
+          <div class="vehicle-meta"><span class="vehicle-speed">48 mph</span><span class="vehicle-fuel">⛽ 67%</span></div>
+        </div>
+      </div>
+
+      <div class="fleet-main">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Active Vehicles</div>
+            <div class="kpi-value amber">38</div>
+            <div class="kpi-delta">of 48 total fleet</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Fuel Efficiency</div>
+            <div class="kpi-value green">8.2 mpg</div>
+            <div class="kpi-delta">▲ 12% vs last mo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Maint. Alerts</div>
+            <div class="kpi-value red">4</div>
+            <div class="kpi-delta neg">Action required</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Miles Today</div>
+            <div class="kpi-value amber">14,820</div>
+            <div class="kpi-delta">▲ 5.2% vs avg</div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div class="fleet-map">
+          <div class="map-label">📍 Live Vehicle Map — Greater Metro Region</div>
+          <div class="map-area">
+            <div class="road-h r1"></div>
+            <div class="road-h r2"></div>
+            <div class="road-v r3"></div>
+            <div class="road-v r4"></div>
+            <div class="road-v r5"></div>
+            <div class="truck-pin t1">🚛</div>
+            <div class="truck-pin t2">🚐</div>
+            <div class="truck-pin t3">🚚</div>
+          </div>
+        </div>
+
+        <!-- Maintenance + Fuel -->
+        <div class="mid-row">
+          <div class="maint-table">
+            <h4>Predictive Maintenance</h4>
+            <div class="maint-row">
+              <span class="maint-vehicle">TRK-015</span>
+              <span class="maint-type">Engine oil change</span>
+              <span class="maint-due due-overdue">OVERDUE</span>
+            </div>
+            <div class="maint-row">
+              <span class="maint-vehicle">TRK-001</span>
+              <span class="maint-type">Brake inspection</span>
+              <span class="maint-due due-soon">In 2 days</span>
+            </div>
+            <div class="maint-row">
+              <span class="maint-vehicle">VAN-007</span>
+              <span class="maint-type">Tire rotation</span>
+              <span class="maint-due due-soon">In 5 days</span>
+            </div>
+            <div class="maint-row">
+              <span class="maint-vehicle">TRK-022</span>
+              <span class="maint-type">Annual inspection</span>
+              <span class="maint-due due-ok">In 18 days</span>
+            </div>
+            <div class="maint-row">
+              <span class="maint-vehicle">VAN-031</span>
+              <span class="maint-type">Transmission fluid</span>
+              <span class="maint-due due-ok">In 30 days</span>
+            </div>
+          </div>
+          <div class="fuel-panel">
+            <h4>Fuel Level Monitor</h4>
+            <div class="fuel-row">
+              <span class="fuel-id">TRK-001</span>
+              <div class="fuel-bar-bg"><div class="fuel-bar fb-high" style="width:74%"></div></div>
+              <span class="fuel-pct">74%</span>
+            </div>
+            <div class="fuel-row">
+              <span class="fuel-id">TRK-002</span>
+              <div class="fuel-bar-bg"><div class="fuel-bar fb-med" style="width:58%"></div></div>
+              <span class="fuel-pct">58%</span>
+            </div>
+            <div class="fuel-row">
+              <span class="fuel-id">VAN-007</span>
+              <div class="fuel-bar-bg"><div class="fuel-bar fb-high" style="width:91%"></div></div>
+              <span class="fuel-pct">91%</span>
+            </div>
+            <div class="fuel-row">
+              <span class="fuel-id">TRK-015</span>
+              <div class="fuel-bar-bg"><div class="fuel-bar fb-low" style="width:43%"></div></div>
+              <span class="fuel-pct">43%</span>
+            </div>
+            <div class="fuel-row">
+              <span class="fuel-id">TRK-022</span>
+              <div class="fuel-bar-bg"><div class="fuel-bar fb-high" style="width:82%"></div></div>
+              <span class="fuel-pct">82%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Alerts -->
+        <div class="ai-alerts">
+          <h4>🤖 AI Insights <span class="ai-tag">LIVE</span></h4>
+          <div class="alert-row">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-text"><strong>TRK-015 engine anomaly:</strong> AI detected abnormal vibration patterns consistent with failing alternator. Schedule immediate inspection to avoid roadside breakdown.</span>
+          </div>
+          <div class="alert-row">
+            <span class="alert-icon">⛽</span>
+            <span class="alert-text"><strong>Fuel optimization:</strong> AI rerouted TRK-001 & TRK-022 to avoid construction on I-95, saving est. 12 gallons and 40 minutes today.</span>
+          </div>
+          <div class="alert-row">
+            <span class="alert-icon">👤</span>
+            <span class="alert-text"><strong>Driver behavior:</strong> Tom Baker (TRK-022) shows 3 hard-braking events today. AI scheduled a safety coaching session automatically.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="section-header">
+    <h2>Fleet Intelligence That Pays for Itself</h2>
+    <p>AI-powered tools that cut costs, prevent downtime, and keep drivers safe</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📍</div>
+      <h3>Real-Time GPS Tracking</h3>
+      <p>Track every vehicle with second-by-second GPS updates, geofencing alerts, and instant replay of any vehicle's route history.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <h3>Predictive Maintenance</h3>
+      <p>AI analyzes engine telemetry to predict failures 2–4 weeks before they happen, reducing breakdown incidents by 62%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⛽</div>
+      <h3>Fuel Management</h3>
+      <p>Monitor fuel levels, detect fuel theft, optimize routes for fuel efficiency, and get AI-powered idle reduction recommendations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡</div>
+      <h3>Driver Safety Scoring</h3>
+      <p>AI scores every driver on speeding, harsh braking, cornering, and phone use. Automated coaching improves safety scores by 41%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗺</div>
+      <h3>Route Optimization</h3>
+      <p>AI calculates optimal routes considering traffic, weather, delivery windows, vehicle capacity, and fuel efficiency in real time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Fleet Analytics & ELD</h3>
+      <p>FMCSA-compliant ELD logs, IFTA fuel tax reports, DOT inspection readiness, and custom KPI dashboards for every stakeholder.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="section-header">
+    <h2>Simple Per-Vehicle Pricing</h2>
+    <p>No hidden fees. Scales as your fleet grows.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Essential</div>
+      <div class="pricing-price">$25<span>/vehicle/mo</span></div>
+      <div class="pricing-desc">GPS tracking and basic fleet management for small fleets of 5–25 vehicles</div>
+      <ul class="pricing-features">
+        <li>Real-time GPS tracking</li>
+        <li>Geofencing & alerts</li>
+        <li>Basic maintenance tracking</li>
+        <li>Driver logs (ELD compliant)</li>
+        <li>Mobile app for drivers</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="pricing-tier">Professional</div>
+      <div class="pricing-price">$49<span>/vehicle/mo</span></div>
+      <div class="pricing-desc">Full AI fleet management with predictive maintenance and route optimization</div>
+      <ul class="pricing-features">
+        <li>Everything in Essential</li>
+        <li>AI predictive maintenance</li>
+        <li>Fuel management & theft detection</li>
+        <li>Driver safety scoring & coaching</li>
+        <li>AI route optimization</li>
+        <li>IFTA fuel tax reports</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-desc">For fleets of 100+ vehicles with custom integrations and dedicated support</div>
+      <ul class="pricing-features">
+        <li>Everything in Professional</li>
+        <li>Custom telematics hardware</li>
+        <li>TMS/ERP integrations</li>
+        <li>White-label driver app</li>
+        <li>Dedicated fleet success manager</li>
+        <li>SLA-backed uptime guarantee</li>
+        <li>24/7 phone support</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Put Your Fleet on Autopilot</h2>
+  <p>Join 3,200+ fleet operators saving thousands every month with AI-powered fleet management</p>
+  <div class="cta-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free 30-Day Trial</button>
+    <button class="btn-lg btn-lg-ghost">Get a Demo</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">🚛 FleetAI</div>
+      <p>AI-powered fleet management that reduces costs, prevents downtime, and keeps every driver safe.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">GPS Tracking</a><a href="#">Predictive Maintenance</a><a href="#">Fuel Management</a><a href="#">ELD Compliance</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 FleetAI · AI-Powered Fleet Management Platform · FMCSA ELD Certified · All rights reserved</div>
+</footer>
+
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signupModal').classList.remove('active')">×</button>
+    <h2>Start Free Trial</h2>
+    <p>30 days free, no credit card required</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 Microsoft</button>
+    </div>
+    <div class="modal-divider">— or sign up with email —</div>
+    <div class="form-group"><label>Full Name</label><input type="text" placeholder="John Smith"></div>
+    <div class="form-group"><label>Work Email</label><input type="email" placeholder="john@fleet.com"></div>
+    <div class="form-group"><label>Fleet Size</label><input type="text" placeholder="e.g. 25 vehicles"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Start Free Trial</button>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('loginModal').classList.remove('active')">×</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to your FleetAI dashboard</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 Microsoft</button>
+    </div>
+    <div class="modal-divider">— or sign in with email —</div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="john@fleet.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Sign In</button>
+  </div>
+</div>
+
+</body>
+</html>
