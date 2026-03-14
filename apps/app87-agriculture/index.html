@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriAI - Smart Agriculture & Farm Management Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #16a34a;
+    --secondary: #22c55e;
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --card2: #1a1a2e;
+    --border: rgba(22,163,74,0.2);
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #16a34a, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color 0.3s; font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-cta { display: flex; gap: 1rem; align-items: center; }
+  .btn { padding: 0.6rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(22,163,74,0.4); }
+  .btn-large { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 12px; }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(22,163,74,0.12) 0%, transparent 70%); }
+  .hero-orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(22,163,74,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(22,163,74,0.1); border: 1px solid var(--border); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, #16a34a, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 620px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--secondary); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); }
+
+  .section { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin-bottom: 3rem; line-height: 1.7; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(22,163,74,0.1); }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .demo-section { padding: 6rem 2rem; background: linear-gradient(180deg, transparent, rgba(22,163,74,0.03), transparent); }
+  .demo-container { max-width: 1200px; margin: 0 auto; }
+  .demo-app { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .demo-header { background: var(--card2); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
+  .demo-dots { display: flex; gap: 0.4rem; }
+  .demo-dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .demo-dots span:nth-child(1) { background: #ef4444; }
+  .demo-dots span:nth-child(2) { background: #f59e0b; }
+  .demo-dots span:nth-child(3) { background: #22c55e; }
+  .demo-title { font-size: 0.85rem; color: var(--muted); }
+  .demo-body { display: grid; grid-template-columns: 1fr 280px; min-height: 520px; }
+
+  .demo-main { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .farm-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+  .kpi-card { background: var(--card2); border-radius: 10px; padding: 1rem; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+  .kpi-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .kpi-val { font-size: 1.4rem; font-weight: 800; color: var(--secondary); }
+  .kpi-label { font-size: 0.68rem; color: var(--muted); margin-top: 0.2rem; }
+  .kpi-sub { font-size: 0.68rem; margin-top: 0.2rem; }
+  .kpi-good { color: #22c55e; }
+  .kpi-warn { color: #f59e0b; }
+
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field-map { background: var(--card2); border-radius: 12px; padding: 1.2rem; }
+  .field-map h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .field-visual { position: relative; height: 180px; background: rgba(22,163,74,0.05); border-radius: 8px; border: 1px solid rgba(22,163,74,0.1); overflow: hidden; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); gap: 2px; padding: 4px; }
+  .field-block { border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+  .field-block:hover { opacity: 0.8; }
+  .fb-wheat { background: rgba(245,158,11,0.4); color: #fbbf24; }
+  .fb-corn { background: rgba(22,163,74,0.5); color: #4ade80; }
+  .fb-soy { background: rgba(59,130,246,0.3); color: #60a5fa; }
+  .fb-fallow { background: rgba(100,116,139,0.2); color: var(--muted); }
+  .fb-alert { background: rgba(239,68,68,0.3); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+  .field-legend { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.6rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.65rem; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .sensor-panel { background: var(--card2); border-radius: 12px; padding: 1.2rem; }
+  .sensor-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .sensor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .sensor-item { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 0.7rem; border: 1px solid rgba(255,255,255,0.06); }
+  .sensor-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.2rem; }
+  .sensor-val { font-size: 1rem; font-weight: 700; }
+  .sensor-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 0.3rem; }
+  .sensor-fill { height: 100%; border-radius: 2px; }
+  .sf-good { background: linear-gradient(90deg, #16a34a, #22c55e); }
+  .sf-warn { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .sf-low { background: linear-gradient(90deg, #dc2626, #ef4444); }
+
+  .crop-table { background: var(--card2); border-radius: 12px; padding: 1.2rem; }
+  .crop-table h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .crop-row { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr 0.8fr 1fr; gap: 0.5rem; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.78rem; }
+  .crop-row.header { font-size: 0.68rem; color: var(--muted); font-weight: 600; }
+  .health-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .health-fill { height: 100%; border-radius: 3px; }
+  .crop-status { font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+  .cs-good { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .cs-warn { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .cs-alert { background: rgba(239,68,68,0.15); color: #f87171; }
+
+  .demo-right { border-left: 1px solid var(--border); padding: 1.2rem; display: flex; flex-direction: column; gap: 1.2rem; }
+  .ai-farm h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+  .farm-alert { padding: 0.7rem; border-radius: 8px; font-size: 0.76rem; line-height: 1.5; margin-bottom: 0.5rem; }
+  .fa-critical { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
+  .fa-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); }
+  .fa-good { background: rgba(22,163,74,0.1); border: 1px solid rgba(22,163,74,0.2); }
+  .weather-panel h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .weather-current { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+  .weather-icon { font-size: 2rem; }
+  .weather-temp { font-size: 1.6rem; font-weight: 800; color: var(--secondary); }
+  .weather-desc { font-size: 0.75rem; color: var(--muted); }
+  .weather-forecast { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
+  .wf-day { background: rgba(255,255,255,0.03); border-radius: 6px; padding: 0.4rem; text-align: center; }
+  .wf-label { font-size: 0.6rem; color: var(--muted); }
+  .wf-icon { font-size: 0.9rem; margin: 0.2rem 0; }
+  .wf-temp { font-size: 0.7rem; font-weight: 600; }
+  .yield-forecast h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .yield-item { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; font-size: 0.76rem; }
+  .yield-crop { width: 55px; color: var(--muted); }
+  .yield-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; }
+  .yield-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #16a34a, #22c55e); }
+  .yield-val { width: 45px; text-align: right; font-weight: 600; color: var(--secondary); }
+
+  .pricing-section { padding: 6rem 2rem; }
+  .pricing-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; }
+  .price-card.popular { border-color: var(--primary); background: linear-gradient(135deg, rgba(22,163,74,0.05), rgba(34,197,94,0.05)); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .price-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--muted); }
+  .price-amount { font-size: 3rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .price-amount span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .price-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-features { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .price-btn { width: 100%; padding: 0.8rem; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+  .price-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .price-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .price-btn-fill { background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; }
+  .price-btn-fill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(22,163,74,0.4); }
+
+  footer { background: var(--card); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer .footer-logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(135deg, #16a34a, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 420px; position: relative; }
+  .modal h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .social-btn { width: 100%; padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; }
+  .social-btn:hover { border-color: var(--primary); background: rgba(22,163,74,0.05); }
+  .divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; position: relative; }
+  .divider::before,.divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .divider::before { left:0; } .divider::after { right:0; }
+  .form-input { width: 100%; padding: 0.75rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem; outline: none; }
+  .form-input:focus { border-color: var(--primary); }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🌾 AgriAI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-ghost" onclick="document.getElementById('modal').classList.add('active')">Log In</button>
+    <button class="btn btn-primary" onclick="document.getElementById('modal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🌾 AI-Powered Precision Agriculture</div>
+    <h1>Farm Smarter,<br>Harvest <span>More with AI</span></h1>
+    <p>Monitor crop health from satellites, predict yields with 95% accuracy, automate irrigation, and get AI-powered recommendations that maximize your farm's productivity.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-large" onclick="document.getElementById('modal').classList.add('active')">Start Free Trial →</button>
+      <button class="btn btn-ghost btn-large">See How It Works</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">25K+</div><div class="stat-label">Farms Managed</div></div>
+      <div class="stat"><div class="stat-num">32%</div><div class="stat-label">Yield Increase</div></div>
+      <div class="stat"><div class="stat-num">40%</div><div class="stat-label">Water Savings</div></div>
+      <div class="stat"><div class="stat-num">18M+</div><div class="stat-label">Acres Monitored</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-label">Platform</div>
+  <h2 class="section-title">Precision Agriculture <span style="background:linear-gradient(135deg,#16a34a,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Powered by AI</span></h2>
+  <p class="section-sub">From soil sensors to satellite imagery — AI intelligence that helps you grow more with less.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🛰️</div>
+      <h3>Satellite Crop Monitoring</h3>
+      <p>Daily satellite imagery with AI analysis detects crop stress, disease, nutrient deficiencies, and irrigation issues across every acre of your farm.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💧</div>
+      <h3>Smart Irrigation AI</h3>
+      <p>Soil moisture sensors combined with weather forecasts and crop models to automatically schedule precision irrigation — reducing water use by up to 40%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌱</div>
+      <h3>Yield Prediction Engine</h3>
+      <p>AI predicts harvest yields up to 3 months in advance with 95% accuracy — enabling better market planning, storage logistics, and financial forecasting.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🐛</div>
+      <h3>Pest & Disease AI</h3>
+      <p>Computer vision detects early signs of pests and disease from drone imagery. AI recommends targeted interventions to minimize chemical use.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌤️</div>
+      <h3>Hyperlocal Weather Intelligence</h3>
+      <p>Field-level weather forecasting with frost alerts, rain predictions, and optimal planting/spraying windows tailored to your exact farm location.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Farm Operations Hub</h3>
+      <p>Equipment tracking, field activity logging, worker task management, crop records, and financial reporting — your complete farm management system.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-container">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div class="section-label">Live Preview</div>
+      <h2 class="section-title">AI Farm Management Dashboard</h2>
+    </div>
+    <div class="demo-app">
+      <div class="demo-header">
+        <div class="demo-dots"><span></span><span></span><span></span></div>
+        <div class="demo-title">AgriAI — Green Valley Farm · 2,400 acres · Spring Season 2025</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-main">
+          <div class="farm-kpis">
+            <div class="kpi-card"><div class="kpi-icon">🌾</div><div class="kpi-val">2,400</div><div class="kpi-label">Acres Managed</div><div class="kpi-sub kpi-good">All monitored ✓</div></div>
+            <div class="kpi-card"><div class="kpi-icon">💧</div><div class="kpi-val">68%</div><div class="kpi-label">Avg. Soil Moisture</div><div class="kpi-sub kpi-good">Optimal range</div></div>
+            <div class="kpi-card"><div class="kpi-icon">🌱</div><div class="kpi-val">94.2%</div><div class="kpi-label">Crop Health Index</div><div class="kpi-sub kpi-warn">⚠ 2 fields flagged</div></div>
+            <div class="kpi-card"><div class="kpi-icon">📈</div><div class="kpi-val">+32%</div><div class="kpi-label">Yield vs Last Year</div><div class="kpi-sub kpi-good">AI optimized</div></div>
+          </div>
+          <div class="field-grid">
+            <div class="field-map">
+              <h4>🗺️ Field Map — Crop & Health View</h4>
+              <div class="field-visual">
+                <div class="field-block fb-wheat">WHEAT<br>A1</div>
+                <div class="field-block fb-corn">CORN<br>A2</div>
+                <div class="field-block fb-corn">CORN<br>A3</div>
+                <div class="field-block fb-soy">SOY<br>A4</div>
+                <div class="field-block fb-wheat">WHEAT<br>B1</div>
+                <div class="field-block fb-alert">⚠ PEST<br>B2</div>
+                <div class="field-block fb-corn">CORN<br>B3</div>
+                <div class="field-block fb-fallow">FALLOW<br>B4</div>
+                <div class="field-block fb-soy">SOY<br>C1</div>
+                <div class="field-block fb-soy">SOY<br>C2</div>
+                <div class="field-block fb-alert">⚠ DRY<br>C3</div>
+                <div class="field-block fb-wheat">WHEAT<br>C4</div>
+              </div>
+              <div class="field-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.6);"></div>Wheat</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(22,163,74,0.6);"></div>Corn</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(59,130,246,0.5);"></div>Soy</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.5);"></div>Alert</div>
+              </div>
+            </div>
+            <div class="sensor-panel">
+              <h4>📡 Live Sensor Readings</h4>
+              <div class="sensor-grid">
+                <div class="sensor-item">
+                  <div class="sensor-label">Soil Temp (A2)</div>
+                  <div class="sensor-val" style="color:#22c55e;">18.4°C</div>
+                  <div class="sensor-bar"><div class="sensor-fill sf-good" style="width:72%;"></div></div>
+                </div>
+                <div class="sensor-item">
+                  <div class="sensor-label">Moisture (C3)</div>
+                  <div class="sensor-val" style="color:#ef4444;">31%</div>
+                  <div class="sensor-bar"><div class="sensor-fill sf-low" style="width:31%;"></div></div>
+                </div>
+                <div class="sensor-item">
+                  <div class="sensor-label">N Level (A1)</div>
+                  <div class="sensor-val" style="color:#f59e0b;">Medium</div>
+                  <div class="sensor-bar"><div class="sensor-fill sf-warn" style="width:55%;"></div></div>
+                </div>
+                <div class="sensor-item">
+                  <div class="sensor-label">pH (B3)</div>
+                  <div class="sensor-val" style="color:#22c55e;">6.8</div>
+                  <div class="sensor-bar"><div class="sensor-fill sf-good" style="width:80%;"></div></div>
+                </div>
+                <div class="sensor-item">
+                  <div class="sensor-label">Air Humidity</div>
+                  <div class="sensor-val" style="color:#22c55e;">62%</div>
+                  <div class="sensor-bar"><div class="sensor-fill sf-good" style="width:62%;"></div></div>
+                </div>
+                <div class="sensor-item">
+                  <div class="sensor-label">Wind Speed</div>
+                  <div class="sensor-val" style="color:#22c55e;">12 km/h</div>
+                  <div class="sensor-bar"><div class="sensor-fill sf-good" style="width:30%;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="crop-table">
+            <h4>🌱 Crop Performance Overview</h4>
+            <div class="crop-row header"><div>Crop / Field</div><div>Planted</div><div>Health</div><div>Yield Est.</div><div>Status</div></div>
+            <div class="crop-row">
+              <div><div style="font-size:0.8rem;font-weight:600;">🌽 Corn — A2/A3/B3</div><div style="font-size:0.68rem;color:var(--muted);">720 acres</div></div>
+              <div>Mar 1</div>
+              <div><div class="health-bar"><div class="health-fill sf-good" style="width:92%;"></div></div></div>
+              <div style="color:#22c55e;font-weight:700;">180 bu/ac</div>
+              <div><span class="crop-status cs-good">On Track</span></div>
+            </div>
+            <div class="crop-row">
+              <div><div style="font-size:0.8rem;font-weight:600;">🌾 Wheat — A1/B1/C4</div><div style="font-size:0.68rem;color:var(--muted);">840 acres</div></div>
+              <div>Feb 15</div>
+              <div><div class="health-bar"><div class="health-fill sf-warn" style="width:74%;"></div></div></div>
+              <div style="color:#f59e0b;font-weight:700;">52 bu/ac</div>
+              <div><span class="crop-status cs-warn">Monitor</span></div>
+            </div>
+            <div class="crop-row">
+              <div><div style="font-size:0.8rem;font-weight:600;">🫘 Soybeans — A4/C1/C2</div><div style="font-size:0.68rem;color:var(--muted);">600 acres</div></div>
+              <div>Apr 5</div>
+              <div><div class="health-bar"><div class="health-fill sf-good" style="width:88%;"></div></div></div>
+              <div style="color:#22c55e;font-weight:700;">48 bu/ac</div>
+              <div><span class="crop-status cs-good">On Track</span></div>
+            </div>
+            <div class="crop-row">
+              <div><div style="font-size:0.8rem;font-weight:600;">⚠ Corn — B2 (Pest Alert)</div><div style="font-size:0.68rem;color:var(--muted);">120 acres</div></div>
+              <div>Mar 1</div>
+              <div><div class="health-bar"><div class="health-fill sf-low" style="width:45%;"></div></div></div>
+              <div style="color:#ef4444;font-weight:700;">Risk: Low</div>
+              <div><span class="crop-status cs-alert">Action Req.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-right">
+          <div class="ai-farm">
+            <h4><div class="ai-dot"></div> AI Farm Advisor</h4>
+            <div class="farm-alert fa-critical">🚨 Field B2: Aphid infestation detected. Recommend targeted pesticide application within 48hrs to prevent 15% yield loss.</div>
+            <div class="farm-alert fa-warn">⚠️ Field C3 soil moisture at 31% — below optimal. Irrigation scheduled for tomorrow 5AM (120 min).</div>
+            <div class="farm-alert fa-good">✅ Corn fields A2/A3 showing excellent growth. Yield forecast upgraded to 180 bu/ac (+12% vs estimate).</div>
+          </div>
+          <div class="weather-panel">
+            <h4>🌤️ Weather Forecast</h4>
+            <div class="weather-current">
+              <div class="weather-icon">⛅</div>
+              <div>
+                <div class="weather-temp">22°C</div>
+                <div class="weather-desc">Partly cloudy · 45% humidity</div>
+              </div>
+            </div>
+            <div class="weather-forecast">
+              <div class="wf-day"><div class="wf-label">Mon</div><div class="wf-icon">☀️</div><div class="wf-temp">24°</div></div>
+              <div class="wf-day"><div class="wf-label">Tue</div><div class="wf-icon">🌧️</div><div class="wf-temp">18°</div></div>
+              <div class="wf-day"><div class="wf-label">Wed</div><div class="wf-icon">⛅</div><div class="wf-temp">21°</div></div>
+              <div class="wf-day"><div class="wf-label">Thu</div><div class="wf-icon">☀️</div><div class="wf-temp">26°</div></div>
+              <div class="wf-day"><div class="wf-label">Fri</div><div class="wf-icon">☀️</div><div class="wf-temp">28°</div></div>
+            </div>
+          </div>
+          <div class="yield-forecast">
+            <h4>📈 Yield Forecast</h4>
+            <div class="yield-item"><span class="yield-crop">Corn</span><div class="yield-bar"><div class="yield-fill" style="width:90%;"></div></div><span class="yield-val">180 bu</span></div>
+            <div class="yield-item"><span class="yield-crop">Wheat</span><div class="yield-bar"><div class="yield-fill" style="width:65%;background:linear-gradient(90deg,#d97706,#f59e0b);"></div></div><span class="yield-val">52 bu</span></div>
+            <div class="yield-item"><span class="yield-crop">Soybeans</span><div class="yield-bar"><div class="yield-fill" style="width:80%;"></div></div><span class="yield-val">48 bu</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section" id="pricing">
+  <div style="text-align:center;max-width:600px;margin:0 auto 3rem;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Grow More, <span style="background:linear-gradient(135deg,#16a34a,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Spend Less</span></h2>
+    <p style="color:var(--muted);">Average farmer sees 32% yield increase and 40% water savings. ROI in the first harvest.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Smallholder</div>
+      <div class="price-amount">$49<span>/mo</span></div>
+      <div class="price-desc">For farms up to 500 acres</div>
+      <ul class="price-features">
+        <li>Satellite crop monitoring</li>
+        <li>Weather intelligence</li>
+        <li>Basic yield forecasting</li>
+        <li>Field health maps</li>
+        <li>Mobile app access</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Start Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">🌾 Most Popular</div>
+      <div class="price-name">Commercial Farm</div>
+      <div class="price-amount">$199<span>/mo</span></div>
+      <div class="price-desc">For farms 500–5,000 acres</div>
+      <ul class="price-features">
+        <li>Everything in Smallholder</li>
+        <li>Smart irrigation AI</li>
+        <li>Pest & disease detection</li>
+        <li>IoT sensor integration</li>
+        <li>Farm operations hub</li>
+        <li>Market price analytics</li>
+      </ul>
+      <button class="price-btn price-btn-fill" onclick="document.getElementById('modal').classList.add('active')">Start Commercial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Agri-Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large operations & cooperatives</div>
+      <ul class="price-features">
+        <li>Unlimited acreage</li>
+        <li>Multi-farm management</li>
+        <li>Custom AI model training</li>
+        <li>ERP & accounting integration</li>
+        <li>Drone fleet integration</li>
+        <li>Dedicated agronomy support</li>
+      </ul>
+      <button class="price-btn price-btn-outline" onclick="document.getElementById('modal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🌾 AgriAI</div>
+  <p>© 2025 AgriAI · Feeding the world smarter with artificial intelligence and precision agriculture.</p>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕</button>
+    <h2>Start Your Free Trial</h2>
+    <p>30-day free trial · No credit card required</p>
+    <button class="social-btn">🔵 Continue with Google</button>
+    <button class="social-btn">🍎 Continue with Apple</button>
+    <div class="divider">or use email</div>
+    <input type="email" class="form-input" placeholder="Email address">
+    <input type="password" class="form-input" placeholder="Password">
+    <button class="btn btn-primary" style="width:100%;padding:0.8rem;border-radius:10px;">Create Account</button>
+  </div>
+</div>
+
+</body>
+</html>
