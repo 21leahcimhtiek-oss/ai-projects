@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LegalAI - AI-Powered Legal Practice Management</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --gold:#f59e0b;--gold2:#fbbf24;--gold3:#fde68a;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px;align-items:center}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text);transition:all .2s}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#000;font-weight:600;transition:all .2s}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
+
+/* HERO */
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(245,158,11,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--gold);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#000;font-weight:700;transition:all .2s}
+.btn-hero:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,158,11,0.3)}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text);transition:all .2s}
+.btn-hero-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+/* DEMO */
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted);font-size:1rem}
+.demo-grid{display:grid;grid-template-columns:280px 1fr 300px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* CASE SIDEBAR */
+.case-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:620px;overflow-y:auto}
+.case-sidebar h3{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.case-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.case-item.active{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3)}
+.case-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.case-name{font-size:0.9rem;font-weight:600;margin-bottom:4px}
+.case-type{font-size:0.75rem;color:var(--muted);margin-bottom:6px}
+.case-meta{display:flex;justify-content:space-between;align-items:center}
+.case-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.status-active{background:rgba(34,197,94,0.15);color:var(--green)}
+.status-review{background:rgba(245,158,11,0.15);color:var(--gold)}
+.status-closed{background:rgba(100,116,139,0.15);color:var(--muted)}
+.status-urgent{background:rgba(239,68,68,0.15);color:var(--red)}
+.case-date{font-size:0.7rem;color:var(--muted)}
+
+/* MAIN PANEL */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.case-header-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.case-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.case-number{font-size:0.8rem;color:var(--gold);font-weight:600;margin-bottom:4px}
+.case-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.case-client{font-size:0.85rem;color:var(--muted)}
+.case-actions{display:flex;gap:8px}
+.action-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.action-btn:hover{border-color:var(--gold);color:var(--gold)}
+.action-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-weight:600}
+.case-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* DOCUMENT TABLE */
+.doc-table-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-header h3{font-size:0.95rem;font-weight:600}
+.doc-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.doc-table th{text-align:left;color:var(--muted);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border)}
+.doc-table td{padding:10px 12px;border-bottom:1px solid rgba(42,42,62,0.5)}
+.doc-table tr:last-child td{border-bottom:none}
+.doc-table tr:hover td{background:rgba(255,255,255,0.02)}
+.doc-type{display:inline-flex;align-items:center;gap:6px}
+.doc-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem}
+.doc-icon.pdf{background:rgba(239,68,68,0.15);color:var(--red)}
+.doc-icon.doc{background:rgba(59,130,246,0.15);color:var(--blue)}
+.doc-icon.xls{background:rgba(34,197,94,0.15);color:var(--green)}
+.doc-icon.img{background:rgba(245,158,11,0.15);color:var(--gold)}
+.ai-badge{font-size:0.7rem;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.15);color:var(--gold)}
+
+/* TIMELINE */
+.timeline-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.timeline{display:flex;flex-direction:column;gap:0}
+.timeline-item{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.timeline-item:not(:last-child)::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:1px;background:var(--border)}
+.t-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;flex-shrink:0;margin-top:2px}
+.t-dot.gold{background:rgba(245,158,11,0.2);border:2px solid var(--gold)}
+.t-dot.green{background:rgba(34,197,94,0.2);border:2px solid var(--green)}
+.t-dot.blue{background:rgba(59,130,246,0.2);border:2px solid var(--blue)}
+.t-dot.gray{background:rgba(100,116,139,0.2);border:2px solid var(--muted)}
+.t-content{}
+.t-title{font-size:0.85rem;font-weight:600;margin-bottom:2px}
+.t-desc{font-size:0.75rem;color:var(--muted);margin-bottom:4px}
+.t-time{font-size:0.7rem;color:var(--muted)}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-insight-card{background:var(--surface2);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:20px}
+.ai-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ai-header span{font-size:0.85rem;font-weight:600;color:var(--gold)}
+.ai-insight{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-insight-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-insight-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.risk-badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.risk-high{background:rgba(239,68,68,0.15);color:var(--red)}
+.risk-med{background:rgba(245,158,11,0.15);color:var(--gold)}
+.risk-low{background:rgba(34,197,94,0.15);color:var(--green)}
+
+.billing-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.billing-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5);font-size:0.82rem}
+.billing-row:last-child{border-bottom:none;font-weight:700;color:var(--gold)}
+.billing-label{color:var(--muted)}
+
+.deadline-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.deadline-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.deadline-item:last-child{border-bottom:none}
+.d-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.d-content{flex:1}
+.d-title{font-size:0.82rem;font-weight:600}
+.d-date{font-size:0.72rem;color:var(--muted)}
+.d-days{font-size:0.75rem;font-weight:600;padding:2px 8px;border-radius:4px}
+.days-urgent{background:rgba(239,68,68,0.15);color:var(--red)}
+.days-warn{background:rgba(245,158,11,0.15);color:var(--gold)}
+.days-ok{background:rgba(34,197,94,0.15);color:var(--green)}
+
+/* FEATURES */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(245,158,11,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(245,158,11,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+
+/* PRICING */
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative;transition:all .3s}
+.price-card.popular{border-color:var(--gold);box-shadow:0 0 40px rgba(245,158,11,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--gold);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;transition:all .2s;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-btn:hover{border-color:var(--gold);color:var(--gold)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000}
+
+/* FOOTER */
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">⚖️</div>
+    <span>LegalAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Platform</a>
+    <a href="#">Case Management</a>
+    <a href="#">Document AI</a>
+    <a href="#">Billing</a>
+    <a href="#">Compliance</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Free Trial</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">⚖️ The 100th App Milestone — AI Legal Practice Suite</div>
+  <h1>AI-Powered Legal Practice<br><span>Management Platform</span></h1>
+  <p>Streamline case management, automate document review, and get AI-powered legal research — all in one secure platform built for modern law firms.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Start Free Trial</button>
+    <button class="btn-hero-outline">Watch Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">12,400+</div><div class="stat-label">Law Firms</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Time Saved on Research</div></div>
+    <div class="stat"><div class="stat-num">3.2M+</div><div class="stat-label">Documents Analyzed</div></div>
+    <div class="stat"><div class="stat-num">SOC 2</div><div class="stat-label">Type II Certified</div></div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live Case Management Dashboard</h2>
+    <p>AI-powered insights across every active matter</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- CASE SIDEBAR -->
+    <div class="case-sidebar">
+      <h3>Active Cases (24)</h3>
+
+      <div class="case-item active">
+        <div class="case-name">Meridian Corp v. DataSync</div>
+        <div class="case-type">Commercial Litigation</div>
+        <div class="case-meta">
+          <span class="case-status status-urgent">URGENT</span>
+          <span class="case-date">Due Oct 14</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Henderson Estate Trust</div>
+        <div class="case-type">Estate Planning</div>
+        <div class="case-meta">
+          <span class="case-status status-active">ACTIVE</span>
+          <span class="case-date">Due Nov 2</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Nova Tech IP Filing</div>
+        <div class="case-type">Intellectual Property</div>
+        <div class="case-meta">
+          <span class="case-status status-review">REVIEW</span>
+          <span class="case-date">Due Oct 28</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Green Energy M&A</div>
+        <div class="case-type">Corporate / M&A</div>
+        <div class="case-meta">
+          <span class="case-status status-active">ACTIVE</span>
+          <span class="case-date">Due Dec 1</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Torres Employment Dispute</div>
+        <div class="case-type">Employment Law</div>
+        <div class="case-meta">
+          <span class="case-status status-review">REVIEW</span>
+          <span class="case-date">Due Oct 20</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Westside Realty Deal</div>
+        <div class="case-type">Real Estate</div>
+        <div class="case-meta">
+          <span class="case-status status-active">ACTIVE</span>
+          <span class="case-date">Due Nov 15</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Chen v. Pacific Motors</div>
+        <div class="case-type">Personal Injury</div>
+        <div class="case-meta">
+          <span class="case-status status-active">ACTIVE</span>
+          <span class="case-date">Due Jan 8</span>
+        </div>
+      </div>
+
+      <div class="case-item">
+        <div class="case-name">Atlas Pharma Compliance</div>
+        <div class="case-type">Regulatory</div>
+        <div class="case-meta">
+          <span class="case-status status-closed">CLOSED</span>
+          <span class="case-date">Sep 30</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <!-- Case Header -->
+      <div class="case-header-card">
+        <div class="case-title-row">
+          <div>
+            <div class="case-number">CASE #2024-1187 • Commercial Litigation</div>
+            <div class="case-title">Meridian Corp v. DataSync Technologies</div>
+            <div class="case-client">Client: Meridian Corporation • Lead: J. Williams, Esq.</div>
+          </div>
+          <div class="case-actions">
+            <button class="action-btn">📄 File</button>
+            <button class="action-btn">📧 Email</button>
+            <button class="action-btn primary">⚡ AI Research</button>
+          </div>
+        </div>
+        <div class="case-kpis">
+          <div class="kpi">
+            <div class="kpi-label">Hours Logged</div>
+            <div class="kpi-val" style="color:var(--gold)">84.5h</div>
+            <div class="kpi-sub">Est. 120h total</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Billable Amount</div>
+            <div class="kpi-val" style="color:var(--green)">$42,250</div>
+            <div class="kpi-sub">Invoice pending</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Documents</div>
+            <div class="kpi-val" style="color:var(--blue)">147</div>
+            <div class="kpi-sub">12 AI-reviewed</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Next Deadline</div>
+            <div class="kpi-val" style="color:var(--red)">3 days</div>
+            <div class="kpi-sub">Motion response</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Table -->
+      <div class="doc-table-card">
+        <div class="card-header">
+          <h3>📁 Case Documents</h3>
+          <div style="display:flex;gap:8px">
+            <button class="action-btn">🔍 AI Search</button>
+            <button class="action-btn primary">+ Upload</button>
+          </div>
+        </div>
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th>Type</th>
+              <th>Added</th>
+              <th>AI Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="doc-type">
+                  <div class="doc-icon pdf">PDF</div>
+                  Complaint_Filed_Final.pdf
+                </div>
+              </td>
+              <td style="color:var(--muted)">Pleading</td>
+              <td style="color:var(--muted)">Oct 2</td>
+              <td><span class="ai-badge">✓ Analyzed</span></td>
+              <td><button class="action-btn">View</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="doc-type">
+                  <div class="doc-icon doc">DOC</div>
+                  Defendant_Motion_Dismiss.docx
+                </div>
+              </td>
+              <td style="color:var(--muted)">Motion</td>
+              <td style="color:var(--muted)">Oct 7</td>
+              <td><span class="ai-badge">✓ Analyzed</span></td>
+              <td><button class="action-btn">View</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="doc-type">
+                  <div class="doc-icon pdf">PDF</div>
+                  DataSync_Contract_2022.pdf
+                </div>
+              </td>
+              <td style="color:var(--muted)">Contract</td>
+              <td style="color:var(--muted)">Oct 3</td>
+              <td><span class="ai-badge">✓ Analyzed</span></td>
+              <td><button class="action-btn">View</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="doc-type">
+                  <div class="doc-icon xls">XLS</div>
+                  Damages_Calculation.xlsx
+                </div>
+              </td>
+              <td style="color:var(--muted)">Financial</td>
+              <td style="color:var(--muted)">Oct 8</td>
+              <td><span style="font-size:0.7rem;color:var(--muted)">Pending…</span></td>
+              <td><button class="action-btn">View</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="doc-type">
+                  <div class="doc-icon img">IMG</div>
+                  Evidence_Screenshots_12.zip
+                </div>
+              </td>
+              <td style="color:var(--muted)">Evidence</td>
+              <td style="color:var(--muted)">Oct 9</td>
+              <td><span style="font-size:0.7rem;color:var(--muted)">Queued</span></td>
+              <td><button class="action-btn">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Timeline -->
+      <div class="timeline-card">
+        <div class="card-header"><h3>📅 Case Timeline</h3></div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="t-dot gold"></div>
+            <div class="t-content">
+              <div class="t-title">Response to Motion to Dismiss DUE</div>
+              <div class="t-desc">Draft opposition brief — AI research completed, 3 key precedents identified</div>
+              <div class="t-time">Oct 14, 2024 • 5:00 PM CT</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="t-dot blue"></div>
+            <div class="t-content">
+              <div class="t-title">Discovery Conference — Judge Hartman</div>
+              <div class="t-desc">Courtroom 4B, Federal District Court</div>
+              <div class="t-time">Oct 22, 2024 • 10:00 AM CT</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="t-dot green"></div>
+            <div class="t-content">
+              <div class="t-title">Deposition — DataSync CEO R. Patel</div>
+              <div class="t-desc">AI-generated question bank ready for review</div>
+              <div class="t-time">Nov 4, 2024 • 9:00 AM CT</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="t-dot gray"></div>
+            <div class="t-content">
+              <div class="t-title">Expert Witness Designation Deadline</div>
+              <div class="t-desc">Dr. Chen (damages) — engagement letter pending</div>
+              <div class="t-time">Nov 20, 2024</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- AI Insights -->
+      <div class="ai-insight-card">
+        <div class="ai-header">
+          <div class="ai-dot"></div>
+          <span>AI Legal Counsel</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">⚠️ Motion Response Strategy</div>
+          <div class="ai-insight-text">Found 3 directly applicable precedents for defeating motion to dismiss. <em>Twombly</em> standard likely met — recommend emphasizing economic harm allegations in paragraphs 14–18.</div>
+          <span class="risk-badge risk-high">HIGH PRIORITY</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">📋 Contract Clause Alert</div>
+          <div class="ai-insight-text">AI identified limitation of liability clause in §8.3 of 2022 contract that may cap damages at $2M. Client should be informed before damages calculation is finalized.</div>
+          <span class="risk-badge risk-med">REVIEW NEEDED</span>
+        </div>
+
+        <div class="ai-insight">
+          <div class="ai-insight-title">💡 Deposition Preparation</div>
+          <div class="ai-insight-text">AI generated 47 deposition questions for R. Patel based on document analysis. Key focus areas: breach timeline, data handling protocols, and damages causation.</div>
+          <span class="risk-badge risk-low">READY</span>
+        </div>
+      </div>
+
+      <!-- Billing Summary -->
+      <div class="billing-card">
+        <div class="card-header"><h3>💰 Billing Summary</h3></div>
+        <div class="billing-row">
+          <span class="billing-label">Attorney Time (84.5h × $400)</span>
+          <span>$33,800</span>
+        </div>
+        <div class="billing-row">
+          <span class="billing-label">Paralegal Time (28h × $150)</span>
+          <span>$4,200</span>
+        </div>
+        <div class="billing-row">
+          <span class="billing-label">Court Filing Fees</span>
+          <span>$850</span>
+        </div>
+        <div class="billing-row">
+          <span class="billing-label">Expert Witness (est.)</span>
+          <span>$3,400</span>
+        </div>
+        <div class="billing-row">
+          <span class="billing-label">Total Billable</span>
+          <span style="color:var(--gold)">$42,250</span>
+        </div>
+      </div>
+
+      <!-- Deadlines -->
+      <div class="deadline-card">
+        <div class="card-header"><h3>⏰ Upcoming Deadlines</h3></div>
+        <div class="deadline-item">
+          <div class="d-dot" style="background:var(--red)"></div>
+          <div class="d-content">
+            <div class="d-title">Motion Response</div>
+            <div class="d-date">Oct 14 • Case #2024-1187</div>
+          </div>
+          <span class="d-days days-urgent">3 days</span>
+        </div>
+        <div class="deadline-item">
+          <div class="d-dot" style="background:var(--gold)"></div>
+          <div class="d-content">
+            <div class="d-title">IP Filing — Nova Tech</div>
+            <div class="d-date">Oct 28 • Case #2024-1204</div>
+          </div>
+          <span class="d-days days-warn">17 days</span>
+        </div>
+        <div class="deadline-item">
+          <div class="d-dot" style="background:var(--green)"></div>
+          <div class="d-content">
+            <div class="d-title">Estate Docs — Henderson</div>
+            <div class="d-date">Nov 2 • Case #2024-0998</div>
+          </div>
+          <span class="d-days days-ok">22 days</span>
+        </div>
+        <div class="deadline-item">
+          <div class="d-dot" style="background:var(--green)"></div>
+          <div class="d-content">
+            <div class="d-title">M&A Due Diligence</div>
+            <div class="d-date">Dec 1 • Case #2024-1156</div>
+          </div>
+          <span class="d-days days-ok">51 days</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-header">
+    <h2>Built for Modern Law Firms</h2>
+    <p>From solo practitioners to AmLaw 200 firms</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>AI Legal Research</h3>
+      <p>Search millions of case precedents, statutes, and regulations in seconds. AI surfaces the most relevant authorities for your specific matter.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Document Review & Analysis</h3>
+      <p>Automatically review contracts, discovery documents, and filings. AI flags risks, inconsistencies, and key clauses — cutting review time by 80%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⏱️</div>
+      <h3>Smart Time & Billing</h3>
+      <p>Automatic time capture from emails, calls, and documents. Generate accurate invoices in one click with full LEDES and e-billing support.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Deadline & Calendar Management</h3>
+      <p>Court rules-based deadline calculator automatically populates your docket. Never miss a filing deadline with AI-powered conflict checking.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>Bank-Grade Security</h3>
+      <p>AES-256 encryption, SOC 2 Type II, and attorney-client privilege protection built-in. Meets all bar association data security requirements.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤝</div>
+      <h3>Client Portal</h3>
+      <p>Branded client portal with secure document sharing, real-time case updates, e-signatures, and integrated billing — reduce client calls by 60%.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="section-header">
+    <h2>Simple, Transparent Pricing</h2>
+    <p>Scale as your practice grows</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">SOLO PRACTITIONER</div>
+      <div class="price-amount">$79<span>/mo</span></div>
+      <div class="price-desc">Perfect for solo attorneys and small practices</div>
+      <ul class="price-features">
+        <li>Up to 25 active matters</li>
+        <li>AI document review (50 docs/mo)</li>
+        <li>Time tracking & invoicing</li>
+        <li>Court deadline calculator</li>
+        <li>Client portal (5 clients)</li>
+        <li>Email support</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">LAW FIRM</div>
+      <div class="price-amount">$299<span>/mo</span></div>
+      <div class="price-desc">For growing firms with multiple attorneys</div>
+      <ul class="price-features">
+        <li>Unlimited active matters</li>
+        <li>AI document review (unlimited)</li>
+        <li>Advanced legal research AI</li>
+        <li>Full billing & LEDES export</li>
+        <li>Unlimited client portal</li>
+        <li>Matter budgeting & alerts</li>
+        <li>Priority support + onboarding</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large firms and legal departments</div>
+      <ul class="price-features">
+        <li>Everything in Law Firm</li>
+        <li>Custom AI model training</li>
+        <li>API & system integrations</li>
+        <li>SSO & advanced security</li>
+        <li>Dedicated success manager</li>
+        <li>SLA guarantees</li>
+        <li>On-premise deployment option</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">
+    <div class="logo-icon">⚖️</div>
+    <span>LegalAI</span>
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Security</a>
+    <a href="#">Bar Compliance</a>
+    <a href="#">Support</a>
+  </div>
+  <div style="color:var(--muted);font-size:0.8rem">© 2024 LegalAI Inc. • App #100 🎉</div>
+</footer>
+
+</body>
+</html>
