@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgricultureAI - AI-Powered Precision Farm Management</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --lime:#84cc16;--lime2:#a3e635;--lime3:#d9f99d;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--teal:#14b8a6
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--lime),var(--lime2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--lime),var(--lime2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#000;font-weight:600}
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(132,204,22,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(132,204,22,0.1);border:1px solid rgba(132,204,22,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--lime);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--lime),var(--lime2),var(--lime3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--lime),var(--lime2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#000;font-weight:700}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--lime),var(--lime2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:260px 1fr 280px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* FIELD SIDEBAR */
+.field-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:680px;overflow-y:auto}
+.field-sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.field-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.field-item.active{background:rgba(132,204,22,0.1);border-color:rgba(132,204,22,0.3)}
+.field-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.field-name{font-size:0.9rem;font-weight:600;margin-bottom:2px}
+.field-crop{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.field-meta{display:flex;justify-content:space-between;align-items:center}
+.field-acres{font-size:0.78rem;font-weight:600;color:var(--lime)}
+.field-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.fs-grow{background:rgba(34,197,94,0.15);color:var(--green)}
+.fs-harvest{background:rgba(245,158,11,0.15);color:var(--amber)}
+.fs-plant{background:rgba(59,130,246,0.15);color:var(--blue)}
+.fs-rest{background:rgba(100,116,139,0.15);color:var(--muted)}
+
+/* MAIN */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.field-header{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.fh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.fh-name{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.fh-sub{font-size:0.82rem;color:var(--muted)}
+.fh-actions{display:flex;gap:8px}
+.act-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.act-btn:hover{border-color:var(--lime);color:var(--lime)}
+.act-btn.primary{background:linear-gradient(135deg,var(--lime),var(--lime2));border:none;color:#000;font-weight:600}
+.field-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* FIELD MAP */
+.field-map{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-hdr h3{font-size:0.95rem;font-weight:600}
+.map-area{position:relative;height:200px;background:linear-gradient(135deg,#0f2a0f,#1a3a1a,#0f2a0f);border-radius:12px;overflow:hidden;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(5,1fr);gap:2px;padding:8px}
+.map-cell{border-radius:4px;cursor:pointer;transition:all .2s;position:relative}
+.mc-good{background:rgba(132,204,22,0.6)}
+.mc-great{background:rgba(132,204,22,0.85)}
+.mc-warn{background:rgba(245,158,11,0.5)}
+.mc-stress{background:rgba(239,68,68,0.4)}
+.mc-water{background:rgba(59,130,246,0.3)}
+.map-legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+.ml-item{display:flex;align-items:center;gap:4px;font-size:0.68rem;color:var(--muted)}
+.ml-dot{width:10px;height:10px;border-radius:2px}
+.drone-badge{position:absolute;top:8px;right:8px;background:rgba(132,204,22,0.2);border:1px solid rgba(132,204,22,0.4);border-radius:6px;padding:4px 10px;font-size:0.7rem;color:var(--lime);display:flex;align-items:center;gap:4px}
+.drone-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* SENSOR TABLE */
+.sensor-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.sensor-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.sensor-table th{text-align:left;color:var(--muted);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border)}
+.sensor-table td{padding:10px 12px;border-bottom:1px solid rgba(42,42,62,0.5)}
+.sensor-table tr:last-child td{border-bottom:none}
+.sensor-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden}
+.sensor-fill{height:100%;border-radius:3px}
+.s-status{font-size:0.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.ss-ok{background:rgba(34,197,94,0.15);color:var(--green)}
+.ss-warn{background:rgba(245,158,11,0.15);color:var(--amber)}
+.ss-alert{background:rgba(239,68,68,0.15);color:var(--red)}
+
+/* YIELD CHART */
+.yield-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-card{background:var(--surface2);border:1px solid rgba(132,204,22,0.3);border-radius:16px;padding:20px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot2{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:blink 1.5s infinite}
+.ai-hdr span{font-size:0.85rem;font-weight:600;color:var(--lime)}
+.ai-item{background:rgba(132,204,22,0.05);border:1px solid rgba(132,204,22,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-item-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-item-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green)}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.b-red{background:rgba(239,68,68,0.15);color:var(--red)}
+
+.weather-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.weather-today{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.weather-icon{font-size:2.5rem}
+.weather-temp{font-size:2rem;font-weight:800}
+.weather-desc{font-size:0.82rem;color:var(--muted)}
+.weather-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.wd-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.wd-val{font-size:1rem;font-weight:700}
+.wd-label{font-size:0.68rem;color:var(--muted);margin-top:2px}
+.forecast-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,62,0.5);font-size:0.78rem}
+.forecast-row:last-child{border-bottom:none}
+
+.task-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.task-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.task-item:last-child{border-bottom:none}
+.task-cb{width:16px;height:16px;border-radius:4px;border:1px solid var(--border);flex-shrink:0;cursor:pointer}
+.task-cb.done{background:var(--lime);border-color:var(--lime)}
+.task-text{flex:1;font-size:0.82rem}
+.task-text.done{text-decoration:line-through;color:var(--muted)}
+.task-pri{font-size:0.68rem;padding:2px 6px;border-radius:4px}
+
+/* FEATURES / PRICING */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(132,204,22,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(132,204,22,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(132,204,22,0.2),rgba(163,230,53,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+.price-card.popular{border-color:var(--lime);box-shadow:0 0 40px rgba(132,204,22,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--lime),var(--lime2));color:#000;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--lime);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--lime);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--lime),var(--lime2));border:none;color:#000}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-icon">🌾</div><span>AgricultureAI</span></div>
+  <div class="nav-links">
+    <a href="#">Field Management</a><a href="#">Crop Analytics</a><a href="#">Irrigation</a><a href="#">Marketplace</a><a href="#">Compliance</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🌾 Precision Agriculture Powered by AI</div>
+  <h1>Grow More, Waste Less with<br><span>AI Farm Intelligence</span></h1>
+  <p>Monitor soil health, predict crop yields, optimize irrigation, and detect disease outbreaks early — all from one AI-powered precision agriculture platform.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Start Free Trial</button>
+    <button class="btn-hero-outline">See Farm Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">42K+</div><div class="stat-label">Farms Managed</div></div>
+    <div class="stat"><div class="stat-num">31%</div><div class="stat-label">Yield Increase Avg</div></div>
+    <div class="stat"><div class="stat-num">28%</div><div class="stat-label">Water Savings</div></div>
+    <div class="stat"><div class="stat-num">18M+</div><div class="stat-label">Acres Monitored</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live Farm Operations Dashboard</h2>
+    <p>Real-time soil, weather, and crop health monitoring across all fields</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- FIELD SIDEBAR -->
+    <div class="field-sidebar">
+      <h3>Farm Fields (9)</h3>
+      <div class="field-item active">
+        <div class="field-name">North Field A</div>
+        <div class="field-crop">Corn • Zone 4</div>
+        <div class="field-meta"><span class="field-acres">480 acres</span><span class="field-status fs-grow">GROWING</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">South Field B</div>
+        <div class="field-crop">Soybeans • Zone 2</div>
+        <div class="field-meta"><span class="field-acres">320 acres</span><span class="field-status fs-harvest">HARVEST</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">East Paddock</div>
+        <div class="field-crop">Wheat • Zone 1</div>
+        <div class="field-meta"><span class="field-acres">215 acres</span><span class="field-status fs-grow">GROWING</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">West Field C</div>
+        <div class="field-crop">Alfalfa • Zone 3</div>
+        <div class="field-meta"><span class="field-acres">180 acres</span><span class="field-status fs-grow">GROWING</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">Creek Bottom</div>
+        <div class="field-crop">Corn • Zone 5</div>
+        <div class="field-meta"><span class="field-acres">290 acres</span><span class="field-status fs-harvest">HARVEST</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">Ridge Top</div>
+        <div class="field-crop">Sunflowers • Zone 2</div>
+        <div class="field-meta"><span class="field-acres">140 acres</span><span class="field-status fs-grow">GROWING</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">Orchard Block</div>
+        <div class="field-crop">Apples • Perennial</div>
+        <div class="field-meta"><span class="field-acres">85 acres</span><span class="field-status fs-grow">GROWING</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">Cover Crop Plot</div>
+        <div class="field-crop">Winter Rye</div>
+        <div class="field-meta"><span class="field-acres">120 acres</span><span class="field-status fs-plant">PLANTING</span></div>
+      </div>
+      <div class="field-item">
+        <div class="field-name">Fallow Field</div>
+        <div class="field-crop">Resting / Soil Regen</div>
+        <div class="field-meta"><span class="field-acres">200 acres</span><span class="field-status fs-rest">FALLOW</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <div class="field-header">
+        <div class="fh-top">
+          <div>
+            <div class="fh-name">North Field A — Corn (480 acres)</div>
+            <div class="fh-sub">Zone 4 • Planted May 12 • Hybrid: DKC 64-69 • Est. Harvest: Oct 28</div>
+          </div>
+          <div class="fh-actions">
+            <button class="act-btn">🚁 Drone</button>
+            <button class="act-btn">💧 Irrigate</button>
+            <button class="act-btn primary">⚡ AI Scout</button>
+          </div>
+        </div>
+        <div class="field-kpis">
+          <div class="kpi">
+            <div class="kpi-label">Yield Forecast</div>
+            <div class="kpi-val" style="color:var(--lime)">214 bu/ac</div>
+            <div class="kpi-sub">+8% vs last year</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Soil Moisture</div>
+            <div class="kpi-val" style="color:var(--blue)">68%</div>
+            <div class="kpi-sub">Field capacity</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Crop Health</div>
+            <div class="kpi-val" style="color:var(--green)">91/100</div>
+            <div class="kpi-sub">NDVI score</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Days to Harvest</div>
+            <div class="kpi-val" style="color:var(--amber)">18 days</div>
+            <div class="kpi-sub">Oct 28 est.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Field Map -->
+      <div class="field-map">
+        <div class="card-hdr">
+          <h3>🗺️ NDVI Vegetation Map — North Field A</h3>
+          <div class="drone-badge"><div class="drone-dot"></div>Drone Active</div>
+        </div>
+        <div class="map-area">
+          <div class="map-cell mc-great"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div>
+          <div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div><div class="map-cell mc-warn"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-great"></div>
+          <div class="map-cell mc-good"></div><div class="map-cell mc-good"></div><div class="map-cell mc-warn"></div><div class="map-cell mc-stress"></div><div class="map-cell mc-warn"></div><div class="map-cell mc-good"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div>
+          <div class="map-cell mc-great"></div><div class="map-cell mc-water"></div><div class="map-cell mc-water"></div><div class="map-cell mc-good"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div><div class="map-cell mc-good"></div>
+          <div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div><div class="map-cell mc-great"></div><div class="map-cell mc-good"></div><div class="map-cell mc-good"></div><div class="map-cell mc-great"></div>
+        </div>
+        <div class="map-legend">
+          <div class="ml-item"><div class="ml-dot" style="background:rgba(132,204,22,0.85)"></div>Excellent NDVI</div>
+          <div class="ml-item"><div class="ml-dot" style="background:rgba(132,204,22,0.6)"></div>Good NDVI</div>
+          <div class="ml-item"><div class="ml-dot" style="background:rgba(245,158,11,0.5)"></div>Stress Detected</div>
+          <div class="ml-item"><div class="ml-dot" style="background:rgba(239,68,68,0.4)"></div>High Stress</div>
+          <div class="ml-item"><div class="ml-dot" style="background:rgba(59,130,246,0.3)"></div>Standing Water</div>
+        </div>
+      </div>
+
+      <!-- Soil Sensors -->
+      <div class="sensor-card">
+        <div class="card-hdr"><h3>📡 IoT Soil Sensor Network</h3><button class="act-btn primary">+ Add Sensor</button></div>
+        <table class="sensor-table">
+          <thead><tr><th>Sensor</th><th>Location</th><th>Moisture</th><th>Temp</th><th>pH</th><th>N-P-K</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>S-101</td>
+              <td style="color:var(--muted)">NW Corner</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="sensor-bar" style="width:60px"><div class="sensor-fill" style="width:70%;background:var(--blue)"></div></div>
+                  <span style="font-size:0.78rem">70%</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">22°C</td>
+              <td style="color:var(--green)">6.8</td>
+              <td style="font-size:0.75rem;color:var(--muted)">H/M/M</td>
+              <td><span class="s-status ss-ok">Normal</span></td>
+            </tr>
+            <tr>
+              <td>S-102</td>
+              <td style="color:var(--muted)">Center</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="sensor-bar" style="width:60px"><div class="sensor-fill" style="width:42%;background:var(--amber)"></div></div>
+                  <span style="font-size:0.78rem">42%</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">24°C</td>
+              <td style="color:var(--amber)">5.9</td>
+              <td style="font-size:0.75rem;color:var(--muted)">L/M/H</td>
+              <td><span class="s-status ss-warn">Low Moist.</span></td>
+            </tr>
+            <tr>
+              <td>S-103</td>
+              <td style="color:var(--muted)">SE Zone</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="sensor-bar" style="width:60px"><div class="sensor-fill" style="width:88%;background:var(--blue)"></div></div>
+                  <span style="font-size:0.78rem">88%</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">19°C</td>
+              <td style="color:var(--green)">7.1</td>
+              <td style="font-size:0.75rem;color:var(--muted)">M/M/M</td>
+              <td><span class="s-status ss-alert">Saturated</span></td>
+            </tr>
+            <tr>
+              <td>S-104</td>
+              <td style="color:var(--muted)">NE Ridge</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="sensor-bar" style="width:60px"><div class="sensor-fill" style="width:65%;background:var(--blue)"></div></div>
+                  <span style="font-size:0.78rem">65%</span>
+                </div>
+              </td>
+              <td style="color:var(--muted)">21°C</td>
+              <td style="color:var(--green)">6.5</td>
+              <td style="font-size:0.75rem;color:var(--muted)">M/H/M</td>
+              <td><span class="s-status ss-ok">Normal</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="ai-card">
+        <div class="ai-hdr"><div class="ai-dot2"></div><span>AI Crop Scout</span></div>
+        <div class="ai-item">
+          <div class="ai-item-title">🌿 Disease Risk Alert</div>
+          <div class="ai-item-text">Drone imagery detected early signs of Northern Corn Leaf Blight in SE sector (rows 18-22). Recommend fungicide application within 72h. Est. yield protection: 12-18 bu/ac.</div>
+          <span class="badge b-red">ACT NOW</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">💧 Irrigation Recommendation</div>
+          <div class="ai-item-text">Center zone S-102 showing moisture stress. AI recommends 1.2" irrigation run for zones 3-5 tonight. Forecast shows no rain next 7 days. Estimated cost savings vs emergency: $840.</div>
+          <span class="badge b-amber">SCHEDULE</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">📈 Yield Upgrade Path</div>
+          <div class="ai-item-text">Based on current NDVI scores and growing degree days, adjusting harvest date to Oct 28 (vs Oct 22 planned) will increase moisture content from 18% to 16%, saving $1,200 in drying costs.</div>
+          <span class="badge b-green">OPTIMIZE</span>
+        </div>
+      </div>
+
+      <div class="weather-card">
+        <div class="card-hdr"><h3>🌤️ Farm Weather</h3></div>
+        <div class="weather-today">
+          <div class="weather-icon">⛅</div>
+          <div>
+            <div class="weather-temp">72°F</div>
+            <div class="weather-desc">Partly Cloudy • Iowa</div>
+          </div>
+        </div>
+        <div class="weather-details">
+          <div class="wd-item"><div class="wd-val" style="color:var(--blue)">42%</div><div class="wd-label">Humidity</div></div>
+          <div class="wd-item"><div class="wd-val" style="color:var(--muted)">8 mph</div><div class="wd-label">Wind SW</div></div>
+          <div class="wd-item"><div class="wd-val" style="color:var(--amber)">1,248</div><div class="wd-label">GDD Accum.</div></div>
+          <div class="wd-item"><div class="wd-val" style="color:var(--green)">0.0"</div><div class="wd-label">Precip Today</div></div>
+        </div>
+        <div class="forecast-row"><span>Tomorrow</span><span>🌤️</span><span>74°/52°F</span><span style="color:var(--muted)">0%</span></div>
+        <div class="forecast-row"><span>Thu Oct 17</span><span>🌧️</span><span>61°/48°F</span><span style="color:var(--blue)">70%</span></div>
+        <div class="forecast-row"><span>Fri Oct 18</span><span>🌧️</span><span>58°/44°F</span><span style="color:var(--blue)">80%</span></div>
+        <div class="forecast-row"><span>Sat Oct 19</span><span>⛅</span><span>65°/49°F</span><span style="color:var(--muted)">20%</span></div>
+        <div class="forecast-row"><span>Sun Oct 20</span><span>☀️</span><span>71°/51°F</span><span style="color:var(--muted)">5%</span></div>
+      </div>
+
+      <div class="task-card">
+        <div class="card-hdr"><h3>✅ Today's Field Tasks</h3></div>
+        <div class="task-item">
+          <div class="task-cb done"></div>
+          <div class="task-text done">Morning sensor data review</div>
+        </div>
+        <div class="task-item">
+          <div class="task-cb done"></div>
+          <div class="task-text done">Drone flight — North Field A</div>
+        </div>
+        <div class="task-item">
+          <div class="task-cb"></div>
+          <div class="task-text">Apply fungicide — SE sector</div>
+          <span class="task-pri" style="background:rgba(239,68,68,0.15);color:var(--red)">URGENT</span>
+        </div>
+        <div class="task-item">
+          <div class="task-cb"></div>
+          <div class="task-text">Schedule irrigation — zones 3-5</div>
+          <span class="task-pri" style="background:rgba(245,158,11,0.15);color:var(--amber)">TODAY</span>
+        </div>
+        <div class="task-item">
+          <div class="task-cb"></div>
+          <div class="task-text">Inspect combine harvester</div>
+          <span class="task-pri" style="background:rgba(132,204,22,0.15);color:var(--lime)">NORMAL</span>
+        </div>
+        <div class="task-item">
+          <div class="task-cb"></div>
+          <div class="task-text">Update harvest schedule</div>
+          <span class="task-pri" style="background:rgba(132,204,22,0.15);color:var(--lime)">NORMAL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-header">
+    <h2>Precision Agriculture Tools</h2>
+    <p>Data-driven farming for maximum yield and sustainability</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🚁</div>
+      <h3>Drone & Satellite Imagery</h3>
+      <p>Automated drone flights and satellite NDVI mapping detect crop stress, disease, and irrigation needs across every acre — visible from field to pixel level.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <h3>IoT Soil Sensor Network</h3>
+      <p>Deploy wireless soil sensors measuring moisture, temperature, pH, and NPK levels. AI correlates sensor data to issue targeted irrigation and fertilizer recommendations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌡️</div>
+      <h3>Hyperlocal Weather AI</h3>
+      <p>Farm-specific weather forecasts, GDD (Growing Degree Day) tracking, frost alerts, and harvest window optimization based on your exact field coordinates.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🦠</div>
+      <h3>Disease & Pest Detection</h3>
+      <p>AI-powered image recognition identifies 200+ crop diseases and 150+ pest species from drone and smartphone photos — enabling targeted treatment before outbreaks spread.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Yield Prediction Engine</h3>
+      <p>Machine learning models trained on satellite data, weather history, soil profiles, and input records predict final yields with 94% accuracy up to 60 days before harvest.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💧</div>
+      <h3>Smart Irrigation Control</h3>
+      <p>Variable-rate irrigation scheduling based on soil moisture maps, weather forecasts, and crop water demand models. Reduce water usage by 28% while improving yields.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-header">
+    <h2>Farm Pricing Plans</h2>
+    <p>Scalable solutions from small farms to large agribusiness</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">SMALL FARM</div>
+      <div class="price-amount">$99<span>/mo</span></div>
+      <div class="price-desc">For farms up to 500 acres</div>
+      <ul class="price-features">
+        <li>Up to 500 acres</li>
+        <li>Satellite NDVI mapping</li>
+        <li>Basic soil sensor support</li>
+        <li>Weather alerts & forecasts</li>
+        <li>Crop scouting app</li>
+        <li>Season reporting</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">MID-SIZE FARM</div>
+      <div class="price-amount">$349<span>/mo</span></div>
+      <div class="price-desc">For 500–5,000 acre operations</div>
+      <ul class="price-features">
+        <li>Up to 5,000 acres</li>
+        <li>Drone flight management</li>
+        <li>AI disease & pest detection</li>
+        <li>IoT sensor network (20 sensors)</li>
+        <li>Yield prediction engine</li>
+        <li>Smart irrigation control</li>
+        <li>Market price integration</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">AGRIBUSINESS</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For large-scale commercial operations</div>
+      <ul class="price-features">
+        <li>Unlimited acreage</li>
+        <li>Custom AI model training</li>
+        <li>Fleet & equipment tracking</li>
+        <li>Supply chain integration</li>
+        <li>Carbon credit reporting</li>
+        <li>Dedicated agronomist support</li>
+        <li>API & ERP integrations</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">🌾</div><span>AgricultureAI</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">Terms</a><a href="#">API</a><a href="#">Sustainability</a><a href="#">Support</a>
+  </div>
+  <div>© 2024 AgricultureAI Inc. • App #103</div>
+</footer>
+
+</body>
+</html>
