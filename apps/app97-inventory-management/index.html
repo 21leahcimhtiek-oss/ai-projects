@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InventoryAI - AI-Powered Inventory Management</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #06b6d4;
+    --secondary: #22d3ee;
+    --accent: #a5f3fc;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a2e;
+    --border: #ffffff15;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; color: var(--muted); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 0.75rem; }
+  .btn-ghost { padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: transparent; color: var(--text); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), #0891b2); color: white; font-weight: 600; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(6,182,212,0.4); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; } 50% { transform: translate(-50%,-50%) scale(1.2); opacity: 1; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); border-radius: 100px; font-size: 0.8rem; color: var(--secondary); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .btn-lg { padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-lg-primary { background: linear-gradient(135deg, var(--primary), #0891b2); color: white; }
+  .btn-lg-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(6,182,212,0.45); }
+  .btn-lg-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-lg-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat strong { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat span { font-size: 0.85rem; color: var(--muted); }
+
+  .demo-section { padding: 5rem 2rem; background: var(--surface); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .section-header p { color: var(--muted); font-size: 1.1rem; }
+  .dashboard { max-width: 1200px; margin: 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  .dash-header { background: rgba(6,182,212,0.05); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-weight: 700; font-size: 1rem; }
+  .dash-body { display: grid; grid-template-columns: 250px 1fr; min-height: 520px; }
+
+  .cat-sidebar { border-right: 1px solid var(--border); padding: 1rem; }
+  .cat-sidebar h4 { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .cat-item { padding: 0.65rem; border-radius: 8px; margin-bottom: 0.4rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.6rem; }
+  .cat-item:hover, .cat-item.active { border-color: var(--primary); background: rgba(6,182,212,0.07); }
+  .cat-icon { font-size: 1.1rem; }
+  .cat-info { flex: 1; }
+  .cat-name { font-size: 0.82rem; font-weight: 600; }
+  .cat-count { font-size: 0.68rem; color: var(--muted); }
+  .cat-value { font-size: 0.78rem; font-weight: 700; color: var(--secondary); }
+
+  .inv-main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; }
+  .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .kpi-value { font-size: 1.4rem; font-weight: 800; }
+  .kpi-value.cyan { color: var(--secondary); }
+  .kpi-value.green { color: #86efac; }
+  .kpi-value.red { color: #fca5a5; }
+  .kpi-value.amber { color: #fde68a; }
+  .kpi-delta { font-size: 0.72rem; color: #86efac; margin-top: 0.2rem; }
+  .kpi-delta.neg { color: #fca5a5; }
+
+  /* Inventory table */
+  .inv-table { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .inv-table-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; gap: 0; background: rgba(6,182,212,0.05); border-bottom: 1px solid var(--border); padding: 0.6rem 1rem; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .inv-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; gap: 0; padding: 0.6rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.8rem; align-items: center; transition: background 0.2s; }
+  .inv-row:last-child { border-bottom: none; }
+  .inv-row:hover { background: rgba(6,182,212,0.04); }
+  .inv-product { font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+  .inv-sku { font-size: 0.65rem; color: var(--muted); }
+  .stock-badge { display: inline-block; font-size: 0.68rem; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 600; }
+  .sb-ok { background: rgba(34,197,94,0.15); color: #86efac; }
+  .sb-low { background: rgba(251,191,36,0.15); color: #fde68a; }
+  .sb-out { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .reorder-btn { font-size: 0.68rem; padding: 0.2rem 0.5rem; border: 1px solid rgba(6,182,212,0.3); border-radius: 4px; background: rgba(6,182,212,0.1); color: var(--secondary); cursor: pointer; }
+
+  /* AI reorder alerts */
+  .ai-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .reorder-panel { background: rgba(6,182,212,0.04); border: 1px solid rgba(6,182,212,0.15); border-radius: 10px; padding: 0.9rem; }
+  .reorder-panel h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-tag { background: linear-gradient(135deg, var(--primary), #0891b2); color: white; font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+  .reorder-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); }
+  .reorder-item:last-child { border-bottom: none; }
+  .ri-icon { font-size: 1rem; }
+  .ri-info { flex: 1; }
+  .ri-name { font-size: 0.8rem; font-weight: 600; }
+  .ri-detail { font-size: 0.68rem; color: var(--muted); }
+  .ri-action { font-size: 0.7rem; padding: 0.2rem 0.55rem; border-radius: 5px; border: none; cursor: pointer; font-weight: 600; }
+  .ra-order { background: linear-gradient(135deg, var(--primary), #0891b2); color: white; }
+  .ra-review { background: rgba(251,191,36,0.15); color: #fde68a; border: 1px solid rgba(251,191,36,0.3); }
+  .forecast-panel { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .forecast-panel h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .forecast-bar-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .forecast-label { font-size: 0.72rem; color: var(--muted); min-width: 60px; }
+  .forecast-bar-bg { flex: 1; height: 10px; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden; }
+  .forecast-bar { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+  .forecast-val { font-size: 0.72rem; font-weight: 700; color: var(--secondary); min-width: 40px; text-align: right; }
+
+  .features-section { padding: 5rem 2rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(6,182,212,0.1); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(34,211,238,0.1)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  .pricing-section { padding: 5rem 2rem; background: var(--surface); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1050px; margin: 0 auto; }
+  .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+  .pricing-card.popular { border-color: var(--primary); box-shadow: 0 0 30px rgba(6,182,212,0.15); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), #0891b2); padding: 0.3rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .pricing-tier { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .pricing-price { font-size: 2.8rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .pricing-features { list-style: none; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pricing-features li { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pricing-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 0.8rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-plan-primary { background: linear-gradient(135deg, var(--primary), #0891b2); color: white; }
+  .btn-plan-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(6,182,212,0.4); }
+  .btn-plan-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+  .cta-section { padding: 5rem 2rem; text-align: center; background: var(--bg); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; position: relative; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  footer { padding: 3rem 2rem 2rem; border-top: 1px solid var(--border); background: var(--surface); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.6; max-width: 250px; }
+  .footer-col h4 { font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+  .footer-col a { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem; width: 100%; max-width: 440px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--primary), #0891b2); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+  .social-btns { display: flex; gap: 0.75rem; }
+  .social-btn { flex: 1; padding: 0.65rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-size: 0.85rem; cursor: pointer; }
+  .modal-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">📦 InventoryAI</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Integrations</a>
+    <a href="#">Forecasting</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="document.getElementById('loginModal').classList.add('active')">Sign In</button>
+    <button class="btn-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">📦 AI-Powered Inventory Management</div>
+  <h1>Never Stockout or<br><span>Overstock Again with AI</span></h1>
+  <p>InventoryAI predicts demand, automates reorders, and optimizes stock levels across every warehouse and sales channel in real time.</p>
+  <div class="hero-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    <button class="btn-lg btn-lg-ghost">Watch Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>35%</strong><span>Avg Inventory Cost Reduction</span></div>
+    <div class="hero-stat"><strong>99.4%</strong><span>Order Fulfillment Rate</span></div>
+    <div class="hero-stat"><strong>8,400+</strong><span>Businesses Using InventoryAI</span></div>
+    <div class="hero-stat"><strong>2.1M+</strong><span>SKUs Tracked</span></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Total Inventory Intelligence</h2>
+    <p>Real-time stock visibility, AI demand forecasting, and automated purchasing across all your channels</p>
+  </div>
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-title">📦 InventoryAI — Acme Commerce · 3 Warehouses · 6 Channels</span>
+      <span style="font-size:0.78rem;color:var(--secondary);">Total Stock Value: <strong>$2.84M</strong></span>
+    </div>
+    <div class="dash-body">
+      <div class="cat-sidebar">
+        <h4>Categories</h4>
+        <div class="cat-item active">
+          <span class="cat-icon">📱</span>
+          <div class="cat-info"><div class="cat-name">Electronics</div><div class="cat-count">284 SKUs</div></div>
+          <span class="cat-value">$940K</span>
+        </div>
+        <div class="cat-item">
+          <span class="cat-icon">👕</span>
+          <div class="cat-info"><div class="cat-name">Apparel</div><div class="cat-count">1,240 SKUs</div></div>
+          <span class="cat-value">$420K</span>
+        </div>
+        <div class="cat-item">
+          <span class="cat-icon">🏠</span>
+          <div class="cat-info"><div class="cat-name">Home & Garden</div><div class="cat-count">892 SKUs</div></div>
+          <span class="cat-value">$380K</span>
+        </div>
+        <div class="cat-item">
+          <span class="cat-icon">💄</span>
+          <div class="cat-info"><div class="cat-name">Beauty</div><div class="cat-count">447 SKUs</div></div>
+          <span class="cat-value">$280K</span>
+        </div>
+        <div class="cat-item">
+          <span class="cat-icon">🎮</span>
+          <div class="cat-info"><div class="cat-name">Toys & Games</div><div class="cat-count">312 SKUs</div></div>
+          <span class="cat-value">$190K</span>
+        </div>
+        <div class="cat-item">
+          <span class="cat-icon">⚙️</span>
+          <div class="cat-info"><div class="cat-name">Auto Parts</div><div class="cat-count">628 SKUs</div></div>
+          <span class="cat-value">$630K</span>
+        </div>
+      </div>
+
+      <div class="inv-main">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Total SKUs</div>
+            <div class="kpi-value cyan">3,807</div>
+            <div class="kpi-delta">▲ 142 added this month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Low Stock Alerts</div>
+            <div class="kpi-value amber">24</div>
+            <div class="kpi-delta neg">AI reorder triggered for 18</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Out of Stock</div>
+            <div class="kpi-value red">6</div>
+            <div class="kpi-delta neg">POs raised automatically</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Inventory Turnover</div>
+            <div class="kpi-value green">8.4x</div>
+            <div class="kpi-delta">▲ 1.2x vs last year</div>
+          </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="inv-table">
+          <div class="inv-table-header">
+            <div>Product</div><div>Stock</div><div>Reorder Pt</div><div>Value</div><div>Status</div><div>Action</div>
+          </div>
+          <div class="inv-row">
+            <div class="inv-product">📱 iPhone 15 Pro Case <div class="inv-sku">SKU-8821</div></div>
+            <div>1,284</div><div>500</div><div>$18,240</div>
+            <div><span class="stock-badge sb-ok">In Stock</span></div>
+            <div><button class="reorder-btn">View</button></div>
+          </div>
+          <div class="inv-row">
+            <div class="inv-product">🎧 AirPods Pro Case <div class="inv-sku">SKU-4401</div></div>
+            <div style="color:#fde68a;font-weight:700;">48</div><div>200</div><div>$1,440</div>
+            <div><span class="stock-badge sb-low">Low Stock</span></div>
+            <div><button class="reorder-btn" style="background:rgba(251,191,36,0.15);color:#fde68a;border-color:rgba(251,191,36,0.3);">Reorder</button></div>
+          </div>
+          <div class="inv-row">
+            <div class="inv-product">💻 MacBook Stand Pro <div class="inv-sku">SKU-7734</div></div>
+            <div style="color:#fca5a5;font-weight:700;">0</div><div>100</div><div>$0</div>
+            <div><span class="stock-badge sb-out">Out of Stock</span></div>
+            <div><button class="reorder-btn" style="background:rgba(239,68,68,0.15);color:#fca5a5;border-color:rgba(239,68,68,0.3);">PO Raised</button></div>
+          </div>
+          <div class="inv-row">
+            <div class="inv-product">🖱 Wireless Charger 3-in-1 <div class="inv-sku">SKU-2290</div></div>
+            <div>892</div><div>300</div><div>$31,220</div>
+            <div><span class="stock-badge sb-ok">In Stock</span></div>
+            <div><button class="reorder-btn">View</button></div>
+          </div>
+          <div class="inv-row">
+            <div class="inv-product">🔋 Power Bank 20000mAh <div class="inv-sku">SKU-5512</div></div>
+            <div style="color:#fde68a;font-weight:700;">124</div><div>250</div><div>$9,920</div>
+            <div><span class="stock-badge sb-low">Low Stock</span></div>
+            <div><button class="reorder-btn" style="background:rgba(251,191,36,0.15);color:#fde68a;border-color:rgba(251,191,36,0.3);">Reorder</button></div>
+          </div>
+        </div>
+
+        <!-- AI Reorder + Forecast -->
+        <div class="ai-row">
+          <div class="reorder-panel">
+            <h4>🤖 AI Reorder Queue <span class="ai-tag">AUTO</span></h4>
+            <div class="reorder-item">
+              <span class="ri-icon">⚡</span>
+              <div class="ri-info"><div class="ri-name">AirPods Pro Case</div><div class="ri-detail">AI suggests: Order 500 units · Lead time: 8 days</div></div>
+              <button class="ri-action ra-order">Order Now</button>
+            </div>
+            <div class="reorder-item">
+              <span class="ri-icon">⚡</span>
+              <div class="ri-info"><div class="ri-name">Power Bank 20000mAh</div><div class="ri-detail">AI suggests: Order 400 units · Lead time: 12 days</div></div>
+              <button class="ri-action ra-order">Order Now</button>
+            </div>
+            <div class="reorder-item">
+              <span class="ri-icon">📈</span>
+              <div class="ri-info"><div class="ri-name">Wireless Charger 3-in-1</div><div class="ri-detail">Demand spike predicted in 14 days · Pre-order?</div></div>
+              <button class="ri-action ra-review">Review</button>
+            </div>
+            <div class="reorder-item">
+              <span class="ri-icon">🎄</span>
+              <div class="ri-info"><div class="ri-name">Holiday Category Prep</div><div class="ri-detail">AI: Increase Toys & Games stock by 340% for Q4</div></div>
+              <button class="ri-action ra-review">Plan Now</button>
+            </div>
+          </div>
+          <div class="forecast-panel">
+            <h4>📈 Demand Forecast — Next 30 Days</h4>
+            <div class="forecast-bar-row"><span class="forecast-label">Electronics</span><div class="forecast-bar-bg"><div class="forecast-bar" style="width:88%"></div></div><span class="forecast-val">+24%</span></div>
+            <div class="forecast-bar-row"><span class="forecast-label">Apparel</span><div class="forecast-bar-bg"><div class="forecast-bar" style="width:62%"></div></div><span class="forecast-val">+8%</span></div>
+            <div class="forecast-bar-row"><span class="forecast-label">Beauty</span><div class="forecast-bar-bg"><div class="forecast-bar" style="width:74%"></div></div><span class="forecast-val">+16%</span></div>
+            <div class="forecast-bar-row"><span class="forecast-label">Toys & Games</span><div class="forecast-bar-bg"><div class="forecast-bar" style="width:95%"></div></div><span class="forecast-val">+41%</span></div>
+            <div class="forecast-bar-row"><span class="forecast-label">Auto Parts</span><div class="forecast-bar-bg"><div class="forecast-bar" style="width:50%"></div></div><span class="forecast-val">+5%</span></div>
+            <div style="margin-top:0.6rem;font-size:0.72rem;color:var(--muted);">📊 Forecast accuracy: <strong style="color:var(--secondary);">94.2%</strong> based on 18 months of historical data + market signals</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="section-header">
+    <h2>End-to-End Inventory Intelligence</h2>
+    <p>AI-powered tools that eliminate stockouts, reduce overstock, and maximize your inventory ROI</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h3>AI Demand Forecasting</h3>
+      <p>Machine learning models analyze 50+ variables — seasonality, trends, promotions, weather — to predict demand with 94% accuracy up to 90 days out.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>Automated Reordering</h3>
+      <p>Set reorder rules once. AI monitors stock levels, calculates optimal order quantities, and sends purchase orders to suppliers automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏭</div>
+      <h3>Multi-Warehouse Management</h3>
+      <p>Track inventory across unlimited warehouses and fulfillment centers. AI routes orders to the optimal location to minimize shipping costs and time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛒</div>
+      <h3>Omnichannel Sync</h3>
+      <p>Real-time inventory sync across Amazon, Shopify, WooCommerce, eBay, Walmart, and your wholesale channels to prevent overselling.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Profitability Analytics</h3>
+      <p>Track COGS, gross margin, dead stock, and carrying costs by SKU, category, supplier, and channel. AI identifies your most and least profitable products.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Barcode & RFID Support</h3>
+      <p>Mobile barcode scanning, RFID integration, and cycle counting tools for accurate physical inventory counts with AI-powered discrepancy detection.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="section-header">
+    <h2>Inventory Management at Every Scale</h2>
+    <p>From 100 SKUs to 1 million — pricing that scales with your business</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-price">$79<span>/mo</span></div>
+      <div class="pricing-desc">For small e-commerce businesses with up to 500 SKUs across 2 channels</div>
+      <ul class="pricing-features">
+        <li>Up to 500 SKUs</li>
+        <li>2 sales channels</li>
+        <li>Basic demand forecasting</li>
+        <li>Low stock alerts</li>
+        <li>1 warehouse location</li>
+        <li>Shopify & Amazon sync</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="pricing-tier">Growth</div>
+      <div class="pricing-price">$299<span>/mo</span></div>
+      <div class="pricing-desc">For growing retailers with complex inventory needs across multiple channels</div>
+      <ul class="pricing-features">
+        <li>Up to 10,000 SKUs</li>
+        <li>Unlimited sales channels</li>
+        <li>AI demand forecasting (94% accuracy)</li>
+        <li>Automated purchase orders</li>
+        <li>5 warehouse locations</li>
+        <li>Full omnichannel sync</li>
+        <li>Profitability analytics</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-desc">For large retailers, distributors, and 3PLs with enterprise-scale inventory operations</div>
+      <ul class="pricing-features">
+        <li>Unlimited SKUs</li>
+        <li>Unlimited warehouses</li>
+        <li>Custom AI forecasting models</li>
+        <li>ERP & WMS integrations</li>
+        <li>RFID & IoT integration</li>
+        <li>Dedicated success team</li>
+        <li>SLA-backed uptime</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Stop Losing Sales to Stockouts</h2>
+  <p>Join 8,400+ businesses using InventoryAI to optimize stock levels and boost profitability</p>
+  <div class="cta-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free 14-Day Trial</button>
+    <button class="btn-lg btn-lg-ghost">See a Live Demo</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">📦 InventoryAI</div>
+      <p>AI-powered inventory management that predicts demand, automates reorders, and maximizes your inventory ROI.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">Forecasting</a><a href="#">Reordering</a><a href="#">Multi-Warehouse</a><a href="#">Analytics</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a><a href="#">Integrations</a><a href="#">Privacy</a><a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 InventoryAI · AI-Powered Inventory Management · All rights reserved</div>
+</footer>
+
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signupModal').classList.remove('active')">×</button>
+    <h2>Start Free Trial</h2>
+    <p>14 days free, no credit card required</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 Microsoft</button>
+    </div>
+    <div class="modal-divider">— or sign up with email —</div>
+    <div class="form-group"><label>Full Name</label><input type="text" placeholder="Jane Smith"></div>
+    <div class="form-group"><label>Work Email</label><input type="email" placeholder="jane@company.com"></div>
+    <div class="form-group"><label>Business Name</label><input type="text" placeholder="Acme Commerce Co."></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Start Free Trial</button>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('loginModal').classList.remove('active')">×</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to InventoryAI</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🔗 Microsoft</button>
+    </div>
+    <div class="modal-divider">— or sign in with email —</div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jane@company.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Sign In</button>
+  </div>
+</div>
+
+</body>
+</html>
