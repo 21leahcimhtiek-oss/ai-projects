@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindAI - AI-Powered Mental Health & Wellness Platform</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --primary: #7c3aed;
+    --secondary: #8b5cf6;
+    --accent: #ddd6fe;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a2e;
+    --border: #ffffff15;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --calm: #a78bfa;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .nav-links { display: flex; gap: 2rem; color: var(--muted); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { display: flex; gap: 0.75rem; }
+  .btn-ghost { padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: transparent; color: var(--text); transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { padding: 0.5rem 1.2rem; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), #6d28d9); color: white; font-weight: 600; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(124,58,237,0.4); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; } 50% { transform: translate(-50%,-50%) scale(1.15); opacity: 0.9; } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); border-radius: 100px; font-size: 0.8rem; color: var(--calm); margin-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+  .btn-lg { padding: 0.9rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-lg-primary { background: linear-gradient(135deg, var(--primary), #6d28d9); color: white; }
+  .btn-lg-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,58,237,0.45); }
+  .btn-lg-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-lg-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat strong { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat span { font-size: 0.85rem; color: var(--muted); }
+
+  .demo-section { padding: 5rem 2rem; background: var(--surface); }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .section-header p { color: var(--muted); font-size: 1.1rem; }
+  .dashboard { max-width: 1200px; margin: 0 auto; background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  .dash-header { background: rgba(124,58,237,0.05); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-title { font-weight: 700; font-size: 1rem; }
+  .dash-body { display: grid; grid-template-columns: 240px 1fr; min-height: 540px; }
+
+  .patient-sidebar { border-right: 1px solid var(--border); padding: 1rem; }
+  .patient-sidebar h4 { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+  .patient-item { padding: 0.7rem; border-radius: 8px; margin-bottom: 0.4rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .patient-item:hover, .patient-item.active { border-color: var(--primary); background: rgba(124,58,237,0.07); }
+  .patient-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+  .patient-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+  .patient-name { font-size: 0.82rem; font-weight: 600; }
+  .patient-meta { font-size: 0.68rem; color: var(--muted); }
+  .mood-indicator { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.2rem; font-size: 0.68rem; }
+  .mood-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .mood-good { background: #86efac; }
+  .mood-neutral { background: #fde68a; }
+  .mood-low { background: #fca5a5; }
+  .mood-label { color: var(--muted); }
+
+  .mind-main { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; }
+  .kpi-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .kpi-value { font-size: 1.4rem; font-weight: 800; }
+  .kpi-value.purple { color: var(--calm); }
+  .kpi-value.green { color: #86efac; }
+  .kpi-value.amber { color: #fde68a; }
+  .kpi-delta { font-size: 0.72rem; color: #86efac; margin-top: 0.2rem; }
+
+  /* Mood tracker + session notes */
+  .mid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .mood-chart { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .mood-chart h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .mood-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+  .mood-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .mood-bar { width: 100%; border-radius: 4px 4px 0 0; transition: opacity 0.2s; }
+  .mb-high { background: linear-gradient(to top, #7c3aed, #a78bfa); }
+  .mb-mid { background: linear-gradient(to top, #6d28d9, #8b5cf6); }
+  .mb-low { background: linear-gradient(to top, #4c1d95, #6d28d9); }
+  .mood-day { font-size: 0.6rem; color: var(--muted); }
+  .session-notes { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .session-notes h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .session-row { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+  .session-row:last-child { border-bottom: none; }
+  .session-date { font-size: 0.68rem; color: var(--muted); min-width: 55px; }
+  .session-info { flex: 1; }
+  .session-title { font-size: 0.8rem; font-weight: 600; }
+  .session-note { font-size: 0.7rem; color: var(--muted); }
+  .session-type { font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 3px; font-weight: 600; }
+  .st-video { background: rgba(124,58,237,0.2); color: var(--accent); }
+  .st-ai { background: rgba(34,197,94,0.15); color: #86efac; }
+
+  /* AI insights + tools */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .ai-insights { background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.15); border-radius: 10px; padding: 0.9rem; }
+  .ai-insights h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+  .ai-tag { background: linear-gradient(135deg, var(--primary), #6d28d9); color: white; font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+  .insight-item { padding: 0.5rem; background: rgba(255,255,255,0.02); border-radius: 6px; margin-bottom: 0.4rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+  .insight-icon { font-size: 0.9rem; min-width: 16px; }
+  .insight-text { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+  .insight-text strong { color: var(--calm); }
+  .wellness-tools { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; }
+  .wellness-tools h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .tool-card { padding: 0.6rem; background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.15); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .tool-card:hover { background: rgba(124,58,237,0.15); }
+  .tool-icon { font-size: 1.1rem; margin-bottom: 0.2rem; }
+  .tool-name { font-size: 0.75rem; font-weight: 600; }
+  .tool-desc { font-size: 0.65rem; color: var(--muted); }
+
+  .features-section { padding: 5rem 2rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.3s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(124,58,237,0.1); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(139,92,246,0.1)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  .pricing-section { padding: 5rem 2rem; background: var(--surface); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+  .pricing-card.popular { border-color: var(--primary); box-shadow: 0 0 30px rgba(124,58,237,0.15); }
+  .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), #6d28d9); padding: 0.3rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .pricing-tier { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .pricing-price { font-size: 2.8rem; font-weight: 900; margin-bottom: 0.25rem; }
+  .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  .pricing-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .pricing-features { list-style: none; margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pricing-features li { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  .pricing-features li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+  .btn-plan { width: 100%; padding: 0.8rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.25s; }
+  .btn-plan-primary { background: linear-gradient(135deg, var(--primary), #6d28d9); color: white; }
+  .btn-plan-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(124,58,237,0.4); }
+  .btn-plan-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+  .cta-section { padding: 5rem 2rem; text-align: center; background: var(--bg); position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; position: relative; }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; position: relative; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  footer { padding: 3rem 2rem 2rem; border-top: 1px solid var(--border); background: var(--surface); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.6; max-width: 250px; }
+  .footer-col h4 { font-weight: 700; margin-bottom: 1rem; font-size: 0.9rem; }
+  .footer-col a { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem; width: 100%; max-width: 440px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+  .modal h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .form-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; }
+  .form-group input:focus { border-color: var(--primary); }
+  .btn-submit { width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--primary), #6d28d9); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem; }
+  .social-btns { display: flex; gap: 0.75rem; }
+  .social-btn { flex: 1; padding: 0.65rem; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-size: 0.85rem; cursor: pointer; }
+  .modal-divider { text-align: center; color: var(--muted); font-size: 0.8rem; margin: 1rem 0; }
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🧘 MindAI</div>
+  <div class="nav-links">
+    <a href="#">For Individuals</a>
+    <a href="#">For Clinicians</a>
+    <a href="#">Employers</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-ghost" onclick="document.getElementById('loginModal').classList.add('active')">Sign In</button>
+    <button class="btn-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🧘 AI-Powered Mental Health & Wellness</div>
+  <h1>Better Mental Health,<br><span>Powered by Compassionate AI</span></h1>
+  <p>MindAI combines evidence-based therapy tools, 24/7 AI support, and licensed therapist matching to make mental health care accessible to everyone.</p>
+  <div class="hero-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Your Journey Free</button>
+    <button class="btn-lg btn-lg-ghost">How It Works</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>1.8M+</strong><span>People Supported</span></div>
+    <div class="hero-stat"><strong>82%</strong><span>Report Reduced Anxiety</span></div>
+    <div class="hero-stat"><strong>4.9★</strong><span>User Rating</span></div>
+    <div class="hero-stat"><strong>10,000+</strong><span>Licensed Therapists</span></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Holistic Mental Health Management</h2>
+    <p>AI-powered insights, mood tracking, and therapist tools working together seamlessly</p>
+  </div>
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-title">🧘 MindAI — Therapist Portal · Dr. Sarah Kim</span>
+      <span style="font-size:0.78rem;color:var(--calm);">12 Active Patients · Next Session: 2:00 PM</span>
+    </div>
+    <div class="dash-body">
+      <div class="patient-sidebar">
+        <h4>My Patients (12)</h4>
+        <div class="patient-item active">
+          <div class="patient-header"><div class="patient-avatar">AJ</div><div><div class="patient-name">Alex Johnson</div><div class="patient-meta">Anxiety · 6 weeks</div></div></div>
+          <div class="mood-indicator"><div class="mood-dot mood-good"></div><span class="mood-label">Mood improving ▲</span></div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-header"><div class="patient-avatar">ML</div><div><div class="patient-name">Maya Lee</div><div class="patient-meta">Depression · 3 months</div></div></div>
+          <div class="mood-indicator"><div class="mood-dot mood-neutral"></div><span class="mood-label">Stable</span></div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-header"><div class="patient-avatar">JR</div><div><div class="patient-name">James Rivera</div><div class="patient-meta">PTSD · 8 weeks</div></div></div>
+          <div class="mood-indicator"><div class="mood-dot mood-low"></div><span class="mood-label">Check in needed</span></div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-header"><div class="patient-avatar">SP</div><div><div class="patient-name">Sofia Park</div><div class="patient-meta">Burnout · 4 weeks</div></div></div>
+          <div class="mood-indicator"><div class="mood-dot mood-good"></div><span class="mood-label">Making progress</span></div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-header"><div class="patient-avatar">TW</div><div><div class="patient-name">Tom Wilson</div><div class="patient-meta">Grief · 2 months</div></div></div>
+          <div class="mood-indicator"><div class="mood-dot mood-neutral"></div><span class="mood-label">Session today</span></div>
+        </div>
+      </div>
+
+      <div class="mind-main">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Avg Mood Score</div>
+            <div class="kpi-value purple">7.2/10</div>
+            <div class="kpi-delta">▲ +1.4 this month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Sessions This Week</div>
+            <div class="kpi-value green">18</div>
+            <div class="kpi-delta">8 video · 10 AI check-ins</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">PHQ-9 Avg</div>
+            <div class="kpi-value purple">8.4</div>
+            <div class="kpi-delta">▼ Improved from 14.2</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Crisis Alerts</div>
+            <div class="kpi-value amber">1</div>
+            <div class="kpi-delta">Flagged for review</div>
+          </div>
+        </div>
+
+        <!-- Mood chart + Session notes -->
+        <div class="mid-row">
+          <div class="mood-chart">
+            <h4>Alex Johnson — Mood Trend (7 Days)</h4>
+            <div class="mood-bars">
+              <div class="mood-bar-wrap"><div class="mood-bar mb-low" style="height:40px"></div><div class="mood-day">Mon</div></div>
+              <div class="mood-bar-wrap"><div class="mood-bar mb-mid" style="height:55px"></div><div class="mood-day">Tue</div></div>
+              <div class="mood-bar-wrap"><div class="mood-bar mb-mid" style="height:50px"></div><div class="mood-day">Wed</div></div>
+              <div class="mood-bar-wrap"><div class="mood-bar mb-high" style="height:70px"></div><div class="mood-day">Thu</div></div>
+              <div class="mood-bar-wrap"><div class="mood-bar mb-high" style="height:65px"></div><div class="mood-day">Fri</div></div>
+              <div class="mood-bar-wrap"><div class="mood-bar mb-high" style="height:75px"></div><div class="mood-day">Sat</div></div>
+              <div class="mood-bar-wrap"><div class="mood-bar mb-high" style="height:80px"></div><div class="mood-day">Sun</div></div>
+            </div>
+            <div style="margin-top:0.5rem;font-size:0.72rem;color:var(--muted);">Mood score: <strong style="color:var(--calm);">7.8/10</strong> today · <strong style="color:#86efac;">Best week in 6 weeks</strong></div>
+          </div>
+          <div class="session-notes">
+            <h4>Recent Sessions</h4>
+            <div class="session-row">
+              <div class="session-date">Jun 16</div>
+              <div class="session-info"><div class="session-title">CBT: Cognitive Restructuring</div><div class="session-note">Strong engagement, identified 3 core beliefs</div></div>
+              <span class="session-type st-video">Video</span>
+            </div>
+            <div class="session-row">
+              <div class="session-date">Jun 14</div>
+              <div class="session-info"><div class="session-title">AI Check-in: Anxiety Management</div><div class="session-note">Completed 5-4-3-2-1 grounding exercise</div></div>
+              <span class="session-type st-ai">AI</span>
+            </div>
+            <div class="session-row">
+              <div class="session-date">Jun 12</div>
+              <div class="session-info"><div class="session-title">Breathing & Mindfulness</div><div class="session-note">10-min meditation completed, sleep improved</div></div>
+              <span class="session-type st-ai">AI</span>
+            </div>
+            <div class="session-row">
+              <div class="session-date">Jun 9</div>
+              <div class="session-info"><div class="session-title">Exposure Therapy Session 3</div><div class="session-note">Social anxiety hierarchy — good progress</div></div>
+              <span class="session-type st-video">Video</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Insights + Wellness Tools -->
+        <div class="bottom-row">
+          <div class="ai-insights">
+            <h4>🤖 AI Clinical Insights <span class="ai-tag">LIVE</span></h4>
+            <div class="insight-item">
+              <span class="insight-icon">📈</span>
+              <span class="insight-text"><strong>Alex Johnson:</strong> Mood scores have improved consistently for 5 days. AI detects correlation with daily journaling started last Monday. Recommend reinforcing this habit.</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-icon">⚠️</span>
+              <span class="insight-text"><strong>James Rivera:</strong> AI detected high distress language in last 3 check-ins. PHQ-9 suggests moderate-severe range. Recommend scheduling urgent session this week.</span>
+            </div>
+            <div class="insight-item">
+              <span class="insight-icon">💡</span>
+              <span class="insight-text"><strong>Group insight:</strong> 73% of your patients show worse mood on Mondays. Consider scheduling supportive AI check-ins for Sunday evenings proactively.</span>
+            </div>
+          </div>
+          <div class="wellness-tools">
+            <h4>AI Wellness Tools</h4>
+            <div class="tool-grid">
+              <div class="tool-card"><div class="tool-icon">🧘</div><div class="tool-name">Guided Meditation</div><div class="tool-desc">5–20 min sessions</div></div>
+              <div class="tool-card"><div class="tool-icon">📓</div><div class="tool-name">AI Journal</div><div class="tool-desc">Mood-aware prompts</div></div>
+              <div class="tool-card"><div class="tool-icon">😮‍💨</div><div class="tool-name">Breathing Exercises</div><div class="tool-desc">Box, 4-7-8, & more</div></div>
+              <div class="tool-card"><div class="tool-icon">💬</div><div class="tool-name">AI Therapist Chat</div><div class="tool-desc">24/7 CBT support</div></div>
+              <div class="tool-card"><div class="tool-icon">😴</div><div class="tool-name">Sleep Coach</div><div class="tool-desc">AI sleep hygiene</div></div>
+              <div class="tool-card"><div class="tool-icon">📊</div><div class="tool-name">PHQ-9 / GAD-7</div><div class="tool-desc">Clinical assessments</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="section-header">
+    <h2>Complete Mental Health Care Ecosystem</h2>
+    <p>Everything individuals, therapists, and employers need to support mental wellbeing</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>24/7 AI Therapist</h3>
+      <p>Evidence-based CBT, DBT, and mindfulness techniques delivered by compassionate AI anytime, anywhere — no waiting rooms, no stigma.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👩‍⚕️</div>
+      <h3>Licensed Therapist Matching</h3>
+      <p>AI matches you with the right licensed therapist based on your needs, preferences, insurance, and availability. First session in 24 hours.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Mood & Progress Tracking</h3>
+      <p>Daily mood check-ins, PHQ-9, GAD-7 assessments, and AI-powered trend analysis to visualize your mental health journey over time.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏢</div>
+      <h3>Employer EAP Solution</h3>
+      <p>Comprehensive Employee Assistance Program with population-level wellbeing dashboards, ROI reporting, and confidential individual support.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Crisis Detection & Response</h3>
+      <p>AI monitors for crisis signals in check-ins and journal entries. Automatic safety protocols connect at-risk users with immediate support resources.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>HIPAA-Compliant Privacy</h3>
+      <p>End-to-end encryption, HIPAA and SOC 2 compliance, zero-knowledge architecture. Your mental health data is 100% private and never sold.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="section-header">
+    <h2>Mental Health Care for Every Budget</h2>
+    <p>Quality care shouldn't be a luxury. Plans starting at free.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Personal</div>
+      <div class="pricing-price">Free</div>
+      <div class="pricing-desc">Core wellness tools and AI support for individuals starting their mental health journey</div>
+      <ul class="pricing-features">
+        <li>Daily mood tracking</li>
+        <li>AI journal with prompts</li>
+        <li>Guided meditations (20+)</li>
+        <li>Basic breathing exercises</li>
+        <li>PHQ-9 & GAD-7 assessments</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Start Free</button>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="pricing-tier">Premium</div>
+      <div class="pricing-price">$29<span>/mo</span></div>
+      <div class="pricing-desc">Full AI therapy support plus access to licensed therapists for comprehensive care</div>
+      <ul class="pricing-features">
+        <li>Everything in Personal</li>
+        <li>Unlimited AI therapist chat</li>
+        <li>4 licensed therapist sessions/mo</li>
+        <li>AI clinical insights</li>
+        <li>Sleep coaching program</li>
+        <li>Crisis support line access</li>
+        <li>Progress reports for therapist</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free Trial</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Employer</div>
+      <div class="pricing-price">$15<span>/employee/mo</span></div>
+      <div class="pricing-desc">Enterprise EAP solution for companies investing in workforce mental health</div>
+      <ul class="pricing-features">
+        <li>All Premium features for employees</li>
+        <li>Anonymous population analytics</li>
+        <li>ROI & utilization reporting</li>
+        <li>HR admin dashboard</li>
+        <li>Dedicated clinical success team</li>
+        <li>HIPAA BAA included</li>
+        <li>Custom wellness programs</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="document.getElementById('signupModal').classList.add('active')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Your Mental Health Journey Starts Today</h2>
+  <p>Join 1.8 million people using MindAI to build resilience, reduce anxiety, and thrive</p>
+  <div class="cta-btns">
+    <button class="btn-lg btn-lg-primary" onclick="document.getElementById('signupModal').classList.add('active')">Start Free — No Card Needed</button>
+    <button class="btn-lg btn-lg-ghost">Talk to Our Team</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">🧘 MindAI</div>
+      <p>AI-powered mental health care that's accessible, evidence-based, and always available when you need it most.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">AI Therapist</a><a href="#">Find a Therapist</a><a href="#">For Employers</a><a href="#">For Clinicians</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Center</a><a href="#">Crisis Resources</a><a href="#">Privacy (HIPAA)</a><a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 MindAI · AI-Powered Mental Health & Wellness · HIPAA Compliant · SOC 2 Certified · All rights reserved</div>
+</footer>
+
+<div class="modal-overlay" id="signupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('signupModal').classList.remove('active')">×</button>
+    <h2>Start Your Journey</h2>
+    <p>Free forever. No credit card required.</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🍎 Apple</button>
+    </div>
+    <div class="modal-divider">— or sign up with email —</div>
+    <div class="form-group"><label>First Name</label><input type="text" placeholder="Jane"></div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jane@email.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Begin Free Journey</button>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('loginModal').classList.remove('active')">×</button>
+    <h2>Welcome Back</h2>
+    <p>Continue your wellness journey</p>
+    <div class="social-btns">
+      <button class="social-btn">🔵 Google</button>
+      <button class="social-btn">🍎 Apple</button>
+    </div>
+    <div class="modal-divider">— or sign in with email —</div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jane@email.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+    <button class="btn-submit">Sign In</button>
+  </div>
+</div>
+
+</body>
+</html>
