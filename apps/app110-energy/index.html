@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnergyAI - AI-Powered Energy & Utilities Intelligence</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#f59e0b;--accent2:#fbbf24;--accent3:#fcd34d;
+  --text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--blue:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(245,158,11,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+/* DEMO */
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:680px;}
+
+/* SIDEBAR */
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.asset-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.asset-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.asset-item:hover,.asset-item.active{background:var(--surface2);border-color:var(--border);}
+.asset-item.active{border-color:rgba(245,158,11,0.4);}
+.asset-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.asset-name{font-size:0.85rem;font-weight:600;}
+.asset-type{font-size:0.7rem;padding:2px 6px;border-radius:4px;background:rgba(245,158,11,0.1);color:var(--accent);}
+.asset-meta{font-size:0.75rem;color:var(--muted);}
+.asset-bar{height:4px;background:var(--surface2);border-radius:2px;margin-top:6px;overflow:hidden;}
+.asset-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+
+/* MAIN PANEL */
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* ENERGY CHART */
+.chart-container{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.chart-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;display:flex;justify-content:space-between;}
+.energy-chart{display:flex;align-items:flex-end;gap:3px;height:120px;}
+.energy-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.energy-bar{width:100%;border-radius:3px 3px 0 0;position:relative;cursor:pointer;transition:opacity 0.2s;}
+.energy-bar:hover{opacity:0.8;}
+.bar-gen{background:linear-gradient(180deg,var(--accent),rgba(245,158,11,0.4));}
+.bar-cons{background:linear-gradient(180deg,var(--blue),rgba(59,130,246,0.4));}
+.bar-label{font-size:0.62rem;color:var(--muted);}
+.chart-legend{display:flex;gap:1rem;margin-top:0.5rem;}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:0.75rem;color:var(--muted);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+
+/* SOURCE MIX */
+.source-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.source-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;text-align:center;}
+.source-icon{font-size:1.5rem;margin-bottom:4px;}
+.source-pct{font-size:1.1rem;font-weight:700;}
+.source-name{font-size:0.72rem;color:var(--muted);}
+.source-bar{height:4px;border-radius:2px;margin-top:6px;}
+
+/* ALERTS TABLE */
+.alerts-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.alerts-table th{padding:0.5rem 0.75rem;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600;}
+.alerts-table td{padding:0.6rem 0.75rem;border-bottom:1px solid rgba(30,42,58,0.5);}
+.alerts-table tr:last-child td{border-bottom:none;}
+.alert-sev{padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;}
+.sev-critical{background:rgba(239,68,68,0.15);color:#ef4444;}
+.sev-warning{background:rgba(245,158,11,0.15);color:var(--accent);}
+.sev-info{background:rgba(59,130,246,0.15);color:var(--blue);}
+
+/* RIGHT PANEL */
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.grid-health{margin-top:0.25rem;}
+.grid-title{font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;}
+.grid-metric{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid rgba(30,42,58,0.5);}
+.grid-metric:last-child{border-bottom:none;}
+.gm-label{font-size:0.75rem;color:var(--muted);}
+.gm-value{font-size:0.8rem;font-weight:600;}
+.gm-bar{height:6px;background:var(--surface);border-radius:3px;overflow:hidden;width:80px;}
+.gm-fill{height:100%;border-radius:3px;}
+
+/* FEATURES */
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(245,158,11,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(251,191,36,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+/* PRICING */
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(245,158,11,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+
+/* FOOTER */
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <span>EnergyAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Grid Intelligence</a>
+    <a href="#">Demand Forecasting</a>
+    <a href="#">Renewable Optimization</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Sign In</button>
+    <button class="btn btn-primary">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">⚡ AI-Powered Energy Intelligence Platform</div>
+  <h1>Optimize Your Energy Grid with <span>Artificial Intelligence</span></h1>
+  <p>Real-time grid monitoring, renewable energy optimization, demand forecasting, and predictive maintenance — all powered by advanced AI.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Free Trial</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">View Live Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">23%</div><div class="lbl">Avg. Cost Reduction</div></div>
+    <div class="hero-stat"><div class="val">99.97%</div><div class="lbl">Grid Uptime</div></div>
+    <div class="hero-stat"><div class="val">340+</div><div class="lbl">Utility Clients</div></div>
+    <div class="hero-stat"><div class="val">18GW</div><div class="lbl">Capacity Managed</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>⚡ Live Energy Operations Center</h2>
+  <p class="sub">Real-time grid intelligence for utility operators and energy managers</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Assets -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Grid Assets</h3>
+        <input class="search-box" placeholder="🔍 Search assets..." value="">
+      </div>
+      <div class="asset-list">
+        <div class="asset-item active">
+          <div class="asset-top"><span class="asset-name">Solar Farm Alpha</span><span class="asset-type">Solar</span></div>
+          <div class="asset-meta">☀️ 850 MW · Operational</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:92%"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Wind Park Bravo</span><span class="asset-type">Wind</span></div>
+          <div class="asset-meta">💨 420 MW · Operational</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:78%"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Hydro Station C</span><span class="asset-type">Hydro</span></div>
+          <div class="asset-meta">💧 1,200 MW · Peak Load</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:95%"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Battery Storage D</span><span class="asset-type">Storage</span></div>
+          <div class="asset-meta">🔋 320 MWh · Charging</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:61%"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Gas Peaker E</span><span class="asset-type" style="background:rgba(239,68,68,0.1);color:#ef4444;">Thermal</span></div>
+          <div class="asset-meta">🔥 600 MW · Standby</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:15%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Solar Farm Foxtrot</span><span class="asset-type">Solar</span></div>
+          <div class="asset-meta">☀️ 560 MW · Operational</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:88%"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Offshore Wind G</span><span class="asset-type">Wind</span></div>
+          <div class="asset-meta">🌊 750 MW · Maintenance</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:0%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-top"><span class="asset-name">Nuclear Base H</span><span class="asset-type" style="background:rgba(59,130,246,0.1);color:#3b82f6;">Nuclear</span></div>
+          <div class="asset-meta">⚛️ 2,100 MW · Baseload</div>
+          <div class="asset-bar"><div class="asset-fill" style="width:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>☀️ Solar Farm Alpha — Live Dashboard</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Overview</div>
+          <div class="tab">Forecast</div>
+          <div class="tab">Maintenance</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Current Output</div>
+            <div class="kpi-value" style="color:var(--accent);">782 MW</div>
+            <div class="kpi-change up">↑ +4.2% vs yesterday</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Capacity Factor</div>
+            <div class="kpi-value">92.0%</div>
+            <div class="kpi-change up">↑ Above forecast</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Today's Revenue</div>
+            <div class="kpi-value" style="color:var(--green);">$184K</div>
+            <div class="kpi-change up">↑ +$12K vs avg</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">CO₂ Avoided</div>
+            <div class="kpi-value" style="color:#10b981;">6,240t</div>
+            <div class="kpi-change up">↑ Record today</div>
+          </div>
+        </div>
+
+        <!-- Hourly Generation vs Consumption Chart -->
+        <div class="chart-container">
+          <div class="chart-title">
+            <span>24-Hour Generation vs. Consumption (MWh)</span>
+            <span style="font-size:0.75rem;color:var(--muted);">Live · Updates every 5 min</span>
+          </div>
+          <div class="energy-chart">
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:20px;"></div><div class="energy-bar bar-cons" style="height:35px;"></div><div class="bar-label">0h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:18px;"></div><div class="energy-bar bar-cons" style="height:32px;"></div><div class="bar-label">2h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:15px;"></div><div class="energy-bar bar-cons" style="height:28px;"></div><div class="bar-label">4h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:25px;"></div><div class="energy-bar bar-cons" style="height:38px;"></div><div class="bar-label">6h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:55px;"></div><div class="energy-bar bar-cons" style="height:52px;"></div><div class="bar-label">8h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:80px;"></div><div class="energy-bar bar-cons" style="height:68px;"></div><div class="bar-label">10h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:108px;"></div><div class="energy-bar bar-cons" style="height:88px;"></div><div class="bar-label">12h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:115px;"></div><div class="energy-bar bar-cons" style="height:92px;"></div><div class="bar-label">14h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:96px;"></div><div class="energy-bar bar-cons" style="height:85px;"></div><div class="bar-label">16h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:70px;"></div><div class="energy-bar bar-cons" style="height:88px;"></div><div class="bar-label">18h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:35px;"></div><div class="energy-bar bar-cons" style="height:95px;"></div><div class="bar-label">20h</div></div>
+            <div class="energy-bar-wrap"><div class="energy-bar bar-gen" style="height:20px;"></div><div class="energy-bar bar-cons" style="height:78px;"></div><div class="bar-label">22h</div></div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent);"></div>Generation</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div>Consumption</div>
+          </div>
+        </div>
+
+        <!-- Energy Source Mix -->
+        <div class="source-grid">
+          <div class="source-card">
+            <div class="source-icon">☀️</div>
+            <div class="source-pct" style="color:var(--accent);">38%</div>
+            <div class="source-name">Solar</div>
+            <div class="source-bar" style="background:rgba(245,158,11,0.2);"><div style="height:100%;width:38%;background:var(--accent);border-radius:2px;"></div></div>
+          </div>
+          <div class="source-card">
+            <div class="source-icon">💨</div>
+            <div class="source-pct" style="color:#60a5fa;">22%</div>
+            <div class="source-name">Wind</div>
+            <div class="source-bar" style="background:rgba(59,130,246,0.2);"><div style="height:100%;width:22%;background:#60a5fa;border-radius:2px;"></div></div>
+          </div>
+          <div class="source-card">
+            <div class="source-icon">⚛️</div>
+            <div class="source-pct" style="color:#818cf8;">31%</div>
+            <div class="source-name">Nuclear</div>
+            <div class="source-bar" style="background:rgba(129,140,248,0.2);"><div style="height:100%;width:31%;background:#818cf8;border-radius:2px;"></div></div>
+          </div>
+          <div class="source-card">
+            <div class="source-icon">💧</div>
+            <div class="source-pct" style="color:#34d399;">9%</div>
+            <div class="source-name">Hydro</div>
+            <div class="source-bar" style="background:rgba(52,211,153,0.2);"><div style="height:100%;width:9%;background:#34d399;border-radius:2px;"></div></div>
+          </div>
+        </div>
+
+        <!-- Active Alerts -->
+        <div class="chart-container">
+          <div class="chart-title"><span>⚠️ Active Grid Alerts</span></div>
+          <table class="alerts-table">
+            <thead><tr><th>Asset</th><th>Alert Type</th><th>Severity</th><th>Status</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>Offshore Wind G</td><td>Scheduled Maintenance</td><td><span class="alert-sev sev-info">INFO</span></td><td>In Progress</td><td>08:00</td></tr>
+              <tr><td>Battery Storage D</td><td>Thermal Runaway Risk</td><td><span class="alert-sev sev-warning">WARN</span></td><td>Monitoring</td><td>11:23</td></tr>
+              <tr><td>Substation 7A</td><td>Voltage Deviation ±5%</td><td><span class="alert-sev sev-critical">CRITICAL</span></td><td>Dispatched</td><td>13:47</td></tr>
+              <tr><td>Solar Farm Alpha</td><td>Inverter Efficiency Drop</td><td><span class="alert-sev sev-warning">WARN</span></td><td>AI Diagnosing</td><td>14:02</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Energy Advisor -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Energy Advisor</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card alert">
+          <div class="insight-title">🔴 Critical: Voltage Deviation</div>
+          <div class="insight-body">Substation 7A showing ±5.2% voltage deviation. Grid stability risk in the NE corridor. Crew dispatched — ETA 22 min.</div>
+          <div class="insight-action">→ Reroute load to Substation 8B</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Peak Demand Approaching</div>
+          <div class="insight-body">Forecast shows 3,840 MW demand spike at 18:30 — 4% above current capacity. Recommend activating Gas Peaker E and discharging Battery Storage D.</div>
+          <div class="insight-action">→ Pre-activate peakers at 17:45</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Renewable Surplus Detected</div>
+          <div class="insight-body">Solar generation 12% above forecast until 16:00. Recommend routing surplus to Battery D for evening peak discharge. Estimated savings: $28K.</div>
+          <div class="insight-action">→ Enable surplus charging mode</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Inverter Anomaly Detected</div>
+          <div class="insight-body">Array 14-C on Solar Farm Alpha showing 8.3% efficiency degradation. Likely soiling event or micro-crack. Maintenance recommended within 48h.</div>
+          <div class="insight-action">→ Schedule drone inspection</div>
+        </div>
+
+        <!-- Grid Health Metrics -->
+        <div class="insight-card">
+          <div class="grid-title">📊 Grid Health Metrics</div>
+          <div class="grid-health">
+            <div class="grid-metric">
+              <span class="gm-label">Grid Frequency</span>
+              <span class="gm-value" style="color:var(--green);">60.01 Hz</span>
+            </div>
+            <div class="grid-metric">
+              <span class="gm-label">Reserve Margin</span>
+              <div>
+                <div class="gm-bar"><div class="gm-fill" style="width:68%;background:var(--accent);"></div></div>
+              </div>
+              <span class="gm-value">18.4%</span>
+            </div>
+            <div class="grid-metric">
+              <span class="gm-label">Transmission Loss</span>
+              <span class="gm-value" style="color:var(--green);">2.1%</span>
+            </div>
+            <div class="grid-metric">
+              <span class="gm-label">Renewable Share</span>
+              <div>
+                <div class="gm-bar"><div class="gm-fill" style="width:69%;background:var(--green);"></div></div>
+              </div>
+              <span class="gm-value" style="color:var(--green);">69%</span>
+            </div>
+            <div class="grid-metric">
+              <span class="gm-label">Carbon Intensity</span>
+              <span class="gm-value" style="color:var(--green);">82 gCO₂/kWh</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Everything Energy Operators Need</h2>
+  <p class="sub">Built for utilities, IPPs, and energy traders managing complex grid portfolios</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Real-Time Grid Monitoring</h3>
+      <p>Monitor frequency, voltage, and power flows across your entire grid with millisecond-level telemetry and AI anomaly detection.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Demand Forecasting</h3>
+      <p>72-hour ahead demand forecasts with ±1.2% accuracy using weather data, economic indicators, and historical load patterns.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">☀️</div>
+      <h3>Renewable Optimization</h3>
+      <p>Maximize renewable integration with AI dispatch scheduling, curtailment minimization, and battery storage optimization algorithms.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <h3>Predictive Maintenance</h3>
+      <p>Detect equipment degradation weeks before failure using AI analysis of thermal imaging, vibration data, and performance telemetry.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💹</div>
+      <h3>Energy Trading & Pricing</h3>
+      <p>AI-powered spot market bidding, ancillary service optimization, and real-time pricing signals to maximize revenue per MWh.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌱</div>
+      <h3>Carbon & ESG Analytics</h3>
+      <p>Track carbon intensity, renewable certificates, and ESG metrics in real-time with automated regulatory reporting and audit trails.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Transparent Pricing for Every Scale</h2>
+  <p class="sub">From community microgrids to national transmission operators</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Microgrid</div>
+      <div class="price-amount">$499<span>/mo</span></div>
+      <div class="price-desc">Community energy systems and C&I microgrids up to 50 MW</div>
+      <ul class="price-features">
+        <li>Up to 50 MW capacity</li>
+        <li>Real-time monitoring</li>
+        <li>24-hour demand forecast</li>
+        <li>Basic alert system</li>
+        <li>5 user seats</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Utility</div>
+      <div class="price-amount">$3,999<span>/mo</span></div>
+      <div class="price-desc">Regional utilities and independent power producers 50MW–5GW</div>
+      <ul class="price-features">
+        <li>Up to 5 GW capacity</li>
+        <li>AI grid intelligence</li>
+        <li>72-hour demand forecast</li>
+        <li>Predictive maintenance</li>
+        <li>Energy trading module</li>
+        <li>25 user seats</li>
+        <li>24/7 priority support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Transmission</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">National grid operators, TSOs, and ISOs managing multi-GW portfolios</div>
+      <ul class="price-features">
+        <li>Unlimited capacity</li>
+        <li>Full AI suite</li>
+        <li>Custom integrations (SCADA/EMS)</li>
+        <li>Regulatory reporting</li>
+        <li>Carbon analytics</li>
+        <li>Unlimited seats</li>
+        <li>Dedicated engineering team</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">⚡ EnergyAI</div>
+  <p>AI-Powered Energy & Utilities Intelligence Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 EnergyAI Inc. · Privacy · Terms · Security</p>
+</footer>
+
+</body>
+</html>
