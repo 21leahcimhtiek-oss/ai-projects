@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealEstateAI - AI-Powered Real Estate Investment Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+  --emerald:#10b981;--emerald2:#34d399;--emerald3:#6ee7b7;
+  --text:#e2e8f0;--muted:#64748b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--emerald),var(--emerald2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:32px;font-size:0.9rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;gap:12px}
+.btn-outline{padding:8px 20px;border:1px solid var(--border);border-radius:8px;font-size:0.85rem;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--emerald),var(--emerald2));border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;color:#000;font-weight:600}
+.hero{padding:100px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(16,185,129,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:var(--emerald);margin-bottom:24px}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.15;margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--emerald),var(--emerald2),var(--emerald3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-hero{padding:14px 32px;background:linear-gradient(135deg,var(--emerald),var(--emerald2));border:none;border-radius:10px;font-size:1rem;cursor:pointer;color:#000;font-weight:700}
+.btn-hero-outline{padding:14px 32px;border:1px solid var(--border);border-radius:10px;font-size:1rem;cursor:pointer;background:transparent;color:var(--text)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--emerald),var(--emerald2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.8rem;color:var(--muted);margin-top:4px}
+
+.demo-section{padding:80px 48px;background:var(--surface)}
+.section-header{text-align:center;margin-bottom:48px}
+.section-header h2{font-size:2rem;font-weight:700;margin-bottom:12px}
+.section-header p{color:var(--muted)}
+.demo-grid{display:grid;grid-template-columns:280px 1fr 300px;gap:20px;max-width:1300px;margin:0 auto}
+
+/* PROPERTY SIDEBAR */
+.prop-sidebar{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px;height:680px;overflow-y:auto}
+.prop-sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.prop-item{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;border:1px solid transparent;transition:all .2s}
+.prop-item.active{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3)}
+.prop-item:hover:not(.active){background:rgba(255,255,255,0.03)}
+.prop-address{font-size:0.88rem;font-weight:600;margin-bottom:2px}
+.prop-type{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.prop-meta{display:flex;justify-content:space-between;align-items:center}
+.prop-val{font-size:0.82rem;font-weight:700;color:var(--emerald)}
+.prop-roi{font-size:0.72rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.roi-high{background:rgba(34,197,94,0.15);color:var(--green)}
+.roi-med{background:rgba(245,158,11,0.15);color:var(--amber)}
+.roi-low{background:rgba(239,68,68,0.15);color:var(--red)}
+
+/* MAIN */
+.main-panel{display:flex;flex-direction:column;gap:16px}
+.prop-header{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.ph-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.ph-address{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.ph-sub{font-size:0.82rem;color:var(--muted)}
+.ph-actions{display:flex;gap:8px}
+.act-btn{padding:6px 14px;border-radius:8px;font-size:0.78rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:all .2s}
+.act-btn:hover{border-color:var(--emerald);color:var(--emerald)}
+.act-btn.primary{background:linear-gradient(135deg,var(--emerald),var(--emerald2));border:none;color:#000;font-weight:600}
+.prop-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:1.3rem;font-weight:700}
+.kpi-sub{font-size:0.7rem;color:var(--muted);margin-top:2px}
+
+/* FINANCIALS TABLE */
+.fin-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-hdr h3{font-size:0.95rem;font-weight:600}
+.fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fin-col h4{font-size:0.78rem;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.fin-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,42,62,0.5);font-size:0.82rem}
+.fin-row:last-child{border-bottom:none;font-weight:700}
+.fin-label{color:var(--muted)}
+.fin-pos{color:var(--green)}
+.fin-neg{color:var(--red)}
+.fin-total{color:var(--emerald)}
+
+/* PRICE CHART */
+.chart-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.price-chart{display:flex;align-items:flex-end;gap:8px;height:120px;margin-top:16px}
+.pc-bar{background:linear-gradient(to top,rgba(16,185,129,0.3),rgba(16,185,129,0.7));border-radius:4px 4px 0 0;flex:1;position:relative;cursor:pointer;transition:all .2s}
+.pc-bar:hover{background:linear-gradient(to top,rgba(16,185,129,0.5),rgba(16,185,129,0.9))}
+.pc-bar::after{content:attr(data-val);position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:0.58rem;color:var(--muted);white-space:nowrap}
+.pc-label{font-size:0.62rem;color:var(--muted);text-align:center;margin-top:6px}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+.ai-card{background:var(--surface2);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ai-hdr span{font-size:0.85rem;font-weight:600;color:var(--emerald)}
+.ai-item{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:8px;padding:12px;margin-bottom:8px}
+.ai-item-title{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.ai-item-text{font-size:0.75rem;color:var(--muted);line-height:1.5}
+.badge{display:inline-block;font-size:0.65rem;padding:2px 6px;border-radius:4px;margin-top:4px;font-weight:600}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green)}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.b-blue{background:rgba(59,130,246,0.15);color:var(--blue)}
+
+.market-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.market-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5);font-size:0.82rem}
+.market-row:last-child{border-bottom:none}
+.market-label{color:var(--muted)}
+.market-val{font-weight:600}
+.market-chg{font-size:0.72rem;padding:2px 6px;border-radius:4px}
+.chg-up{background:rgba(34,197,94,0.15);color:var(--green)}
+.chg-dn{background:rgba(239,68,68,0.15);color:var(--red)}
+
+.tenant-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px}
+.tenant-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,62,0.5)}
+.tenant-item:last-child{border-bottom:none}
+.t-unit{width:32px;height:32px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--emerald)}
+.t-info{flex:1}
+.t-name{font-size:0.82rem;font-weight:600}
+.t-lease{font-size:0.72rem;color:var(--muted)}
+.t-rent{font-size:0.82rem;font-weight:700;color:var(--emerald)}
+
+/* FEATURES / PRICING */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s}
+.feature-card:hover{border-color:rgba(16,185,129,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(16,185,129,0.08)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(52,211,153,0.1));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.pricing{padding:80px 48px;background:var(--surface)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+.price-card.popular{border-color:var(--emerald);box-shadow:0 0 40px rgba(16,185,129,0.15)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--emerald),var(--emerald2));color:#000;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-tier{font-size:0.85rem;color:var(--emerald);font-weight:600;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted)}
+.price-desc{font-size:0.83rem;color:var(--muted);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px}
+.price-features li::before{content:'✓';color:var(--emerald);font-weight:700;flex-shrink:0}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:0.9rem;cursor:pointer;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text)}
+.price-card.popular .price-btn{background:linear-gradient(135deg,var(--emerald),var(--emerald2));border:none;color:#000}
+footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:0.85rem}
+.footer-links{display:flex;gap:24px}
+.footer-links a:hover{color:var(--text)}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-icon">🏢</div><span>RealEstateAI</span></div>
+  <div class="nav-links">
+    <a href="#">Portfolio</a><a href="#">Market Analysis</a><a href="#">Deal Finder</a><a href="#">Tenant Management</a><a href="#">Analytics</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn-outline">Sign In</button>
+    <button class="btn-primary">Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🏢 AI-Powered Real Estate Investment Intelligence</div>
+  <h1>Invest Smarter with<br><span>AI Real Estate Analytics</span></h1>
+  <p>Analyze properties instantly, predict rental yields, manage portfolios, and discover off-market deals — all powered by AI trained on millions of real estate transactions.</p>
+  <div class="hero-actions">
+    <button class="btn-hero">Start Free Trial</button>
+    <button class="btn-hero-outline">View Demo Portfolio</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">$4.2B+</div><div class="stat-label">Portfolio Value Managed</div></div>
+    <div class="stat"><div class="stat-num">94%</div><div class="stat-label">Valuation Accuracy</div></div>
+    <div class="stat"><div class="stat-num">28K+</div><div class="stat-label">Investors</div></div>
+    <div class="stat"><div class="stat-num">18%</div><div class="stat-label">Avg ROI Improvement</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="section-header">
+    <h2>Live Investment Portfolio Dashboard</h2>
+    <p>AI-powered analysis across your entire real estate portfolio</p>
+  </div>
+  <div class="demo-grid">
+
+    <!-- PROPERTY SIDEBAR -->
+    <div class="prop-sidebar">
+      <h3>Portfolio — 8 Properties</h3>
+      <div class="prop-item active">
+        <div class="prop-address">412 Maple Ave, Austin TX</div>
+        <div class="prop-type">Multi-Family • 12 units</div>
+        <div class="prop-meta"><span class="prop-val">$1.84M</span><span class="prop-roi roi-high">8.4% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">88 Harbor Blvd, Miami FL</div>
+        <div class="prop-type">Commercial • Office</div>
+        <div class="prop-meta"><span class="prop-val">$3.2M</span><span class="prop-roi roi-med">6.1% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">220 Oak St, Denver CO</div>
+        <div class="prop-type">Single Family • STR</div>
+        <div class="prop-meta"><span class="prop-val">$520K</span><span class="prop-roi roi-high">11.2% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">1450 Tech Pkwy, Austin TX</div>
+        <div class="prop-type">Industrial • Warehouse</div>
+        <div class="prop-meta"><span class="prop-val">$2.1M</span><span class="prop-roi roi-med">7.3% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">330 Pine Ct, Nashville TN</div>
+        <div class="prop-type">Multi-Family • 6 units</div>
+        <div class="prop-meta"><span class="prop-val">$890K</span><span class="prop-roi roi-high">9.1% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">7 Sunset Dr, Phoenix AZ</div>
+        <div class="prop-type">Single Family • LTR</div>
+        <div class="prop-meta"><span class="prop-val">$410K</span><span class="prop-roi roi-low">4.2% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">512 River Rd, Portland OR</div>
+        <div class="prop-type">Mixed Use • Retail+Res</div>
+        <div class="prop-meta"><span class="prop-val">$1.55M</span><span class="prop-roi roi-med">6.8% ROI</span></div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-address">99 Lakefront Dr, Chicago IL</div>
+        <div class="prop-type">Condo • 4 units</div>
+        <div class="prop-meta"><span class="prop-val">$1.1M</span><span class="prop-roi roi-med">5.9% ROI</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+
+      <div class="prop-header">
+        <div class="ph-top">
+          <div>
+            <div class="ph-address">412 Maple Ave, Austin TX 78701</div>
+            <div class="ph-sub">Multi-Family • 12 Units • Acquired Jan 2022 • Zone: R3 Multi-Family Residential</div>
+          </div>
+          <div class="ph-actions">
+            <button class="act-btn">📊 Report</button>
+            <button class="act-btn">📋 Lease</button>
+            <button class="act-btn primary">⚡ AI Analyze</button>
+          </div>
+        </div>
+        <div class="prop-kpis">
+          <div class="kpi">
+            <div class="kpi-label">Current Value</div>
+            <div class="kpi-val" style="color:var(--emerald)">$1.84M</div>
+            <div class="kpi-sub">+$340K since acq.</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Monthly NOI</div>
+            <div class="kpi-val" style="color:var(--green)">$12,880</div>
+            <div class="kpi-sub">After all expenses</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Occupancy</div>
+            <div class="kpi-val" style="color:var(--blue)">91.7%</div>
+            <div class="kpi-sub">11/12 units</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Cap Rate</div>
+            <div class="kpi-val" style="color:var(--amber)">8.4%</div>
+            <div class="kpi-sub">Market avg: 6.2%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financials -->
+      <div class="fin-card">
+        <div class="card-hdr"><h3>💰 Monthly Financial Breakdown</h3><span style="font-size:0.8rem;color:var(--muted)">October 2024</span></div>
+        <div class="fin-grid">
+          <div class="fin-col">
+            <h4>Income</h4>
+            <div class="fin-row"><span class="fin-label">Gross Rental Income</span><span class="fin-pos">$19,800</span></div>
+            <div class="fin-row"><span class="fin-label">Laundry / Parking</span><span class="fin-pos">$480</span></div>
+            <div class="fin-row"><span class="fin-label">Late Fees</span><span class="fin-pos">$120</span></div>
+            <div class="fin-row"><span class="fin-label">Vacancy Loss (1 unit)</span><span class="fin-neg">-$1,650</span></div>
+            <div class="fin-row"><span class="fin-label">Effective Gross Income</span><span class="fin-pos" style="color:var(--emerald)">$18,750</span></div>
+          </div>
+          <div class="fin-col">
+            <h4>Expenses</h4>
+            <div class="fin-row"><span class="fin-label">Mortgage (P&I)</span><span class="fin-neg">-$3,820</span></div>
+            <div class="fin-row"><span class="fin-label">Property Tax</span><span class="fin-neg">-$980</span></div>
+            <div class="fin-row"><span class="fin-label">Insurance</span><span class="fin-neg">-$420</span></div>
+            <div class="fin-row"><span class="fin-label">Maintenance</span><span class="fin-neg">-$650</span></div>
+            <div class="fin-row"><span class="fin-label">Net Operating Income</span><span class="fin-total">$12,880</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price History Chart -->
+      <div class="chart-card">
+        <div class="card-hdr"><h3>📈 Property Value History</h3><span style="font-size:0.8rem;color:var(--emerald)">+22.7% since acquisition</span></div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:130px;margin-top:16px">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;height:130px;margin-right:8px">
+            <span style="font-size:0.6rem;color:var(--muted)">$2.0M</span>
+            <span style="font-size:0.6rem;color:var(--muted)">$1.8M</span>
+            <span style="font-size:0.6rem;color:var(--muted)">$1.6M</span>
+            <span style="font-size:0.6rem;color:var(--muted)">$1.4M</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:flex-end;flex:1">
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:50px;background:linear-gradient(to top,rgba(16,185,129,0.3),rgba(16,185,129,0.6));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted);margin-top:4px">Jan'22</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:60px;background:linear-gradient(to top,rgba(16,185,129,0.3),rgba(16,185,129,0.6));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted);margin-top:4px">Jul'22</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:72px;background:linear-gradient(to top,rgba(16,185,129,0.4),rgba(16,185,129,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted);margin-top:4px">Jan'23</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:80px;background:linear-gradient(to top,rgba(16,185,129,0.4),rgba(16,185,129,0.7));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted);margin-top:4px">Jul'23</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:88px;background:linear-gradient(to top,rgba(16,185,129,0.5),rgba(16,185,129,0.8));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted);margin-top:4px">Jan'24</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:96px;background:linear-gradient(to top,rgba(16,185,129,0.5),rgba(16,185,129,0.8));border-radius:4px 4px 0 0"></div>
+              <span style="font-size:0.62rem;color:var(--muted);margin-top:4px">Jul'24</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+              <div style="width:100%;height:104px;background:linear-gradient(to top,rgba(16,185,129,0.6),rgba(16,185,129,0.9));border-radius:4px 4px 0 0;border:1px solid var(--emerald)"></div>
+              <span style="font-size:0.62rem;color:var(--emerald);margin-top:4px;font-weight:600">Now</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <div class="ai-card">
+        <div class="ai-hdr"><div class="ai-dot"></div><span>AI Investment Advisor</span></div>
+        <div class="ai-item">
+          <div class="ai-item-title">📈 Appreciation Forecast</div>
+          <div class="ai-item-text">Austin East Side market showing 12–15% appreciation projected for next 12 months based on tech migration, job growth (+8.4%), and new transit corridor opening Q1 2025.</div>
+          <span class="badge b-green">BUY SIGNAL</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">🔧 Maintenance Alert</div>
+          <div class="ai-item-text">HVAC units in units 4B and 7A flagged as 8+ years old. Proactive replacement ($4,200) recommended before winter season to avoid emergency costs ($8,000+) and tenant turnover.</div>
+          <span class="badge b-amber">ACTION NEEDED</span>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">💡 Rent Optimization</div>
+          <div class="ai-item-text">AI analysis shows 3 units are 12% below market rate. Staggered rent increases at lease renewal (avg +$187/unit/mo) could add $6,732/year to NOI without vacancy risk.</div>
+          <span class="badge b-blue">OPPORTUNITY</span>
+        </div>
+      </div>
+
+      <div class="market-card">
+        <div class="card-hdr"><h3>📊 Austin Market Pulse</h3></div>
+        <div class="market-row"><span class="market-label">Median Home Price</span><div style="display:flex;align-items:center;gap:6px"><span class="market-val">$542K</span><span class="market-chg chg-up">+3.2%</span></div></div>
+        <div class="market-row"><span class="market-label">Avg Rent (2BR)</span><div style="display:flex;align-items:center;gap:6px"><span class="market-val">$1,840</span><span class="market-chg chg-up">+4.1%</span></div></div>
+        <div class="market-row"><span class="market-label">Market Cap Rate</span><div style="display:flex;align-items:center;gap:6px"><span class="market-val">6.2%</span><span class="market-chg chg-dn">-0.3%</span></div></div>
+        <div class="market-row"><span class="market-label">Days on Market</span><div style="display:flex;align-items:center;gap:6px"><span class="market-val">22 days</span><span class="market-chg chg-dn">-5 days</span></div></div>
+        <div class="market-row"><span class="market-label">Vacancy Rate</span><div style="display:flex;align-items:center;gap:6px"><span class="market-val">4.8%</span><span class="market-chg chg-dn">-1.1%</span></div></div>
+        <div class="market-row"><span class="market-label">Price/SqFt</span><div style="display:flex;align-items:center;gap:6px"><span class="market-val">$284</span><span class="market-chg chg-up">+2.8%</span></div></div>
+      </div>
+
+      <div class="tenant-card">
+        <div class="card-hdr"><h3>🏠 Tenant Summary</h3></div>
+        <div class="tenant-item">
+          <div class="t-unit">1A</div>
+          <div class="t-info"><div class="t-name">Chen Family</div><div class="t-lease">Lease ends Mar 2025</div></div>
+          <span class="t-rent">$1,650</span>
+        </div>
+        <div class="tenant-item">
+          <div class="t-unit">2B</div>
+          <div class="t-info"><div class="t-name">M. Rodriguez</div><div class="t-lease">Lease ends Jan 2025</div></div>
+          <span class="t-rent">$1,590</span>
+        </div>
+        <div class="tenant-item">
+          <div class="t-unit">3C</div>
+          <div class="t-info"><div class="t-name">K. Patel</div><div class="t-lease">Lease ends Jun 2025</div></div>
+          <span class="t-rent">$1,720</span>
+        </div>
+        <div class="tenant-item">
+          <div class="t-unit">4A</div>
+          <div class="t-info"><div class="t-name">T. Williams</div><div class="t-lease">Month-to-Month</div></div>
+          <span class="t-rent">$1,540</span>
+        </div>
+        <div class="tenant-item">
+          <div class="t-unit">5B</div>
+          <div class="t-info" style="color:var(--muted)"><div class="t-name" style="color:var(--muted)">VACANT</div><div class="t-lease">Listed @ $1,800</div></div>
+          <span style="font-size:0.7rem;color:var(--red);font-weight:600">VACANT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-header">
+    <h2>AI-Powered Investment Intelligence</h2>
+    <p>Every tool you need to maximize real estate returns</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>AI Deal Analyzer</h3>
+      <p>Instantly analyze any property — input an address and get cap rate, cash-on-cash return, NOI projections, and AI-powered appreciation forecasts based on 200+ market signals.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Market Intelligence</h3>
+      <p>Real-time data on rental rates, vacancy trends, price-per-sqft, and neighborhood growth scores. Get alerts when target markets hit your investment criteria.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏠</div>
+      <h3>Tenant Management</h3>
+      <p>Online rent collection, maintenance request tracking, lease renewal automation, and AI-powered tenant screening with credit, background, and eviction history checks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Portfolio Analytics</h3>
+      <p>Track total portfolio value, equity positions, cash flow, and ROI across all properties in one dashboard. Tax optimization reports and depreciation scheduling included.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Off-Market Deal Finder</h3>
+      <p>AI scans distressed listings, pre-foreclosures, probate properties, and motivated seller signals. Get notified of deals matching your criteria before they hit MLS.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Automated Reporting</h3>
+      <p>One-click monthly owner reports, tax-ready financials, and investor-ready performance summaries. Export to PDF, Excel, or directly to your CPA's portal.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="section-header">
+    <h2>Pricing for Every Investor</h2>
+    <p>From first-time landlords to institutional portfolios</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">LANDLORD</div>
+      <div class="price-amount">$49<span>/mo</span></div>
+      <div class="price-desc">For landlords with 1–5 properties</div>
+      <ul class="price-features">
+        <li>Up to 5 properties</li>
+        <li>Tenant management portal</li>
+        <li>Online rent collection</li>
+        <li>Basic deal analyzer</li>
+        <li>Monthly financial reports</li>
+        <li>Maintenance tracking</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="price-tier">INVESTOR</div>
+      <div class="price-amount">$199<span>/mo</span></div>
+      <div class="price-desc">For active investors and property managers</div>
+      <ul class="price-features">
+        <li>Up to 50 properties</li>
+        <li>Full AI deal analyzer</li>
+        <li>Market intelligence suite</li>
+        <li>Off-market deal alerts</li>
+        <li>Portfolio analytics dashboard</li>
+        <li>Tax optimization reports</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="price-btn">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">For funds, REITs, and property management firms</div>
+      <ul class="price-features">
+        <li>Unlimited properties</li>
+        <li>Custom AI models</li>
+        <li>API access & integrations</li>
+        <li>White-label option</li>
+        <li>Dedicated account manager</li>
+        <li>Custom reporting & SLAs</li>
+        <li>MLS & data feed integrations</li>
+      </ul>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><div class="logo-icon">🏢</div><span>RealEstateAI</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">API</a><a href="#">Support</a>
+  </div>
+  <div>© 2024 RealEstateAI Inc. • App #102</div>
+</footer>
+
+</body>
+</html>
