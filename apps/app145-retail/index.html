@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetailAI - Intelligent Retail Operations</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e5e5e5;
+            min-height: 100vh;
+        }
+        :root {
+            --gradient: linear-gradient(135deg, #db2777, #f472b6);
+            --accent: #db2777;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #e5e5e5; }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 20px rgba(219, 39, 119, 0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #e5e5e5;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero {
+            padding: 8rem 3rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            padding: 4rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-card p {
+            color: #9ca3af;
+            margin-top: 0.5rem;
+        }
+        .features {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .feature-card {
+            padding: 2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(219, 39, 119, 0.3);
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        .demo {
+            padding: 6rem 3rem;
+            background: rgba(255,255,255,0.01);
+        }
+        .demo h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #12121a;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        .demo-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .demo-header h3 {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+        .demo-content {
+            padding: 2rem;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .dashboard-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .dashboard-card h4 {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .kpi-change {
+            font-size: 0.85rem;
+            color: #22c55e;
+        }
+        .kpi-change.negative { color: #ef4444; }
+        .product-list {
+            list-style: none;
+        }
+        .product-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .product-list li:last-child { border-bottom: none; }
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .stock-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .stock-badge.in-stock { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+        .stock-badge.low-stock { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
+        .stock-badge.out-of-stock { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+        .ai-insights {
+            margin-top: 2rem;
+            background: rgba(219, 39, 119, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(219, 39, 119, 0.2);
+        }
+        .ai-insights h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #f472b6;
+        }
+        .ai-insights h4::before {
+            content: '●';
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .ai-insights ul {
+            list-style: none;
+        }
+        .ai-insights li {
+            padding: 0.5rem 0;
+            color: #fbcfe8;
+            font-size: 0.9rem;
+        }
+        .pricing {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .pricing-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        .pricing-card.featured {
+            border-color: rgba(219, 39, 119, 0.5);
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .pricing-card .price span {
+            font-size: 1rem;
+            color: #9ca3af;
+            font-weight: 400;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        .pricing-card li {
+            padding: 0.5rem 0;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-card li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .cta {
+            padding: 6rem 3rem;
+            text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(219, 39, 119, 0.05));
+        }
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            padding: 3rem;
+            text-align: center;
+            color: #6b7280;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #12121a;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e5e5e5;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .modal input:focus {
+            outline: none;
+            border-color: #db2777;
+        }
+        .modal .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .features-grid, .pricing-grid, .dashboard-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">RetailAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="showModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="showModal('signup')">Get Started</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Transform Retail Operations with <span>AI-Powered Intelligence</span></h1>
+        <p>Inventory optimization, demand forecasting, and customer insights for modern retailers.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="showModal('signup')">Start Free Trial</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">View Demo</button>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <h3>10K+</h3>
+            <p>Stores Powered</p>
+        </div>
+        <div class="stat-card">
+            <h3>35%</h3>
+            <p>Less Overstock</p>
+        </div>
+        <div class="stat-card">
+            <h3>28%</h3>
+            <p>Fewer Stockouts</p>
+        </div>
+        <div class="stat-card">
+            <h3>$500M</h3>
+            <p>Revenue Increased</p>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Smart Retail Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Inventory AI</h3>
+                <p>Smart inventory optimization with automated reorder points and stock balancing.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Demand Forecasting</h3>
+                <p>AI-powered sales predictions based on trends, seasonality, and external factors.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Price Optimization</h3>
+                <p>Dynamic pricing recommendations to maximize margin and competitiveness.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Customer Analytics</h3>
+                <p>Deep customer insights, segmentation, and personalized recommendations.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏪</div>
+                <h3>Store Operations</h3>
+                <p>Staff scheduling, layout optimization, and planogram intelligence.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Omnichannel</h3>
+                <p>Unified commerce across online, mobile, and physical retail channels.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <h2>Interactive Demo</h2>
+        <div class="demo-container">
+            <div class="demo-header">
+                <h3>RetailAI Dashboard</h3>
+                <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Try Demo</button>
+            </div>
+            <div class="demo-content">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Today's Revenue</h4>
+                        <div class="kpi-value">$48.2K</div>
+                        <div class="kpi-change">↑ 12% vs yesterday</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Inventory Health</h4>
+                        <div class="kpi-value">94%</div>
+                        <div class="kpi-change">Optimal levels</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Conversion Rate</h4>
+                        <div class="kpi-value">3.8%</div>
+                        <div class="kpi-change">↑ 0.5% improvement</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" style="margin-top: 1.5rem;">
+                    <div class="dashboard-card" style="grid-column: span 2;">
+                        <h4>Top Products</h4>
+                        <ul class="product-list">
+                            <li>
+                                <div class="product-info">
+                                    <span class="stock-badge in-stock">In Stock</span>
+                                    <span>Wireless Earbuds Pro - SKU: WEP-2847</span>
+                                </div>
+                                <span>$89.99 | 234 sold</span>
+                            </li>
+                            <li>
+                                <div class="product-info">
+                                    <span class="stock-badge low-stock">Low Stock</span>
+                                    <span>Smart Watch Series 5 - SKU: SWS-1029</span>
+                                </div>
+                                <span>$299.99 | 89 sold</span>
+                            </li>
+                            <li>
+                                <div class="product-info">
+                                    <span class="stock-badge in-stock">In Stock</span>
+                                    <span>Premium Phone Case - SKU: PPC-3847</span>
+                                </div>
+                                <span>$29.99 | 567 sold</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Category Sales</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Electronics</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 45%"></div></div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Accessories</span>
+                                <span>32%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 32%"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Wearables</span>
+                                <span>23%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 23%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <h4>AI Insights</h4>
+                    <ul>
+                        <li>• Smart Watch Series 5 selling fast - recommend ordering 500 units to prevent stockout</li>
+                        <li>• Weekend traffic expected 25% higher - consider additional staff for Saturday</li>
+                        <li>• Bundling opportunity: Earbuds + Case combo could increase basket by $35</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <h2>Flexible Pricing Plans</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$79<span>/mo</span></div>
+                <ul>
+                    <li>1 store location</li>
+                    <li>Inventory management</li>
+                    <li>Basic analytics</li>
+                    <li>Email support</li>
+                    <li>Mobile app</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="showModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Business</h3>
+                <div class="price">$199<span>/mo</span></div>
+                <ul>
+                    <li>Up to 10 locations</li>
+                    <li>Everything in Starter</li>
+                    <li>Demand forecasting</li>
+                    <li>Price optimization</li>
+                    <li>Customer analytics</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="showModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <ul>
+                    <li>Unlimited locations</li>
+                    <li>Everything in Business</li>
+                    <li>Omnichannel suite</li>
+                    <li>Custom integrations</li>
+                    <li>Dedicated manager</li>
+                    <li>SLA guarantee</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="showModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Transform Your Retail?</h2>
+        <p>Join thousands of retailers using RetailAI to optimize operations and delight customers.</p>
+        <button class="btn btn-primary" onclick="showModal('signup')">Start Your Free Trial</button>
+    </section>
+
+    <footer>
+        <p>© 2024 RetailAI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-title">Create Account</h3>
+            <p id="modal-subtitle">Start your free trial today</p>
+            <input type="text" placeholder="Full Name" id="name-input">
+            <input type="email" placeholder="Email Address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary" id="modal-btn">Get Started</button>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #6b7280;">
+                Already have an account? <a href="#" style="color: #db2777;" onclick="toggleModal()">Log in</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let modalMode = 'signup';
+        function showModal(mode) {
+            modalMode = mode;
+            document.getElementById('modal').classList.add('active');
+            if (mode === 'login') {
+                document.getElementById('modal-title').textContent = 'Welcome Back';
+                document.getElementById('modal-subtitle').textContent = 'Log in to your account';
+                document.getElementById('name-input').style.display = 'none';
+                document.getElementById('modal-btn').textContent = 'Log In';
+            } else {
+                document.getElementById('modal-title').textContent = 'Create Account';
+                document.getElementById('modal-subtitle').textContent = 'Start your free trial today';
+                document.getElementById('name-input').style.display = 'block';
+                document.getElementById('modal-btn').textContent = 'Get Started';
+            }
+        }
+        function toggleModal() {
+            modalMode = modalMode === 'login' ? 'signup' : 'login';
+            showModal(modalMode);
+        }
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
