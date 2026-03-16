@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlockchainAI - AI-Powered Blockchain Analytics & DeFi Intelligence</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#8b5cf6;--accent2:#a78bfa;--accent3:#c4b5fd;
+  --text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:700px;}
+
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.wallet-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.wallet-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.wallet-item:hover,.wallet-item.active{background:var(--surface2);border-color:var(--border);}
+.wallet-item.active{border-color:rgba(139,92,246,0.4);}
+.wallet-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.wallet-name{font-size:0.82rem;font-weight:600;}
+.wallet-tag{font-size:0.68rem;padding:2px 7px;border-radius:4px;font-weight:600;}
+.tag-whale{background:rgba(139,92,246,0.15);color:var(--accent);}
+.tag-defi{background:rgba(59,130,246,0.15);color:#3b82f6;}
+.tag-nft{background:rgba(236,72,153,0.15);color:#ec4899;}
+.tag-sus{background:rgba(239,68,68,0.15);color:#ef4444;}
+.wallet-addr{font-size:0.7rem;color:var(--muted);font-family:monospace;}
+.wallet-val{font-size:0.78rem;font-weight:600;color:var(--accent);margin-top:2px;}
+
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* PRICE CHART */
+.chart-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.chart-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;}
+.price-chart{position:relative;height:110px;overflow:hidden;}
+.price-chart svg{width:100%;height:100%;}
+
+/* TX TABLE */
+.tx-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+.tx-table th{padding:0.5rem 0.75rem;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600;}
+.tx-table td{padding:0.55rem 0.75rem;border-bottom:1px solid rgba(30,42,58,0.5);font-family:monospace;}
+.tx-table tr:last-child td{border-bottom:none;}
+.tx-type{padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;font-family:'Segoe UI',sans-serif;}
+.tx-swap{background:rgba(139,92,246,0.15);color:var(--accent);}
+.tx-transfer{background:rgba(59,130,246,0.15);color:#3b82f6;}
+.tx-stake{background:rgba(16,185,129,0.15);color:#10b981;}
+.tx-sus{background:rgba(239,68,68,0.15);color:#ef4444;}
+
+/* NETWORK STATS */
+.network-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;}
+.network-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;text-align:center;}
+.network-chain{font-size:1.2rem;margin-bottom:4px;}
+.network-name{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.network-tps{font-size:1rem;font-weight:700;}
+.network-bar{height:4px;border-radius:2px;margin-top:6px;overflow:hidden;background:var(--surface);}
+.network-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.defi-metric{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid rgba(30,42,58,0.5);}
+.defi-metric:last-child{border-bottom:none;}
+.dm-label{font-size:0.75rem;color:var(--muted);}
+.dm-value{font-size:0.8rem;font-weight:600;}
+
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(139,92,246,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(167,139,250,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(139,92,246,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">⛓️</div>
+    <span>BlockchainAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">On-Chain Analytics</a>
+    <a href="#">DeFi Intelligence</a>
+    <a href="#">Wallet Tracking</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Sign In</button>
+    <button class="btn btn-primary">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">⛓️ AI-Powered Blockchain Intelligence</div>
+  <h1>Decode Every Transaction with <span>On-Chain AI</span></h1>
+  <p>Real-time blockchain analytics, wallet intelligence, DeFi protocol monitoring, and AI-powered fraud detection across Ethereum, Solana, Bitcoin and 40+ chains.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Free Trial</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">View Live Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">40+</div><div class="lbl">Chains Supported</div></div>
+    <div class="hero-stat"><div class="val">2.4B</div><div class="lbl">Transactions Indexed</div></div>
+    <div class="hero-stat"><div class="val">$890M</div><div class="lbl">Fraud Detected</div></div>
+    <div class="hero-stat"><div class="val">18K+</div><div class="lbl">Active Analysts</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>⛓️ Live Blockchain Intelligence Center</h2>
+  <p class="sub">Real-time on-chain analytics across wallets, DeFi protocols, and NFT markets</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Wallets -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Tracked Wallets</h3>
+        <input class="search-box" placeholder="🔍 Search address..." value="">
+      </div>
+      <div class="wallet-list">
+        <div class="wallet-item active">
+          <div class="wallet-top"><span class="wallet-name">Whale Alpha</span><span class="wallet-tag tag-whale">WHALE</span></div>
+          <div class="wallet-addr">0x1a2b...9f3c</div>
+          <div class="wallet-val">💰 $84.2M portfolio</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">DeFi Degen #1</span><span class="wallet-tag tag-defi">DEFI</span></div>
+          <div class="wallet-addr">0x3c4d...7e1a</div>
+          <div class="wallet-val">💰 $12.8M · 42 protocols</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">NFT Collector</span><span class="wallet-tag tag-nft">NFT</span></div>
+          <div class="wallet-addr">0x7f8a...2b9d</div>
+          <div class="wallet-val">🖼️ 847 NFTs · $3.4M</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">Suspicious Actor</span><span class="wallet-tag tag-sus">⚠️ SUS</span></div>
+          <div class="wallet-addr">0xb2c3...5d6e</div>
+          <div class="wallet-val">🚨 Mixer interaction</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">VC Fund Beta</span><span class="wallet-tag tag-whale">WHALE</span></div>
+          <div class="wallet-addr">0xe9f0...8c4b</div>
+          <div class="wallet-val">💰 $230M · 18 investments</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">MEV Bot Gamma</span><span class="wallet-tag tag-defi">BOT</span></div>
+          <div class="wallet-addr">0x4a5b...1f2e</div>
+          <div class="wallet-val">⚡ $2.1M MEV extracted</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">Exchange Wallet</span><span class="wallet-tag tag-defi">CEX</span></div>
+          <div class="wallet-addr">0xf1a2...3e4d</div>
+          <div class="wallet-val">💰 $1.2B custody</div>
+        </div>
+        <div class="wallet-item">
+          <div class="wallet-top"><span class="wallet-name">DAO Treasury</span><span class="wallet-tag tag-defi">DAO</span></div>
+          <div class="wallet-addr">0x8c9d...6b7a</div>
+          <div class="wallet-val">🏛️ $48M · Gnosis Safe</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>🐋 Whale Alpha — On-Chain Analysis</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Portfolio</div>
+          <div class="tab">Transactions</div>
+          <div class="tab">DeFi</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Portfolio Value</div>
+            <div class="kpi-value" style="color:var(--accent);">$84.2M</div>
+            <div class="kpi-change up">↑ +$3.1M (24h)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">ETH Holdings</div>
+            <div class="kpi-value">24,840 ETH</div>
+            <div class="kpi-change up">↑ +2.4% today</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">DeFi Yield (APY)</div>
+            <div class="kpi-value" style="color:var(--green);">18.4%</div>
+            <div class="kpi-change up">↑ Curve + Aave</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Risk Score</div>
+            <div class="kpi-value" style="color:var(--green);">Low (12)</div>
+            <div class="kpi-change up">✓ Clean history</div>
+          </div>
+        </div>
+
+        <!-- ETH Price Chart -->
+        <div class="chart-box">
+          <div class="chart-title">
+            <span>📈 ETH/USD Price (7 Days)</span>
+            <span style="font-size:0.75rem;color:var(--accent);">$3,284.50 ↑ +4.2%</span>
+          </div>
+          <div class="price-chart">
+            <svg viewBox="0 0 600 110" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(139,92,246,0.4)"/>
+                  <stop offset="100%" stop-color="rgba(139,92,246,0)"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,85 L50,80 L100,75 L150,82 L200,70 L250,60 L300,55 L350,65 L400,50 L450,40 L500,35 L550,25 L600,20" fill="none" stroke="#8b5cf6" stroke-width="2.5"/>
+              <path d="M0,85 L50,80 L100,75 L150,82 L200,70 L250,60 L300,55 L350,65 L400,50 L450,40 L500,35 L550,25 L600,20 L600,110 L0,110 Z" fill="url(#priceGrad)"/>
+              <line x1="0" y1="20" x2="600" y2="20" stroke="rgba(139,92,246,0.2)" stroke-width="1" stroke-dasharray="4"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="chart-box">
+          <div class="chart-title"><span>🔄 Recent Transactions</span></div>
+          <table class="tx-table">
+            <thead><tr><th>Hash</th><th>Type</th><th>Amount</th><th>Protocol</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>0xa1b2...c3d4</td>
+                <td><span class="tx-type tx-swap">SWAP</span></td>
+                <td>500 ETH → 1.2M USDC</td>
+                <td>Uniswap V3</td>
+                <td>2 min ago</td>
+              </tr>
+              <tr>
+                <td>0xe5f6...a7b8</td>
+                <td><span class="tx-type tx-stake">STAKE</span></td>
+                <td>1,000 ETH staked</td>
+                <td>Lido Finance</td>
+                <td>18 min ago</td>
+              </tr>
+              <tr>
+                <td>0xc9d0...e1f2</td>
+                <td><span class="tx-type tx-transfer">TRANSFER</span></td>
+                <td>2.4M USDC out</td>
+                <td>Direct</td>
+                <td>1h ago</td>
+              </tr>
+              <tr>
+                <td>0x3a4b...5c6d</td>
+                <td><span class="tx-type tx-swap">SWAP</span></td>
+                <td>800K USDT → 240 ETH</td>
+                <td>Curve</td>
+                <td>3h ago</td>
+              </tr>
+              <tr>
+                <td>0x7e8f...9a0b</td>
+                <td><span class="tx-type tx-sus">FLAGGED</span></td>
+                <td>50 ETH → Mixer</td>
+                <td>Tornado Cash</td>
+                <td>6h ago</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Network Stats -->
+        <div class="network-grid">
+          <div class="network-card">
+            <div class="network-chain">⟠</div>
+            <div class="network-name">Ethereum</div>
+            <div class="network-tps" style="color:var(--accent);">28 TPS</div>
+            <div class="network-bar"><div class="network-fill" style="width:85%;"></div></div>
+          </div>
+          <div class="network-card">
+            <div class="network-chain">◎</div>
+            <div class="network-name">Solana</div>
+            <div class="network-tps" style="color:#14b8a6;">3,240 TPS</div>
+            <div class="network-bar"><div class="network-fill" style="width:72%;background:linear-gradient(90deg,#14b8a6,#2dd4bf);"></div></div>
+          </div>
+          <div class="network-card">
+            <div class="network-chain">₿</div>
+            <div class="network-name">Bitcoin</div>
+            <div class="network-tps" style="color:#f59e0b;">7 TPS</div>
+            <div class="network-bar"><div class="network-fill" style="width:45%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Advisor -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Chain Advisor</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Large Whale Movement</div>
+          <div class="insight-body">Whale Alpha swapped 500 ETH → 1.2M USDC. Historical pattern suggests bearish positioning before major corrections. 3 similar wallets followed within 8 min.</div>
+          <div class="insight-action">→ Monitor for cascade selling</div>
+        </div>
+
+        <div class="insight-card alert">
+          <div class="insight-title">🔴 Mixer Interaction Flagged</div>
+          <div class="insight-body">Transaction 0x7e8f sent 50 ETH to Tornado Cash. AML compliance risk: HIGH. Wallet flagged for enhanced monitoring. Regulatory reporting may be required.</div>
+          <div class="insight-action">→ File SAR if threshold met</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 DeFi Yield Opportunity</div>
+          <div class="insight-body">Curve 3pool offering 22.4% APY due to low liquidity spike. Wallet has $12M idle USDC suitable for deployment. Opportunity window: ~4 hours.</div>
+          <div class="insight-action">→ Deploy to Curve 3pool</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 MEV Protection Active</div>
+          <div class="insight-body">AI detected 3 sandwich attack attempts on today's swaps. Private mempool routing saved $84K in slippage. All transactions routed via Flashbots Protect.</div>
+          <div class="insight-action">→ MEV protection: ON</div>
+        </div>
+
+        <!-- DeFi Protocol TVL -->
+        <div class="insight-card">
+          <div class="kpi-label" style="font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:8px;">📊 DeFi Protocol TVL</div>
+          <div class="defi-metric"><span class="dm-label">Aave V3</span><span class="dm-value" style="color:var(--accent);">$8.4B</span></div>
+          <div class="defi-metric"><span class="dm-label">Uniswap V3</span><span class="dm-value" style="color:var(--accent);">$5.2B</span></div>
+          <div class="defi-metric"><span class="dm-label">Curve Finance</span><span class="dm-value" style="color:var(--accent);">$3.8B</span></div>
+          <div class="defi-metric"><span class="dm-label">Lido Finance</span><span class="dm-value" style="color:var(--accent);">$32.1B</span></div>
+          <div class="defi-metric"><span class="dm-label">MakerDAO</span><span class="dm-value" style="color:var(--accent);">$7.9B</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Complete Blockchain Intelligence Stack</h2>
+  <p class="sub">Built for analysts, compliance teams, funds, and DeFi protocols needing deep on-chain data</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>On-Chain Analytics</h3>
+      <p>Index every transaction across 40+ blockchains with real-time data, historical queries, and cross-chain wallet tracking for complete asset visibility.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🐋</div>
+      <h3>Whale Intelligence</h3>
+      <p>Track smart money wallets, VC funds, and institutional players. Get alerts when whales accumulate, distribute, or make large DeFi moves before the market reacts.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏦</div>
+      <h3>DeFi Protocol Monitoring</h3>
+      <p>Real-time TVL tracking, liquidity analysis, yield farming intelligence, and risk monitoring across 500+ DeFi protocols and AMMs.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚨</div>
+      <h3>AML & Fraud Detection</h3>
+      <p>AI-powered transaction screening, mixer detection, sanctions compliance, and automated SAR filing for crypto exchanges and financial institutions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>MEV Protection</h3>
+      <p>Detect sandwich attacks, frontrunning, and arbitrage bots. Route transactions through private mempools to save millions in MEV extraction losses.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Portfolio Analytics</h3>
+      <p>Cross-chain portfolio tracking with P&L analysis, tax reporting, DeFi position management, and NFT portfolio valuation in one unified dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Intelligence at Every Level</h2>
+  <p class="sub">From individual traders to institutional compliance teams</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Trader</div>
+      <div class="price-amount">$49<span>/mo</span></div>
+      <div class="price-desc">Individual traders and DeFi users needing on-chain edge</div>
+      <ul class="price-features">
+        <li>10 tracked wallets</li>
+        <li>5 blockchain networks</li>
+        <li>Whale alert notifications</li>
+        <li>Portfolio tracking</li>
+        <li>Basic AML screening</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Analyst</div>
+      <div class="price-amount">$299<span>/mo</span></div>
+      <div class="price-desc">Research firms, funds, and serious DeFi protocol analysts</div>
+      <ul class="price-features">
+        <li>Unlimited wallet tracking</li>
+        <li>40+ blockchain networks</li>
+        <li>Full DeFi intelligence</li>
+        <li>MEV protection</li>
+        <li>Advanced AML tools</li>
+        <li>API access (1M calls/mo)</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Compliance</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Exchanges, banks, and regulators requiring enterprise AML/KYC</div>
+      <ul class="price-features">
+        <li>Full compliance suite</li>
+        <li>Automated SAR filing</li>
+        <li>FATF Travel Rule</li>
+        <li>Sanctions screening</li>
+        <li>Custom integrations</li>
+        <li>Dedicated compliance team</li>
+        <li>SLA 99.99% uptime</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">⛓️ BlockchainAI</div>
+  <p>AI-Powered Blockchain Analytics & DeFi Intelligence Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 BlockchainAI Inc. · Privacy · Terms · Security</p>
+</footer>
+
+</body>
+</html>
