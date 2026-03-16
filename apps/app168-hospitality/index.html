@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HospitalityAI - Intelligent Hotel & Guest Experience Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --gradient: linear-gradient(135deg, #f59e0b, #d97706);
+            --accent: #f59e0b;
+            --accent-dark: #d97706;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 1000;
+            padding: 16px 0;
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(245, 158, 11, 0.3); }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-secondary:hover { border-color: var(--accent); }
+        
+        /* Hero */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, rgba(245, 158, 11, 0.1), transparent 60%);
+        }
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        /* Demo Section */
+        .demo {
+            padding: 100px 0;
+        }
+        .demo-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        .demo-header {
+            background: var(--bg-secondary);
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .demo-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .demo-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .demo-tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        .demo-content {
+            padding: 24px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-card .label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        .stat-card .change {
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        .stat-card .change.positive { color: #10b981; }
+        .stat-card .change.negative { color: #ef4444; }
+        
+        .chart-container {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: var(--gradient);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .data-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 13px;
+        }
+        .data-table tr:hover td {
+            background: rgba(245, 158, 11, 0.05);
+        }
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status.available { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status.occupied { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .status.maintenance { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        
+        /* AI Insights */
+        .ai-insights {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .ai-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ai-content h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .ai-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-top: 8px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .pricing-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+        .pricing-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .pricing-card .price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        .pricing-card .description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+        .pricing-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* CTA */
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.15), transparent 70%);
+        }
+        .cta h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+        .cta p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 16px;
+        }
+        .footer-links h4 {
+            margin-bottom: 20px;
+        }
+        .footer-links ul {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: var(--text-primary); }
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-card;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 440px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal-content h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .modal-content p {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid, .pricing-grid, .dashboard-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 40px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">HospitalityAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div>
+                <button class="btn btn-secondary" onclick="showModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="showModal('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Elevate <span>Guest Experiences</span> with AI</h1>
+            <p>Intelligent hotel management, personalized guest engagement, and revenue optimization for the modern hospitality industry.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="showModal('signup')">Start Free Trial</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">View Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Complete Hospitality Intelligence Suite</h2>
+                <p>Everything you need to delight guests and maximize revenue</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏨</div>
+                    <h3>Smart Booking</h3>
+                    <p>AI-powered reservation system with dynamic pricing and demand forecasting.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>Guest Profiles</h3>
+                    <p>Deep guest insights with preference learning and personalized recommendations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Revenue Management</h3>
+                    <p>Dynamic pricing algorithms that maximize RevPAR and occupancy rates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛎️</div>
+                    <h3>Concierge AI</h3>
+                    <p>24/7 AI concierge for instant guest requests and local recommendations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧹</div>
+                    <h3>Housekeeping Optimization</h3>
+                    <p>Smart scheduling and task assignment for efficient room turnover.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Review Intelligence</h3>
+                    <p>Sentiment analysis and automated response suggestions for guest reviews.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="container">
+            <div class="section-title">
+                <h2>Live Demo Dashboard</h2>
+                <p>Experience HospitalityAI's powerful features in action</p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <div class="demo-tabs">
+                        <button class="demo-tab active">Overview</button>
+                        <button class="demo-tab">Rooms</button>
+                        <button class="demo-tab">Guests</button>
+                    </div>
+                    <span style="color: var(--text-secondary); font-size: 14px;">Last updated: Just now</span>
+                </div>
+                <div class="demo-content">
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="label">Occupancy Rate</div>
+                            <div class="value">87.3%</div>
+                            <div class="change positive">↑ 12% vs last week</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Avg Daily Rate</div>
+                            <div class="value">$248</div>
+                            <div class="change positive">↑ 8% this month</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Guest Satisfaction</div>
+                            <div class="value">4.8</div>
+                            <div class="change positive">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container" id="occupancy-chart"></div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th>Type</th>
+                                <th>Guest</th>
+                                <th>Check Out</th>
+                                <th>Status</th>
+                                <th>ADR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>301</td>
+                                <td>Suite</td>
+                                <td>J. Smith</td>
+                                <td>Dec 18</td>
+                                <td><span class="status occupied">Occupied</span></td>
+                                <td>$385</td>
+                            </tr>
+                            <tr>
+                                <td>205</td>
+                                <td>Deluxe</td>
+                                <td>M. Johnson</td>
+                                <td>Dec 17</td>
+                                <td><span class="status occupied">Occupied</span></td>
+                                <td>$245</td>
+                            </tr>
+                            <tr>
+                                <td>412</td>
+                                <td>Standard</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td><span class="status available">Available</span></td>
+                                <td>$189</td>
+                            </tr>
+                            <tr>
+                                <td>118</td>
+                                <td>Deluxe</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td><span class="status maintenance">Cleaning</span></td>
+                                <td>$245</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="ai-insights">
+                        <div class="ai-icon">🤖</div>
+                        <div class="ai-content">
+                            <h4>AI Revenue Recommendation</h4>
+                            <p>High demand detected for next weekend due to local conference. Recommend increasing ADR by 18% for Dec 20-22. Predicted occupancy: 95%. Estimated additional revenue: $12,400. Also, consider offering premium package upgrades to 12 guests with high likelihood to accept.</p>
+                            <div class="pulse-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Pricing for Every Property</h2>
+                <p>From boutique hotels to large chains</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Boutique</h3>
+                    <div class="price">$149<span>/mo</span></div>
+                    <p class="description">For small properties</p>
+                    <ul class="pricing-features">
+                        <li>Up to 50 rooms</li>
+                        <li>Basic booking engine</li>
+                        <li>Guest messaging</li>
+                        <li>Email support</li>
+                        <li>Mobile app</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Professional</h3>
+                    <div class="price">$399<span>/mo</span></div>
+                    <p class="description">For growing hotels</p>
+                    <ul class="pricing-features">
+                        <li>Up to 250 rooms</li>
+                        <li>AI revenue management</li>
+                        <li>Guest profiles</li>
+                        <li>Review intelligence</li>
+                        <li>Priority support</li>
+                        <li>API access</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%">Get Started</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <p class="description">For hotel chains</p>
+                    <ul class="pricing-features">
+                        <li>Unlimited rooms</li>
+                        <li>Multi-property dashboard</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated success team</li>
+                        <li>White-label option</li>
+                        <li>24/7 phone support</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Transform Your Property?</h2>
+            <p>Join 3,000+ hotels already delivering exceptional guest experiences with HospitalityAI.</p>
+            <button class="btn btn-primary" onclick="showModal('signup')">Start Your Free Trial</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">HospitalityAI</div>
+                    <p>Empowering hotels and resorts with artificial intelligence. Creating memorable guest experiences, optimizing operations, and maximizing revenue.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 HospitalityAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal" id="signup-modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close" onclick="closeModal('signup')">&times;</button>
+            <h2>Create Account</h2>
+            <p>Start your 14-day free trial. No credit card required.</p>
+            <form onsubmit="event.preventDefault(); alert('Demo account created!'); closeModal('signup');">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Hotel Manager" required>
+                </div>
+                <div class="form-group">
+                    <label>Work Email</label>
+                    <input type="email" placeholder="manager@hotel.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="login-modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close" onclick="closeModal('login')">&times;</button>
+            <h2>Welcome Back</h2>
+            <p>Log in to your HospitalityAI dashboard</p>
+            <form onsubmit="event.preventDefault(); alert('Logged in successfully!'); closeModal('login');">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="manager@hotel.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%">Log In</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Chart animation
+        const chartData = [72, 68, 85, 92, 88, 95, 82, 78, 90, 94, 87, 91];
+        const chartContainer = document.getElementById('occupancy-chart');
+        chartData.forEach((value, index) => {
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            bar.style.height = '0%';
+            chartContainer.appendChild(bar);
+            setTimeout(() => {
+                bar.style.height = value + '%';
+            }, index * 50);
+        });
+
+        // Modal functions
+        function showModal(type) {
+            document.getElementById(type + '-modal').classList.add('active');
+        }
+        function closeModal(type) {
+            document.getElementById(type + '-modal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Tab switching
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
