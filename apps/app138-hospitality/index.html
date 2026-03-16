@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HospitalityAI - Smart Hotel & Guest Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e5e5e5;
+            min-height: 100vh;
+        }
+        :root {
+            --gradient: linear-gradient(135deg, #f59e0b, #fbbf24);
+            --accent: #f59e0b;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #e5e5e5; }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary {
+            background: var(--gradient);
+            color: #0a0a0f;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #e5e5e5;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero {
+            padding: 8rem 3rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            padding: 4rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-card p {
+            color: #9ca3af;
+            margin-top: 0.5rem;
+        }
+        .features {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .feature-card {
+            padding: 2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        .demo {
+            padding: 6rem 3rem;
+            background: rgba(255,255,255,0.01);
+        }
+        .demo h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #12121a;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        .demo-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .demo-header h3 {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+        .demo-content {
+            padding: 2rem;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .dashboard-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .dashboard-card h4 {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .kpi-change {
+            font-size: 0.85rem;
+            color: #22c55e;
+        }
+        .kpi-change.negative { color: #ef4444; }
+        .booking-list {
+            list-style: none;
+        }
+        .booking-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .booking-list li:last-child { border-bottom: none; }
+        .booking-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .room-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .room-badge.occupied { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .room-badge.available { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+        .ai-insights {
+            margin-top: 2rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        .ai-insights h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #fbbf24;
+        }
+        .ai-insights h4::before {
+            content: '●';
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .ai-insights ul {
+            list-style: none;
+        }
+        .ai-insights li {
+            padding: 0.5rem 0;
+            color: #fde68a;
+            font-size: 0.9rem;
+        }
+        .pricing {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .pricing-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        .pricing-card.featured {
+            border-color: rgba(245, 158, 11, 0.5);
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0a0a0f;
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .pricing-card .price span {
+            font-size: 1rem;
+            color: #9ca3af;
+            font-weight: 400;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        .pricing-card li {
+            padding: 0.5rem 0;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-card li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .cta {
+            padding: 6rem 3rem;
+            text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(245, 158, 11, 0.05));
+        }
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            padding: 3rem;
+            text-align: center;
+            color: #6b7280;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #12121a;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e5e5e5;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .modal input:focus {
+            outline: none;
+            border-color: #f59e0b;
+        }
+        .modal .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .features-grid, .pricing-grid, .dashboard-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">HospitalityAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="showModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="showModal('signup')">Get Started</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Elevate Guest Experiences with <span>AI-Powered Hospitality</span></h1>
+        <p>Smart hotel management, intelligent booking optimization, and personalized guest engagement for the modern hospitality industry.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="showModal('signup')">Start Free Trial</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">View Demo</button>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <h3>5,000+</h3>
+            <p>Hotels Managed</p>
+        </div>
+        <div class="stat-card">
+            <h3>2M+</h3>
+            <p>Bookings Processed</p>
+        </div>
+        <div class="stat-card">
+            <h3>98%</h3>
+            <p>Guest Satisfaction</p>
+        </div>
+        <div class="stat-card">
+            <h3>35%</h3>
+            <p>Revenue Increase</p>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Smart Hospitality Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🏨</div>
+                <h3>Smart Booking</h3>
+                <p>AI-powered booking engine with dynamic pricing, channel management, and real-time availability sync.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Guest App</h3>
+                <p>Mobile-first guest experience with digital check-in, room controls, and concierge services.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Revenue Management</h3>
+                <p>Dynamic pricing algorithms that optimize rates based on demand, events, and market conditions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧹</div>
+                <h3>Housekeeping AI</h3>
+                <p>Smart scheduling and task assignment for housekeeping teams with real-time status updates.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Guest Messaging</h3>
+                <p>Automated guest communication via WhatsApp, SMS, and email with AI-powered responses.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Analytics Dashboard</h3>
+                <p>Comprehensive insights on occupancy, ADR, RevPAR, and guest sentiment analysis.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <h2>Interactive Demo</h2>
+        <div class="demo-container">
+            <div class="demo-header">
+                <h3>HospitalityAI Dashboard</h3>
+                <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Try Demo</button>
+            </div>
+            <div class="demo-content">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Occupancy Rate</h4>
+                        <div class="kpi-value">87.5%</div>
+                        <div class="kpi-change">↑ 12% vs last week</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Avg. Daily Rate</h4>
+                        <div class="kpi-value">$189</div>
+                        <div class="kpi-change">↑ 8% increase</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Guest Score</h4>
+                        <div class="kpi-value">9.4/10</div>
+                        <div class="kpi-change">↑ 0.3 improvement</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" style="margin-top: 1.5rem;">
+                    <div class="dashboard-card" style="grid-column: span 2;">
+                        <h4>Today's Room Status</h4>
+                        <ul class="booking-list">
+                            <li>
+                                <div class="booking-info">
+                                    <span class="room-badge occupied">Occupied</span>
+                                    <span>Room 301 - Deluxe Suite</span>
+                                </div>
+                                <span>John Smith</span>
+                            </li>
+                            <li>
+                                <div class="booking-info">
+                                    <span class="room-badge available">Available</span>
+                                    <span>Room 302 - Standard King</span>
+                                </div>
+                                <span>Check-in 3PM</span>
+                            </li>
+                            <li>
+                                <div class="booking-info">
+                                    <span class="room-badge occupied">Occupied</span>
+                                    <span>Room 303 - Executive Suite</span>
+                                </div>
+                                <span>Sarah Johnson</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Revenue Channels</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Direct</span>
+                                <span>45%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 45%"></div></div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>OTA</span>
+                                <span>38%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 38%"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Corporate</span>
+                                <span>17%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 17%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <h4>AI Insights</h4>
+                    <ul>
+                        <li>• Predicted high demand next weekend - consider increasing rates by 15%</li>
+                        <li>• 23 check-outs today, 18 rooms ready for cleaning assignment</li>
+                        <li>• Guest satisfaction improved after implementing AI concierge recommendations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <h2>Flexible Pricing Plans</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Boutique</h3>
+                <div class="price">$99<span>/mo</span></div>
+                <ul>
+                    <li>Up to 50 rooms</li>
+                    <li>Booking engine</li>
+                    <li>Guest messaging</li>
+                    <li>Basic analytics</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="showModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Hotel</h3>
+                <div class="price">$249<span>/mo</span></div>
+                <ul>
+                    <li>Up to 200 rooms</li>
+                    <li>Everything in Boutique</li>
+                    <li>Revenue management</li>
+                    <li>Guest mobile app</li>
+                    <li>Housekeeping AI</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="showModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <ul>
+                    <li>Unlimited rooms</li>
+                    <li>Everything in Hotel</li>
+                    <li>Multi-property support</li>
+                    <li>Custom integrations</li>
+                    <li>Dedicated manager</li>
+                    <li>SLA guarantee</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="showModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Transform Your Property?</h2>
+        <p>Join thousands of hotels using HospitalityAI to deliver exceptional guest experiences and maximize revenue.</p>
+        <button class="btn btn-primary" onclick="showModal('signup')">Start Your Free Trial</button>
+    </section>
+
+    <footer>
+        <p>© 2024 HospitalityAI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-title">Create Account</h3>
+            <p id="modal-subtitle">Start your free trial today</p>
+            <input type="text" placeholder="Full Name" id="name-input">
+            <input type="email" placeholder="Email Address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary" id="modal-btn">Get Started</button>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #6b7280;">
+                Already have an account? <a href="#" style="color: #f59e0b;" onclick="toggleModal()">Log in</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let modalMode = 'signup';
+        function showModal(mode) {
+            modalMode = mode;
+            document.getElementById('modal').classList.add('active');
+            if (mode === 'login') {
+                document.getElementById('modal-title').textContent = 'Welcome Back';
+                document.getElementById('modal-subtitle').textContent = 'Log in to your account';
+                document.getElementById('name-input').style.display = 'none';
+                document.getElementById('modal-btn').textContent = 'Log In';
+            } else {
+                document.getElementById('modal-title').textContent = 'Create Account';
+                document.getElementById('modal-subtitle').textContent = 'Start your free trial today';
+                document.getElementById('name-input').style.display = 'block';
+                document.getElementById('modal-btn').textContent = 'Get Started';
+            }
+        }
+        function toggleModal() {
+            modalMode = modalMode === 'login' ? 'signup' : 'login';
+            showModal(modalMode);
+        }
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
