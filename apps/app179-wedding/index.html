@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeddingAI - AI-Powered Wedding Planning Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #18181f;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: #f9a8d4;
+            --accent-secondary: #be185d;
+            --gradient: linear-gradient(135deg, #f9a8d4, #be185d);
+            --border: rgba(255,255,255,0.1);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10,10,15,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(249,168,212,0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+        
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, rgba(249,168,212,0.15), transparent 50%);
+        }
+        
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        .features {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .demo {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .demo-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+        }
+        
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .demo-header h3 {
+            font-size: 24px;
+        }
+        
+        .demo-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .demo-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .demo-tab.active {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        
+        .planning-viewer {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            height: 350px;
+            overflow: hidden;
+        }
+        
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .task-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .task-check.done {
+            background: var(--gradient);
+            border-color: transparent;
+        }
+        
+        .task-details h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .task-details p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .task-due {
+            font-size: 12px;
+            color: var(--accent);
+            background: rgba(249,168,212,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .stat-card h4 {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+        
+        .ai-insights {
+            margin-top: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .ai-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .ai-header span {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .ai-list {
+            list-style: none;
+        }
+        
+        .ai-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ai-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .ai-list li::before {
+            content: "💍";
+        }
+        
+        .pricing {
+            padding: 100px 0;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+        
+        .pricing-card.featured::before {
+            content: "Most Popular";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .pricing-card .price span {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+        
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pricing-features li::before {
+            content: "✓";
+            color: var(--accent);
+        }
+        
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: radial-gradient(ellipse at center, rgba(249,168,212,0.1), transparent 70%);
+        }
+        
+        .cta h2 {
+            font-size: 48px;
+            margin-bottom: 24px;
+        }
+        
+        .cta p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        
+        footer {
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .modal-header h3 {
+            font-size: 24px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid, .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">WeddingAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div>
+                <button class="btn btn-secondary" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Plan Your Dream Wedding with <span>AI Magic</span></h1>
+            <p>AI-powered wedding planning that finds perfect vendors, manages your budget, and creates an unforgettable celebration tailored to your vision.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Planning Free</button>
+                <button class="btn btn-secondary">See Examples</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Planning Made Perfect</h2>
+                <p>Everything you need for your special day</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Vendor Matching</h3>
+                    <p>AI-powered vendor recommendations that match your style, budget, and availability perfectly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Budget Manager</h3>
+                    <p>Smart budget allocation and tracking with AI suggestions to maximize your wedding value.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Smart Checklist</h3>
+                    <p>Personalized timeline and checklist that adapts to your wedding date and priorities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Design Assistant</h3>
+                    <p>AI-generated mood boards, color palettes, and decor ideas based on your preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🪑</div>
+                    <h3>Seating Planner</h3>
+                    <p>Intelligent seating arrangements that consider relationships, preferences, and dynamics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Guest Manager</h3>
+                    <p>RSVP tracking, dietary preferences, and guest communication all in one place.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="demo" id="demo">
+        <div class="container">
+            <div class="section-title">
+                <h2>Wedding Dashboard</h2>
+                <p>Everything organized for your big day</p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h3>Wedding Countdown</h3>
+                    <div class="demo-tabs">
+                        <button class="demo-tab active">Tasks</button>
+                        <button class="demo-tab">Vendors</button>
+                        <button class="demo-tab">Budget</button>
+                    </div>
+                </div>
+                <div class="demo-grid">
+                    <div class="planning-viewer">
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-check done">✓</div>
+                                <div class="task-details">
+                                    <h4>Book Venue</h4>
+                                    <p>Riverside Gardens confirmed</p>
+                                </div>
+                            </div>
+                            <span class="task-due">Completed</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-check done">✓</div>
+                                <div class="task-details">
+                                    <h4>Send Invitations</h4>
+                                    <p>142 of 150 sent</p>
+                                </div>
+                            </div>
+                            <span class="task-due">Completed</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-check"></div>
+                                <div class="task-details">
+                                    <h4>Cake Tasting</h4>
+                                    <p>Scheduled with Sweet Dreams Bakery</p>
+                                </div>
+                            </div>
+                            <span class="task-due">Tomorrow</span>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-check"></div>
+                                <div class="task-details">
+                                    <h4>Final Dress Fitting</h4>
+                                    <p>Bridal Boutique appointment</p>
+                                </div>
+                            </div>
+                            <span class="task-due">In 3 days</span>
+                        </div>
+                    </div>
+                    <div class="side-panel">
+                        <div class="stat-card">
+                            <h4>Days Until Wedding</h4>
+                            <div class="stat-value">47</div>
+                            <div class="stat-change">June 15, 2025</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Tasks Complete</h4>
+                            <div class="stat-value">68%</div>
+                            <div class="stat-change">17 of 25 done</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Budget Used</h4>
+                            <div class="stat-value">72%</div>
+                            <div class="stat-change">$21,600 of $30K</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-insights">
+                    <div class="ai-header">
+                        <div class="ai-dot"></div>
+                        <span>AI Wedding Assistant</span>
+                    </div>
+                    <ul class="ai-list">
+                        <li>Photographer recommendation: 3 vendors match your style perfectly</li>
+                        <li>Budget tip: Save $800 by adjusting floral arrangements</li>
+                        <li>4 guests haven't RSVP'd yet - send reminder?</li>
+                        <li>Weather forecast for your date: 75°F, partly cloudy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Wedding Plans</h2>
+                <p>Choose the perfect plan for your celebration</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Essentials</h3>
+                    <div class="price">Free</div>
+                    <ul class="pricing-features">
+                        <li>Basic checklist</li>
+                        <li>Vendor directory</li>
+                        <li>Budget tracker</li>
+                        <li>Guest list manager</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">$49<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>AI vendor matching</li>
+                        <li>Design assistant</li>
+                        <li>Seating planner</li>
+                        <li>Priority support</li>
+                        <li>Website builder</li>
+                        <li>RSVP management</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Full Service</h3>
+                    <div class="price">$149<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Everything in Premium</li>
+                        <li>1-on-1 AI consultant</li>
+                        <li>Vendor negotiations</li>
+                        <li>Timeline management</li>
+                        <li>Day-of coordination</li>
+                        <li>Unlimited support</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Plan Your Perfect Day?</h2>
+            <p>Join thousands of couples who planned stress-free weddings with AI</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Planning Now</button>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">WeddingAI</div>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Sign Up</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameField" style="display: none;">
+                    <label>Your Name</label>
+                    <input type="text" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Continue</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function openModal(type) {
+            document.getElementById('authModal').classList.add('active');
+            if (type === 'signup') {
+                document.getElementById('modalTitle').textContent = 'Sign Up';
+                document.getElementById('nameField').style.display = 'block';
+            } else {
+                document.getElementById('modalTitle').textContent = 'Login';
+                document.getElementById('nameField').style.display = 'none';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Welcome to WeddingAI! Let\'s start planning your dream wedding.');
+            closeModal();
+        });
+        
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
