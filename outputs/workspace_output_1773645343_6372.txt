@@ -1,0 +1,6 @@
+[main e00f6f6] Add WellnessAI app #148 and EventAI app #149
+ 2 files changed, 766 insertions(+)
+ create mode 100644 apps/app148-wellness/index.html
+ create mode 100644 apps/app149-event/index.html
+To https://github.com/21leahcimhtiek-oss/ai-projects.git
+   6d401cb..e00f6f6  main -> main
