@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeautyAI - AI-Powered Beauty Personalization Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #18181f;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: #ec4899;
+            --accent-secondary: #f472b6;
+            --gradient: linear-gradient(135deg, #ec4899, #f472b6);
+            --border: rgba(255,255,255,0.1);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10,10,15,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(236,72,153,0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+        
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, rgba(236,72,153,0.15), transparent 50%);
+        }
+        
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        .features {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .demo {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .demo-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+        }
+        
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .demo-header h3 {
+            font-size: 24px;
+        }
+        
+        .demo-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .demo-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .demo-tab.active {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        
+        .product-grid {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            height: 350px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            overflow: hidden;
+        }
+        
+        .product-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .product-card:hover {
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+        
+        .product-image {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(244,114,182,0.3));
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .product-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .product-match {
+            font-size: 11px;
+            color: var(--accent);
+            background: rgba(236,72,153,0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .stat-card h4 {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+        
+        .ai-insights {
+            margin-top: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .ai-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .ai-header span {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .ai-list {
+            list-style: none;
+        }
+        
+        .ai-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ai-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .ai-list li::before {
+            content: "💄";
+        }
+        
+        .pricing {
+            padding: 100px 0;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+        
+        .pricing-card.featured::before {
+            content: "Most Popular";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .pricing-card .price span {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+        
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pricing-features li::before {
+            content: "✓";
+            color: var(--accent);
+        }
+        
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: radial-gradient(ellipse at center, rgba(236,72,153,0.1), transparent 70%);
+        }
+        
+        .cta h2 {
+            font-size: 48px;
+            margin-bottom: 24px;
+        }
+        
+        .cta p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        
+        footer {
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .modal-header h3 {
+            font-size: 24px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid, .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">BeautyAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div>
+                <button class="btn btn-secondary" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Discover Your Perfect <span>Beauty Match</span></h1>
+            <p>AI-powered skincare and makeup recommendations tailored to your unique features, skin type, and personal style preferences.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Free Quiz</button>
+                <button class="btn btn-secondary">Watch Demo</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Personalized Beauty Tools</h2>
+                <p>Everything you need to find your perfect beauty routine</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Skin Analysis</h3>
+                    <p>AI-powered skin analysis from your selfie to identify skin type, concerns, and recommend targeted treatments.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Shade Matching</h3>
+                    <p>Find your perfect foundation, concealer, and lipstick shades with precision color matching technology.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3>Virtual Try-On</h3>
+                    <p>Test makeup looks virtually before you buy with AR-powered virtual try-on technology.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Routine Builder</h3>
+                    <p>Build a personalized skincare routine with AI-curated product recommendations and layering guidance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧴</div>
+                    <h3>Ingredient Analysis</h3>
+                    <p>Understand what's in your products with AI-powered ingredient analysis and safety ratings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Smart Shopping</h3>
+                    <p>Get personalized deals and find dupes for high-end products that fit your budget.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="demo" id="demo">
+        <div class="container">
+            <div class="section-title">
+                <h2>Personalized For You</h2>
+                <p>AI-curated recommendations based on your unique profile</p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h3>Your Beauty Dashboard</h3>
+                    <div class="demo-tabs">
+                        <button class="demo-tab active">Skincare</button>
+                        <button class="demo-tab">Makeup</button>
+                        <button class="demo-tab">Hair</button>
+                    </div>
+                </div>
+                <div class="demo-grid">
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <div class="product-image">🧴</div>
+                            <div class="product-name">Hydrating Serum</div>
+                            <span class="product-match">98% match</span>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">✨</div>
+                            <div class="product-name">Vitamin C Cream</div>
+                            <span class="product-match">95% match</span>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🌙</div>
+                            <div class="product-name">Night Repair</div>
+                            <span class="product-match">92% match</span>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">☀️</div>
+                            <div class="product-name">SPF 50 Moisturizer</div>
+                            <span class="product-match">90% match</span>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">💧</div>
+                            <div class="product-name">Gentle Cleanser</div>
+                            <span class="product-match">88% match</span>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🌸</div>
+                            <div class="product-name">Toning Essence</div>
+                            <span class="product-match">87% match</span>
+                        </div>
+                    </div>
+                    <div class="side-panel">
+                        <div class="stat-card">
+                            <h4>Profile Match</h4>
+                            <div class="stat-value">94%</div>
+                            <div class="stat-change">Based on your skin type</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Products Tried</h4>
+                            <div class="stat-value">28</div>
+                            <div class="stat-change">This year</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Savings Found</h4>
+                            <div class="stat-value">$142</div>
+                            <div class="stat-change">Via smart dupes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-insights">
+                    <div class="ai-header">
+                        <div class="ai-dot"></div>
+                        <span>AI Beauty Insights</span>
+                    </div>
+                    <ul class="ai-list">
+                        <li>Based on your dry skin, add hyaluronic acid to your routine</li>
+                        <li>New product match: Retinol serum 94% compatible</li>
+                        <li>Seasonal update: Switch to lighter moisturizer for summer</li>
+                        <li>Ingredient alert: 3 products contain fragrance you may avoid</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>Beauty Plans</h2>
+                <p>Choose the plan that fits your beauty journey</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Basic skin analysis</li>
+                        <li>5 product matches/week</li>
+                        <li>Ingredient look-up</li>
+                        <li>Community access</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">$9.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited analyses</li>
+                        <li>Virtual try-on</li>
+                        <li>Personalized routines</li>
+                        <li>Shade matching</li>
+                        <li>Deal alerts</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Beauty Box</h3>
+                    <div class="price">$29.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Everything in Premium</li>
+                        <li>Monthly sample box</li>
+                        <li>Full-size product gifts</li>
+                        <li>Early access to launches</li>
+                        <li>Exclusive tutorials</li>
+                        <li>1-on-1 consultations</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Discover Your Perfect Routine?</h2>
+            <p>Join millions finding their ideal beauty products with AI</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Take the Free Quiz</button>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">BeautyAI</div>
+                <div class="footer-links">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Sign Up</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameField" style="display: none;">
+                    <label>Name</label>
+                    <input type="text" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Continue</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function openModal(type) {
+            document.getElementById('authModal').classList.add('active');
+            if (type === 'signup') {
+                document.getElementById('modalTitle').textContent = 'Sign Up';
+                document.getElementById('nameField').style.display = 'block';
+            } else {
+                document.getElementById('modalTitle').textContent = 'Login';
+                document.getElementById('nameField').style.display = 'none';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Welcome to BeautyAI! Let\'s start your personalized beauty journey.');
+            closeModal();
+        });
+        
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
