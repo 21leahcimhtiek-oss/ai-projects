@@ -1,0 +1,103 @@
+[main 73a26f3] Add App #151 BeautyAI and App #152 FashionAI
+ 100 files changed, 12334 insertions(+), 41 deletions(-)
+ create mode 100644 --Automated.txt
+ create mode 100644 1python.pdf
+ create mode 100644 ALL_118_APPS_SUMMARY.md
+ create mode 100644 App.tsx
+ create mode 100644 BUILD_INSTRUCTIONS.md
+ create mode 100644 Comprehensive_Guide_to_Python_Code_Obfuscation_Tec.pdf
+ create mode 100644 DisclosureStatement.pdf
+ create mode 100644 Excellent.txt
+ create mode 100644 Great! The app.txt
+ create mode 100644 H8X11_D5500SAC_TCRGEN_427709_1.pdf
+ create mode 100644 I understand.txt
+ create mode 100644 I've created.txt
+ create mode 100644 MindSpace_-_TODO.md
+ create mode 100644 PROJECT_SUMMARY.md
+ create mode 100644 Perfect! I'll.txt
+ create mode 100644 Perfect! I've.txt
+ create mode 100644 QUICK_START.md
+ create mode 100644 README (1).md
+ create mode 100644 StoryForge_Kids_-_Complete_TikTok_Ad_Campaign_Pack.pdf
+ create mode 100644 StoryForge_Kids_TikTok_Ad_Scripts_(Ages_0-12).md
+ create mode 100644 StoryForge_Kids_TikTok_Ad_Scripts_(Ages_0-12).pdf
+ create mode 100644 Subscription_Payment_Flow_Test_Plan.md
+ create mode 100644 _layout.tsx
+ create mode 100644 ad_presentation_content.pdf
+ create mode 100644 android-debloat-helper.py
+ create mode 100644 app.config.ts
+ create mode 100644 apps/app123-healthcare/index.html
+ create mode 100644 apps/app152-fashion/index.html
+ create mode 100644 chat-storage.ts
+ create mode 100644 client.py
+ create mode 100644 copilot_image_1769663951169.jpeg
+ create mode 100644 copilot_image_1769663957685.jpeg
+ create mode 100644 copilot_image_1769663963241.jpeg
+ create mode 100644 copilot_image_1769663968181.jpeg
+ create mode 100644 design.md
+ create mode 100644 design.pdf
+ create mode 100644 design_1.pdf
+ create mode 100644 featherless-abliterated-models.md
+ create mode 100644 gemini_generated_audio_overview_15d36df0.mp3
+ create mode 100644 gemini_generated_audio_overview_f0121486.mp3
+ create mode 100644 generated_image_4b81c60c-3659-418f-ab9b-6215f0cda493_0.png
+ create mode 100644 google-analytics(1).html
+ create mode 100644 google-drive (1).svg
+ create mode 100644 google-drive.svg
+ create mode 100644 google-plus-g.svg
+ create mode 100644 https---mega.nz (1).txt
+ create mode 100644 https---mega.nz.txt
+ create mode 100644 icon-symbol.tsx
+ create mode 100644 image_1769664630470.jpeg
+ create mode 100644 images.jpeg
+ create mode 100644 index.tsx
+ create mode 100644 obfuscated.py
+ create mode 100644 openrouter-free-models.md
+ create mode 100644 openrouter.ts
+ create mode 100644 original.py
+ create mode 100644 outputs/workspace_output_1773644968_4549.txt
+ create mode 100644 outputs/workspace_output_1773645152_3501.txt
+ create mode 100644 outputs/workspace_output_1773645169_5223.txt
+ create mode 100644 outputs/workspace_output_1773645324_9065.txt
+ create mode 100644 outputs/workspace_output_1773645343_6372.txt
+ create mode 100644 outputs/workspace_output_1773645348_5667.txt
+ create mode 100644 outputs/workspace_output_1773645493_697.txt
+ create mode 100644 outputs/workspace_output_1773645516_7648.txt
+ create mode 100644 outputs/workspace_output_1773659931_1607.txt
+ create mode 100644 outputs/workspace_output_1773659939_3050.txt
+ create mode 100644 outputs/workspace_output_1773660221_5697.txt
+ create mode 100644 outputs/workspace_output_1773660243_173.txt
+ create mode 100644 outputs/workspace_output_1773660247_1048.txt
+ create mode 100644 outputs/workspace_output_1773660450_1958.txt
+ create mode 100644 outputs/workspace_output_1773660467_1719.txt
+ create mode 100644 outputs/workspace_output_shell_tool_2026_03_16_11_19_08_1150.txt
+ create mode 100644 pasted_content.txt
+ create mode 100644 permissions.ts
+ create mode 100644 permissions.tsx
+ create mode 100644 permissions_1.ts
+ create mode 100644 server.py
+ create mode 100644 settings.tsx
+ create mode 100644 starred-repos-analysis.md
+ create mode 100644 storage.ts
+ create mode 100644 storyforge_kids_ad_scripts.pdf
+ create mode 100644 storyforge_kids_ad_scripts_1.pdf
+ create mode 100644 stripe-products.ts
+ create mode 100644 stripe-webhook.ts
+ create mode 100644 summarized_conversations/original_conversation_1773660447_5738.txt
+ create mode 100644 test-notes.md
+ create mode 100644 theme.config.js
+ create mode 100644 theme.config_1.js
+ create mode 100644 todo.pdf
+ create mode 100644 todo_1.md
+ create mode 100644 todo_1.pdf
+ create mode 100644 todo_2.md
+ create mode 100644 tor-service.ts
+ create mode 100644 tor-service_1.ts
+ create mode 100644 tordex-research.md
+ create mode 100644 venice-conversation-I need to make as much income as I can as fast as I can and have no money what should I do bob-f3bd6f99-23b5-4005-b2c0-73efdc2e77f9.txt
+ create mode 100644 web-scraper.ts
+ create mode 100644 web-tools.tsx
+ create mode 100644 "\360\237\216\257_Comprehensive_Analysis_&_Strategic_Recommendati.md"
+ create mode 100644 "\360\237\224\223_Complete_Uncensored_Unfiltered_LLM_Access_Guide.md"
+To https://github.com/21leahcimhtiek-oss/ai-projects.git
+   324803e..73a26f3  main -> main
