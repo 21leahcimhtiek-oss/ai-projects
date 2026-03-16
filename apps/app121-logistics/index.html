@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogisticsAI - Intelligent Logistics & Supply Chain Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --border: #1f2937;
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(circle at 70% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-content h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .hero-demo {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .demo-header {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .demo-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .demo-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .demo-content {
+            padding: 1.5rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .demo-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .demo-card:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .demo-card-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .demo-card-change {
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+        
+        .route-map {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .route-title {
+            font-weight: 600;
+        }
+        
+        .route-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .route-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+        }
+        
+        .route-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .route-status.active {
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+        
+        .route-status.pending {
+            background: #f59e0b;
+        }
+        
+        .route-status.completed {
+            background: var(--primary);
+        }
+        
+        .route-info {
+            flex: 1;
+        }
+        
+        .route-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .route-detail {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .route-eta {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.875rem;
+        }
+        
+        .features {
+            padding: 6rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .pricing {
+            padding: 6rem 2rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-tier {
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-desc {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .pricing-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pricing-btn.outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        
+        .pricing-btn.outline:hover {
+            border-color: var(--primary);
+        }
+        
+        .pricing-btn.primary {
+            background: var(--gradient);
+            border: none;
+            color: white;
+        }
+        
+        .pricing-btn.primary:hover {
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .cta {
+            padding: 6rem 2rem;
+            background: var(--gradient);
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-btn {
+            background: white;
+            color: var(--primary-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 100%;
+            margin: 1rem;
+            position: relative;
+        }
+        
+        .modal h2 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-demo {
+                order: -1;
+            }
+            
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                flex-wrap: wrap;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">LogisticsAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Free Trial</button>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>AI-Powered <span>Logistics</span> Intelligence Platform</h1>
+                <p>Optimize routes, track shipments in real-time, and reduce delivery costs with AI-driven logistics management for modern supply chains.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" onclick="openModal('signup')">Start Free Trial</button>
+                    <button class="btn btn-outline" onclick="scrollToDemo()">View Demo</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">40%</div>
+                        <div class="stat-label">Cost Reduction</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">99.5%</div>
+                        <div class="stat-label">On-Time Delivery</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">5M+</div>
+                        <div class="stat-label">Shipments/Month</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-demo" id="demo">
+                <div class="demo-header">
+                    <div class="demo-title">LogisticsAI Dashboard</div>
+                    <div class="demo-status">
+                        <span class="status-dot"></span>
+                        Live Tracking
+                    </div>
+                </div>
+                <div class="demo-content">
+                    <div class="demo-grid">
+                        <div class="demo-card">
+                            <div class="demo-card-title">Active Shipments</div>
+                            <div class="demo-card-value">2,847</div>
+                            <div class="demo-card-change">Across 45 routes</div>
+                        </div>
+                        <div class="demo-card">
+                            <div class="demo-card-title">Fleet Utilization</div>
+                            <div class="demo-card-value">94%</div>
+                            <div class="demo-card-change">Optimal capacity</div>
+                        </div>
+                        <div class="demo-card">
+                            <div class="demo-card-title">Avg Delivery</div>
+                            <div class="demo-card-value">2.3h</div>
+                            <div class="demo-card-change">-18% vs last week</div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-map">
+                        <div class="route-header">
+                            <span class="route-title">Live Routes</span>
+                            <span style="color: var(--text-secondary); font-size: 0.75rem;">Real-time Status</span>
+                        </div>
+                        <div class="route-list">
+                            <div class="route-item">
+                                <div class="route-status active"></div>
+                                <div class="route-info">
+                                    <div class="route-name">Route #RT-4521 - Chicago Hub</div>
+                                    <div class="route-detail">12 packages • 340 miles</div>
+                                </div>
+                                <div class="route-eta">In Transit</div>
+                            </div>
+                            <div class="route-item">
+                                <div class="route-status pending"></div>
+                                <div class="route-info">
+                                    <div class="route-name">Route #RT-4522 - NYC Distribution</div>
+                                    <div class="route-detail">8 packages • 125 miles</div>
+                                </div>
+                                <div class="route-eta">Loading</div>
+                            </div>
+                            <div class="route-item">
+                                <div class="route-status completed"></div>
+                                <div class="route-info">
+                                    <div class="route-name">Route #RT-4520 - LA Express</div>
+                                    <div class="route-detail">15 packages • 89 miles</div>
+                                </div>
+                                <div class="route-eta">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Powerful Logistics Features</h2>
+                <p>Everything you need to optimize your logistics operations</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Route Optimization</h3>
+                    <p>AI-powered route planning that minimizes distance, fuel consumption, and delivery time while maximizing capacity utilization.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Real-Time Tracking</h3>
+                    <p>Live GPS tracking of all shipments with predictive ETAs, delay alerts, and proactive customer notifications.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚛</div>
+                    <h3>Fleet Management</h3>
+                    <p>Complete fleet visibility with maintenance scheduling, driver performance analytics, and asset utilization reports.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Warehouse Integration</h3>
+                    <p>Seamless integration with WMS systems for automated picking, packing, and shipping workflows.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Demand Forecasting</h3>
+                    <p>Predictive analytics for shipment volumes, seasonal trends, and resource planning.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Carrier Network</h3>
+                    <p>Multi-carrier rate shopping, automated carrier selection, and unified tracking across all shipping partners.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Simple Pricing</h2>
+                <p>Choose the plan that fits your logistics needs</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Starter</div>
+                    <div class="pricing-price">$499<span>/month</span></div>
+                    <div class="pricing-desc">For small fleets</div>
+                    <ul class="pricing-features">
+                        <li>Up to 50 vehicles</li>
+                        <li>Route optimization</li>
+                        <li>Basic tracking</li>
+                        <li>Email support</li>
+                        <li>3 users</li>
+                    </ul>
+                    <button class="pricing-btn outline" onclick="openModal('signup')">Get Started</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-tier">Professional</div>
+                    <div class="pricing-price">$1,999<span>/month</span></div>
+                    <div class="pricing-desc">For growing operations</div>
+                    <ul class="pricing-features">
+                        <li>Up to 500 vehicles</li>
+                        <li>AI route optimization</li>
+                        <li>Real-time tracking</li>
+                        <li>Priority support</li>
+                        <li>15 users</li>
+                        <li>API access</li>
+                    </ul>
+                    <button class="pricing-btn primary" onclick="openModal('signup')">Start Free Trial</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-tier">Enterprise</div>
+                    <div class="pricing-price">Custom</div>
+                    <div class="pricing-desc">For large logistics networks</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited vehicles</li>
+                        <li>Everything in Pro</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated support</li>
+                        <li>Unlimited users</li>
+                        <li>SLA guarantee</li>
+                    </ul>
+                    <button class="pricing-btn outline" onclick="openModal('signup')">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <h2>Ready to Transform Your Logistics Operations?</h2>
+        <p>Join leading logistics companies using LogisticsAI to deliver faster</p>
+        <button class="cta-btn" onclick="openModal('signup')">Start Your Free Trial Today</button>
+    </section>
+    
+    <footer>
+        <p>&copy; 2024 LogisticsAI. All rights reserved. | Built for the future of logistics.</p>
+    </footer>
+    
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 id="modal-title">Start Free Trial</h2>
+            <p id="modal-subtitle">Get started with LogisticsAI today</p>
+            <form id="modal-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="you@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group" id="company-field">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" placeholder="Your company">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Get Started</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function openModal(type) {
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const companyField = document.getElementById('company-field');
+            
+            if (type === 'login') {
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Log in to your LogisticsAI account';
+                companyField.style.display = 'none';
+            } else {
+                title.textContent = 'Start Free Trial';
+                subtitle.textContent = 'Get started with LogisticsAI today';
+                companyField.style.display = 'block';
+            }
+            
+            modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Thank you for signing up! In a production environment, this would create your account and redirect you to the dashboard.');
+            closeModal();
+        }
+        
+        function scrollToDemo() {
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
