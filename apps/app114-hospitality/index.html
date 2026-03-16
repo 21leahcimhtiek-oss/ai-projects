@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HospitalityAI - AI-Powered Hotel & Hospitality Management</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#ec4899;--accent2:#f472b6;--accent3:#f9a8d4;
+  --text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(236,72,153,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:700px;}
+
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.room-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.room-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.room-item:hover,.room-item.active{background:var(--surface2);border-color:var(--border);}
+.room-item.active{border-color:rgba(236,72,153,0.4);}
+.room-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.room-num{font-size:0.82rem;font-weight:600;}
+.room-status{font-size:0.68rem;padding:2px 7px;border-radius:4px;font-weight:600;}
+.status-occupied{background:rgba(236,72,153,0.15);color:var(--accent);}
+.status-vacant{background:rgba(16,185,129,0.15);color:#10b981;}
+.status-cleaning{background:rgba(245,158,11,0.15);color:#f59e0b;}
+.status-maintenance{background:rgba(239,68,68,0.15);color:#ef4444;}
+.room-guest{font-size:0.72rem;color:var(--muted);}
+.room-checkout{font-size:0.7rem;color:var(--muted);margin-top:2px;}
+
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* OCCUPANCY CHART */
+.chart-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.chart-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;}
+.occupancy-chart{display:flex;align-items:flex-end;gap:6px;height:100px;}
+.day-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.day-bar{width:100%;border-radius:4px 4px 0 0;position:relative;transition:opacity 0.2s;}
+.day-bar:hover{opacity:0.85;}
+.day-label{font-size:0.65rem;color:var(--muted);}
+.day-pct{font-size:0.62rem;position:absolute;top:-16px;left:50%;transform:translateX(-50%);color:var(--muted);}
+
+/* ROOM GRID */
+.room-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;}
+.room-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.room-cell:hover{transform:scale(1.1);z-index:1;}
+.room-cell.occupied{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.room-cell.vacant{background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.3);}
+.room-cell.cleaning{background:rgba(245,158,11,0.2);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);}
+.room-cell.maintenance{background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.3);}
+
+/* RESERVATIONS TABLE */
+.res-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+.res-table th{padding:0.5rem 0.75rem;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600;}
+.res-table td{padding:0.55rem 0.75rem;border-bottom:1px solid rgba(30,42,58,0.5);}
+.res-table tr:last-child td{border-bottom:none;}
+
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.service-list{margin-top:0.25rem;}
+.service-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid rgba(30,42,58,0.5);}
+.service-item:last-child{border-bottom:none;}
+.service-name{font-size:0.75rem;}
+.service-count{font-size:0.75rem;font-weight:600;color:var(--accent);}
+
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(236,72,153,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(244,114,182,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(236,72,153,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🏨</div>
+    <span>HospitalityAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Front Desk</a>
+    <a href="#">Reservations</a>
+    <a href="#">Revenue</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Sign In</button>
+    <button class="btn btn-primary">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🏨 AI-Powered Hotel Management Platform</div>
+  <h1>Maximize Occupancy, Revenue & <span>Guest Experience</span></h1>
+  <p>AI-driven dynamic pricing, automated booking management, guest sentiment analysis, and predictive staffing for hotels of all sizes.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Free Trial</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">View Live Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">12,000+</div><div class="lbl">Hotels Worldwide</div></div>
+    <div class="hero-stat"><div class="val">94%</div><div class="lbl">Avg. Occupancy</div></div>
+    <div class="hero-stat"><div class="val">+23%</div><div class="lbl">RevPAR Increase</div></div>
+    <div class="hero-stat"><div class="val">4.8/5</div><div class="lbl">Guest Rating</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>🏨 Front Desk Operations Dashboard</h2>
+  <p class="sub">Real-time room management, reservations, and AI-powered revenue optimization</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Room List -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Room Status</h3>
+        <input class="search-box" placeholder="🔍 Search room..." value="">
+      </div>
+      <div class="room-list">
+        <div class="room-item active">
+          <div class="room-top"><span class="room-num">Room 501</span><span class="room-status status-occupied">OCCUPIED</span></div>
+          <div class="room-guest">Sarah Johnson · Suite King</div>
+          <div class="room-checkout">📅 Checkout: Tomorrow 11AM</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 502</span><span class="room-status status-vacant">VACANT</span></div>
+          <div class="room-guest">Standard Queen · Ready</div>
+          <div class="room-checkout">🧹 Cleaned 2h ago</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 503</span><span class="room-status status-cleaning">CLEANING</span></div>
+          <div class="room-guest">Deluxe King · In progress</div>
+          <div class="room-checkout">⏱️ ETA: 25 min</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 504</span><span class="room-status status-occupied">OCCUPIED</span></div>
+          <div class="room-guest">Michael Chen · Executive Suite</div>
+          <div class="room-checkout">📅 Checkout: Oct 28</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 505</span><span class="room-status status-maintenance">MAINTENANCE</span></div>
+          <div class="room-guest">AC repair in progress</div>
+          <div class="room-checkout">🔧 ETA: 2 hours</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 506</span><span class="room-status status-occupied">OCCUPIED</span></div>
+          <div class="room-guest">Emma Wilson · Suite King</div>
+          <div class="room-checkout">📅 Checkout: Oct 29</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 507</span><span class="room-status status-vacant">VACANT</span></div>
+          <div class="room-guest">Standard Double · Ready</div>
+          <div class="room-checkout">🧹 Cleaned 1h ago</div>
+        </div>
+        <div class="room-item">
+          <div class="room-top"><span class="room-num">Room 508</span><span class="room-status status-occupied">OCCUPIED</span></div>
+          <div class="room-guest">David Park · Deluxe Twin</div>
+          <div class="room-checkout">📅 Checkout: Today 11AM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>📊 Today's Overview — Grand Hotel Downtown</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Operations</div>
+          <div class="tab">Revenue</div>
+          <div class="tab">Guests</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Occupancy Rate</div>
+            <div class="kpi-value" style="color:var(--accent);">87%</div>
+            <div class="kpi-change up">↑ +4% vs last week</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">ADR (Avg Daily Rate)</div>
+            <div class="kpi-value">$284</div>
+            <div class="kpi-change up">↑ +$12 vs forecast</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">RevPAR</div>
+            <div class="kpi-value" style="color:var(--green);">$247</div>
+            <div class="kpi-change up">↑ +8% this month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Checkouts Today</div>
+            <div class="kpi-value">24</div>
+            <div class="kpi-change">42 arrivals scheduled</div>
+          </div>
+        </div>
+
+        <!-- Occupancy Chart -->
+        <div class="chart-box">
+          <div class="chart-title">
+            <span>📈 Weekly Occupancy Forecast</span>
+            <span style="font-size:0.75rem;color:var(--muted);">Next 7 days</span>
+          </div>
+          <div class="occupancy-chart">
+            <div class="day-bar-wrap"><div class="day-bar" style="height:87%;background:linear-gradient(180deg,var(--accent),rgba(236,72,153,0.3));"><span class="day-pct">87%</span></div><div class="day-label">Today</div></div>
+            <div class="day-bar-wrap"><div class="day-bar" style="height:92%;background:linear-gradient(180deg,var(--accent),rgba(236,72,153,0.3));"><span class="day-pct">92%</span></div><div class="day-label">Tue</div></div>
+            <div class="day-bar-wrap"><div class="day-bar" style="height:95%;background:linear-gradient(180deg,var(--accent),rgba(236,72,153,0.3));"><span class="day-pct">95%</span></div><div class="day-label">Wed</div></div>
+            <div class="day-bar-wrap"><div class="day-bar" style="height:88%;background:linear-gradient(180deg,var(--accent),rgba(236,72,153,0.3));"><span class="day-pct">88%</span></div><div class="day-label">Thu</div></div>
+            <div class="day-bar-wrap"><div class="day-bar" style="height:94%;background:linear-gradient(180deg,var(--accent),rgba(236,72,153,0.3));"><span class="day-pct">94%</span></div><div class="day-label">Fri</div></div>
+            <div class="day-bar-wrap"><div class="day-bar" style="height:98%;background:linear-gradient(180deg,#10b981,rgba(16,185,129,0.3));"><span class="day-pct">98%</span></div><div class="day-label">Sat</div></div>
+            <div class="day-bar-wrap"><div class="day-bar" style="height:96%;background:linear-gradient(180deg,#10b981,rgba(16,185,129,0.3));"><span class="day-pct">96%</span></div><div class="day-label">Sun</div></div>
+          </div>
+        </div>
+
+        <!-- Room Grid -->
+        <div class="chart-box">
+          <div class="chart-title"><span>🏠 Room Status Grid — Floor 5</span></div>
+          <div class="room-grid">
+            <div class="room-cell occupied">501</div>
+            <div class="room-cell vacant">502</div>
+            <div class="room-cell cleaning">503</div>
+            <div class="room-cell occupied">504</div>
+            <div class="room-cell maintenance">505</div>
+            <div class="room-cell occupied">506</div>
+            <div class="room-cell vacant">507</div>
+            <div class="room-cell occupied">508</div>
+            <div class="room-cell occupied">509</div>
+            <div class="room-cell occupied">510</div>
+            <div class="room-cell vacant">511</div>
+            <div class="room-cell cleaning">512</div>
+            <div class="room-cell occupied">513</div>
+            <div class="room-cell occupied">514</div>
+            <div class="room-cell occupied">515</div>
+            <div class="room-cell vacant">516</div>
+          </div>
+          <div style="display:flex;gap:1rem;margin-top:0.5rem;flex-wrap:wrap;">
+            <span style="font-size:0.72rem;color:var(--muted);"><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:2px;margin-right:4px;"></span>Occupied (9)</span>
+            <span style="font-size:0.72rem;color:var(--muted);"><span style="display:inline-block;width:10px;height:10px;background:rgba(16,185,129,0.5);border-radius:2px;margin-right:4px;"></span>Vacant (4)</span>
+            <span style="font-size:0.72rem;color:var(--muted);"><span style="display:inline-block;width:10px;height:10px;background:rgba(245,158,11,0.5);border-radius:2px;margin-right:4px;"></span>Cleaning (2)</span>
+            <span style="font-size:0.72rem;color:var(--muted);"><span style="display:inline-block;width:10px;height:10px;background:rgba(239,68,68,0.5);border-radius:2px;margin-right:4px;"></span>Maintenance (1)</span>
+          </div>
+        </div>
+
+        <!-- Today's Arrivals -->
+        <div class="chart-box">
+          <div class="chart-title"><span>🛎️ Upcoming Arrivals</span></div>
+          <table class="res-table">
+            <thead><tr><th>Guest</th><th>Room</th><th>Type</th><th>ETA</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Robert Martinez</td><td>502</td><td>Standard Queen</td><td>2:00 PM</td><td style="color:var(--green);">Room Ready</td></tr>
+              <tr><td>Amanda Lewis</td><td>511</td><td>Deluxe King</td><td>3:30 PM</td><td style="color:var(--yellow);">Cleaning</td></tr>
+              <tr><td>James & Lisa Wong</td><td>514</td><td>Suite King</td><td>4:00 PM</td><td style="color:var(--green);">Room Ready</td></tr>
+              <tr><td>Corporate Group (8)</td><td>520-527</td><td>Standard Double</td><td>5:00 PM</td><td style="color:var(--yellow);">Prep in progress</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Advisor -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Revenue Advisor</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Dynamic Pricing Opportunity</div>
+          <div class="insight-body">Weekend occupancy at 98% with high demand from concert event nearby. Recommend increasing Saturday rates by $45 (+16%) to maximize RevPAR. Competitor rates already at $315+.</div>
+          <div class="insight-action">→ Apply rate increase</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Room 505 Maintenance Delay</div>
+          <div class="insight-body">AC repair taking longer than expected. Current ETA 2 hours. Consider offering room upgrade to affected incoming guest or complimentary amenities if delay continues.</div>
+          <div class="insight-action">→ Review options</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 High Service Request Volume</div>
+          <div class="insight-body">Today's service requests 23% above average. Housekeeping at 85% capacity. Consider calling in 2 additional staff for evening shift.</div>
+          <div class="insight-action">→ Schedule extra staff</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Guest Satisfaction Up</div>
+          <div class="insight-body">Recent reviews trending positive (4.8/5 last 30 days). Guests praising: cleanliness (+0.3), staff friendliness (+0.2). Keep current service levels.</div>
+        </div>
+
+        <!-- Service Requests -->
+        <div class="insight-card">
+          <div class="kpi-label" style="font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:8px;">📋 Active Service Requests</div>
+          <div class="service-list">
+            <div class="service-item"><span class="service-name">Extra towels</span><span class="service-count">8</span></div>
+            <div class="service-item"><span class="service-name">Room service</span><span class="service-count">12</span></div>
+            <div class="service-item"><span class="service-name">Wake-up call</span><span class="service-count">6</span></div>
+            <div class="service-item"><span class="service-name">Maintenance</span><span class="service-count">3</span></div>
+            <div class="service-item"><span class="service-name">Valet parking</span><span class="service-count">15</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Complete Hotel Management Suite</h2>
+  <p class="sub">Built for independent hotels, hotel groups, and resort chains</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Dynamic Pricing Engine</h3>
+      <p>AI-powered revenue management that adjusts rates in real-time based on demand, competitor pricing, events, and booking patterns to maximize RevPAR.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Smart Reservations</h3>
+      <p>Integrated booking engine with channel management across OTAs, GDS, and direct bookings. Automatic inventory sync prevents overbooking.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧹</div>
+      <h3>Housekeeping Optimization</h3>
+      <p>AI-driven cleaning schedules, staff routing optimization, and real-time room status tracking. Reduce turnaround time by 30%.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Guest Analytics</h3>
+      <p>Complete guest profiles, sentiment analysis from reviews, preference tracking, and personalized marketing automation.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👥</div>
+      <h3>Predictive Staffing</h3>
+      <p>AI forecasts staffing needs based on occupancy, events, and historical patterns. Optimize labor costs while maintaining service quality.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>PMS Integration</h3>
+      <p>Seamless integration with Opera, Cloudbeds, Mews, and other property management systems. Real-time data sync across all systems.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Pricing for Every Property</h2>
+  <p class="sub">From boutique hotels to international chains</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Boutique</div>
+      <div class="price-amount">$99<span>/mo</span></div>
+      <div class="price-desc">Small hotels and B&Bs with up to 50 rooms</div>
+      <ul class="price-features">
+        <li>Up to 50 rooms</li>
+        <li>Front desk dashboard</li>
+        <li>Basic reservations</li>
+        <li>Housekeeping module</li>
+        <li>Daily reporting</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Professional</div>
+      <div class="price-amount">$399<span>/mo</span></div>
+      <div class="price-desc">Full-service hotels seeking revenue optimization</div>
+      <ul class="price-features">
+        <li>Up to 200 rooms</li>
+        <li>Dynamic pricing engine</li>
+        <li>Channel management</li>
+        <li>Guest analytics</li>
+        <li>Predictive staffing</li>
+        <li>PMS integration</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Hotel groups and resorts with complex operations</div>
+      <ul class="price-features">
+        <li>Unlimited rooms & properties</li>
+        <li>Multi-property dashboard</li>
+        <li>Custom integrations</li>
+        <li>API access</li>
+        <li>White-label option</li>
+        <li>Dedicated success team</li>
+        <li>SLA 99.99% uptime</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🏨 HospitalityAI</div>
+  <p>AI-Powered Hotel & Hospitality Management Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 HospitalityAI Inc. · Privacy · Terms · Security</p>
+</footer>
+
+</body>
+</html>
