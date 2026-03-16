@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogisticsAI - Smart Supply Chain Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e5e5e5;
+            min-height: 100vh;
+        }
+        :root {
+            --gradient: linear-gradient(135deg, #64748b, #94a3b8);
+            --accent: #64748b;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #e5e5e5; }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary {
+            background: var(--gradient);
+            color: #0a0a0f;
+            box-shadow: 0 4px 20px rgba(100, 116, 139, 0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #e5e5e5;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero {
+            padding: 8rem 3rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            padding: 4rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-card p {
+            color: #9ca3af;
+            margin-top: 0.5rem;
+        }
+        .features {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .feature-card {
+            padding: 2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(100, 116, 139, 0.3);
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        .demo {
+            padding: 6rem 3rem;
+            background: rgba(255,255,255,0.01);
+        }
+        .demo h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #12121a;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        .demo-header {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .demo-header h3 {
+            font-size: 1rem;
+            color: #9ca3af;
+        }
+        .demo-content {
+            padding: 2rem;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .dashboard-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .dashboard-card h4 {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .kpi-change {
+            font-size: 0.85rem;
+            color: #22c55e;
+        }
+        .kpi-change.negative { color: #ef4444; }
+        .shipment-list {
+            list-style: none;
+        }
+        .shipment-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .shipment-list li:last-child { border-bottom: none; }
+        .shipment-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-badge.in-transit { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .status-badge.delivered { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+        .status-badge.pending { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+        .ai-insights {
+            margin-top: 2rem;
+            background: rgba(100, 116, 139, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+        .ai-insights h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #94a3b8;
+        }
+        .ai-insights h4::before {
+            content: '●';
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .ai-insights ul {
+            list-style: none;
+        }
+        .ai-insights li {
+            padding: 0.5rem 0;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+        .pricing {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .pricing-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        .pricing-card.featured {
+            border-color: rgba(100, 116, 139, 0.5);
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0a0a0f;
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .pricing-card .price span {
+            font-size: 1rem;
+            color: #9ca3af;
+            font-weight: 400;
+        }
+        .pricing-card ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        .pricing-card li {
+            padding: 0.5rem 0;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-card li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .cta {
+            padding: 6rem 3rem;
+            text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(100, 116, 139, 0.05));
+        }
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .cta p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            padding: 3rem;
+            text-align: center;
+            color: #6b7280;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #12121a;
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        .modal input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #e5e5e5;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .modal input:focus {
+            outline: none;
+            border-color: #64748b;
+        }
+        .modal .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .features-grid, .pricing-grid, .dashboard-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">LogisticsAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="showModal('login')">Log In</button>
+            <button class="btn btn-primary" onclick="showModal('signup')">Get Started</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Optimize Your Supply Chain with <span>AI-Powered Logistics</span></h1>
+        <p>End-to-end visibility, intelligent route optimization, and predictive analytics for modern logistics operations.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="showModal('signup')">Start Free Trial</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">View Demo</button>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <h3>50M+</h3>
+            <p>Shipments Tracked</p>
+        </div>
+        <div class="stat-card">
+            <h3>99.5%</h3>
+            <p>On-Time Delivery</p>
+        </div>
+        <div class="stat-card">
+            <h3>30%</h3>
+            <p>Cost Reduction</p>
+        </div>
+        <div class="stat-card">
+            <h3>200+</h3>
+            <p>Integrations</p>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Smart Logistics Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Fleet Management</h3>
+                <p>Real-time vehicle tracking, maintenance scheduling, and driver performance monitoring.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🗺️</div>
+                <h3>Route Optimization</h3>
+                <p>AI-powered route planning that reduces fuel costs and improves delivery times.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Inventory Sync</h3>
+                <p>Real-time inventory visibility across warehouses with automated reorder triggers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Demand Forecasting</h3>
+                <p>Predictive analytics to anticipate demand and optimize stock levels.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Carrier Integration</h3>
+                <p>Connect with major carriers for rate shopping, tracking, and automated shipping labels.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Last-Mile AI</h3>
+                <p>Intelligent delivery scheduling and customer communication for last-mile excellence.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <h2>Interactive Demo</h2>
+        <div class="demo-container">
+            <div class="demo-header">
+                <h3>LogisticsAI Dashboard</h3>
+                <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Try Demo</button>
+            </div>
+            <div class="demo-content">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Active Shipments</h4>
+                        <div class="kpi-value">8,432</div>
+                        <div class="kpi-change">↑ 15% this week</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>On-Time Rate</h4>
+                        <div class="kpi-value">97.8%</div>
+                        <div class="kpi-change">↑ 2.3% improvement</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Cost per Mile</h4>
+                        <div class="kpi-value">$2.14</div>
+                        <div class="kpi-change">↓ 8% reduction</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" style="margin-top: 1.5rem;">
+                    <div class="dashboard-card" style="grid-column: span 2;">
+                        <h4>Recent Shipments</h4>
+                        <ul class="shipment-list">
+                            <li>
+                                <div class="shipment-info">
+                                    <span class="status-badge in-transit">In Transit</span>
+                                    <span>SHP-284729 - Chicago to NYC</span>
+                                </div>
+                                <span>ETA: 2h 15m</span>
+                            </li>
+                            <li>
+                                <div class="shipment-info">
+                                    <span class="status-badge delivered">Delivered</span>
+                                    <span>SHP-284728 - LA to Seattle</span>
+                                </div>
+                                <span>Completed</span>
+                            </li>
+                            <li>
+                                <div class="shipment-info">
+                                    <span class="status-badge pending">Pending</span>
+                                    <span>SHP-284730 - Miami to Atlanta</span>
+                                </div>
+                                <span>Departs 4PM</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Fleet Utilization</h4>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Active</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 78%"></div></div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Maintenance</span>
+                                <span>12%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 12%"></div></div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem;">
+                                <span>Idle</span>
+                                <span>10%</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: 10%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <h4>AI Insights</h4>
+                    <ul>
+                        <li>• Route optimization saved 2,340 miles this week - recommend continuing AI routing</li>
+                        <li>• 3 vehicles due for maintenance - schedule to prevent breakdowns</li>
+                        <li>• Predicted demand spike next Tuesday - consider adding capacity</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <h2>Flexible Pricing Plans</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">$149<span>/mo</span></div>
+                <ul>
+                    <li>Up to 500 shipments/mo</li>
+                    <li>Route optimization</li>
+                    <li>Basic tracking</li>
+                    <li>Email support</li>
+                    <li>5 integrations</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="showModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Business</h3>
+                <div class="price">$399<span>/mo</span></div>
+                <ul>
+                    <li>Up to 5,000 shipments/mo</li>
+                    <li>Everything in Starter</li>
+                    <li>Fleet management</li>
+                    <li>Demand forecasting</li>
+                    <li>Priority support</li>
+                    <li>Unlimited integrations</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;" onclick="showModal('signup')">Get Started</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <ul>
+                    <li>Unlimited shipments</li>
+                    <li>Everything in Business</li>
+                    <li>Custom AI models</li>
+                    <li>Dedicated success manager</li>
+                    <li>SLA guarantee</li>
+                    <li>On-premise option</li>
+                </ul>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="showModal('signup')">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Optimize Your Logistics?</h2>
+        <p>Join leading logistics companies using LogisticsAI to reduce costs and improve delivery performance.</p>
+        <button class="btn btn-primary" onclick="showModal('signup')">Start Your Free Trial</button>
+    </section>
+
+    <footer>
+        <p>© 2024 LogisticsAI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-title">Create Account</h3>
+            <p id="modal-subtitle">Start your free trial today</p>
+            <input type="text" placeholder="Full Name" id="name-input">
+            <input type="email" placeholder="Email Address">
+            <input type="password" placeholder="Password">
+            <button class="btn btn-primary" id="modal-btn">Get Started</button>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #6b7280;">
+                Already have an account? <a href="#" style="color: #64748b;" onclick="toggleModal()">Log in</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let modalMode = 'signup';
+        function showModal(mode) {
+            modalMode = mode;
+            document.getElementById('modal').classList.add('active');
+            if (mode === 'login') {
+                document.getElementById('modal-title').textContent = 'Welcome Back';
+                document.getElementById('modal-subtitle').textContent = 'Log in to your account';
+                document.getElementById('name-input').style.display = 'none';
+                document.getElementById('modal-btn').textContent = 'Log In';
+            } else {
+                document.getElementById('modal-title').textContent = 'Create Account';
+                document.getElementById('modal-subtitle').textContent = 'Start your free trial today';
+                document.getElementById('name-input').style.display = 'block';
+                document.getElementById('modal-btn').textContent = 'Get Started';
+            }
+        }
+        function toggleModal() {
+            modalMode = modalMode === 'login' ? 'signup' : 'login';
+            showModal(modalMode);
+        }
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
