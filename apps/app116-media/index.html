@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediaAI - AI-Powered Media & Entertainment Analytics</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#f43f5e;--accent2:#fb7185;--accent3:#fda4af;
+  --text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(244,63,94,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:700px;}
+
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.content-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.content-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.content-item:hover,.content-item.active{background:var(--surface2);border-color:var(--border);}
+.content-item.active{border-color:rgba(244,63,94,0.4);}
+.content-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.content-title{font-size:0.82rem;font-weight:600;}
+.content-type{font-size:0.68rem;padding:2px 7px;border-radius:4px;font-weight:600;}
+.type-movie{background:rgba(244,63,94,0.15);color:var(--accent);}
+.type-series{background:rgba(139,92,246,0.15);color:var(--purple);}
+.type-music{background:rgba(16,185,129,0.15);color:var(--green);}
+.content-meta{font-size:0.72rem;color:var(--muted);}
+.content-stats{font-size:0.7rem;color:var(--muted);margin-top:2px;}
+
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(244,63,94,0.1);border-color:rgba(244,63,94,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* ENGAGEMENT CHART */
+.chart-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.chart-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;}
+.engagement-chart{display:flex;align-items:flex-end;gap:6px;height:100px;}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.week-bar{width:100%;border-radius:4px 4px 0 0;position:relative;transition:opacity 0.2s;}
+.week-bar:hover{opacity:0.85;}
+.week-label{font-size:0.65rem;color:var(--muted);}
+
+/* PLATFORM BREAKDOWN */
+.platform-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.platform-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;text-align:center;}
+.platform-icon{font-size:1.3rem;margin-bottom:4px;}
+.platform-name{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.platform-value{font-size:1rem;font-weight:700;}
+.platform-bar{height:4px;border-radius:2px;margin-top:6px;overflow:hidden;background:var(--surface);}
+.platform-fill{height:100%;border-radius:2px;}
+
+/* AUDIENCE DEMOGRAPHICS */
+.demographics{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.demo-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.demo-title{font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;}
+.demo-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:6px;}
+.demo-label{font-size:0.72rem;color:var(--muted);min-width:50px;}
+.demo-bar{flex:1;height:8px;background:var(--surface);border-radius:4px;overflow:hidden;}
+.demo-fill{height:100%;border-radius:4px;}
+.demo-pct{font-size:0.72rem;font-weight:600;min-width:35px;text-align:right;}
+
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.trend-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid rgba(30,42,58,0.5);}
+.trend-item:last-child{border-bottom:none;}
+.trend-name{font-size:0.75rem;}
+.trend-growth{font-size:0.72rem;font-weight:600;}
+.trend-up{color:var(--green);}
+.trend-down{color:var(--red);}
+
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(244,63,94,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(244,63,94,0.2),rgba(251,113,133,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(244,63,94,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🎬</div>
+    <span>MediaAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Analytics</a>
+    <a href="#">Content</a>
+    <a href="#">Audience</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Sign In</button>
+    <button class="btn btn-primary">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🎬 AI-Powered Media & Entertainment Analytics</div>
+  <h1>Unlock Your Content's Full <span>Audience Potential</span></h1>
+  <p>AI-powered content performance analytics, audience insights, predictive trending, and revenue optimization for creators, studios, and streaming platforms.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Free Trial</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">View Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">50K+</div><div class="lbl">Creators</div></div>
+    <div class="hero-stat"><div class="val">12B</div><div class="lbl">Views Analyzed</div></div>
+    <div class="hero-stat"><div class="val">+340%</div><div class="lbl">Avg. Growth</div></div>
+    <div class="hero-stat"><div class="val">4.9/5</div><div class="lbl">User Rating</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>🎬 Content Intelligence Dashboard</h2>
+  <p class="sub">Real-time analytics, audience insights, and AI-powered recommendations for content performance</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Content Library -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Content Library</h3>
+        <input class="search-box" placeholder="🔍 Search content..." value="">
+      </div>
+      <div class="content-list">
+        <div class="content-item active">
+          <div class="content-top"><span class="content-title">The Last Horizon</span><span class="content-type type-movie">FILM</span></div>
+          <div class="content-meta">Sci-Fi · 2h 18m · 2024</div>
+          <div class="content-stats">👁️ 24.8M views · ⭐ 8.7</div>
+        </div>
+        <div class="content-item">
+          <div class="content-top"><span class="content-title">Midnight Chronicles S2</span><span class="content-type type-series">SERIES</span></div>
+          <div class="content-meta">Drama · 8 episodes · 2024</div>
+          <div class="content-stats">👁️ 42.3M views · ⭐ 9.1</div>
+        </div>
+        <div class="content-item">
+          <div class="content-top"><span class="content-title">Echoes of Tomorrow</span><span class="content-type type-movie">FILM</span></div>
+          <div class="content-meta">Drama · 1h 52m · 2024</div>
+          <div class="content-stats">👁️ 18.2M views · ⭐ 7.9</div>
+        </div>
+        <div class="content-item">
+          <div class="content-top"><span class="content-title">Neon Dreams (Album)</span><span class="content-type type-music">MUSIC</span></div>
+          <div class="content-meta">Electronic · 12 tracks · 2024</div>
+          <div class="content-stats">🎧 89M streams · ⭐ 8.4</div>
+        </div>
+        <div class="content-item">
+          <div class="content-top"><span class="content-title">Quantum Break</span><span class="content-type type-movie">FILM</span></div>
+          <div class="content-meta">Action · 2h 5m · 2023</div>
+          <div class="content-stats">👁️ 31.5M views · ⭐ 7.6</div>
+        </div>
+        <div class="content-item">
+          <div class="content-top"><span class="content-title">The Deep Below</span><span class="content-type type-series">SERIES</span></div>
+          <div class="content-meta">Thriller · 6 episodes · 2024</div>
+          <div class="content-stats">👁️ 28.7M views · ⭐ 8.8</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>📊 The Last Horizon — Performance Analytics</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Overview</div>
+          <div class="tab">Audience</div>
+          <div class="tab">Revenue</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Total Views</div>
+            <div class="kpi-value" style="color:var(--accent);">24.8M</div>
+            <div class="kpi-change up">↑ +18% this week</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Watch Time</div>
+            <div class="kpi-value">48.2M hrs</div>
+            <div class="kpi-change up">↑ +24% engagement</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Audience Score</div>
+            <div class="kpi-value" style="color:var(--green);">8.7/10</div>
+            <div class="kpi-change up">Top 15% this year</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Est. Revenue</div>
+            <div class="kpi-value" style="color:var(--green);">$2.4M</div>
+            <div class="kpi-change up">↑ +$420K this month</div>
+          </div>
+        </div>
+
+        <!-- Weekly Engagement Chart -->
+        <div class="chart-box">
+          <div class="chart-title">
+            <span>📈 Weekly Engagement Trend</span>
+            <span style="font-size:0.75rem;color:var(--muted);">Last 8 weeks</span>
+          </div>
+          <div class="engagement-chart">
+            <div class="week-bar-wrap"><div class="week-bar" style="height:55%;background:linear-gradient(180deg,var(--accent),rgba(244,63,94,0.3));"></div><div class="week-label">W1</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:62%;background:linear-gradient(180deg,var(--accent),rgba(244,63,94,0.3));"></div><div class="week-label">W2</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:58%;background:linear-gradient(180deg,var(--accent),rgba(244,63,94,0.3));"></div><div class="week-label">W3</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:72%;background:linear-gradient(180deg,var(--accent),rgba(244,63,94,0.3));"></div><div class="week-label">W4</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:80%;background:linear-gradient(180deg,var(--accent),rgba(244,63,94,0.3));"></div><div class="week-label">W5</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:88%;background:linear-gradient(180deg,var(--accent),rgba(244,63,94,0.3));"></div><div class="week-label">W6</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:95%;background:linear-gradient(180deg,#10b981,rgba(16,185,129,0.3));"></div><div class="week-label">W7</div></div>
+            <div class="week-bar-wrap"><div class="week-bar" style="height:100%;background:linear-gradient(180deg,#10b981,rgba(16,185,129,0.3));"></div><div class="week-label">W8</div></div>
+          </div>
+        </div>
+
+        <!-- Platform Breakdown -->
+        <div class="chart-box">
+          <div class="chart-title"><span>📺 Platform Distribution</span></div>
+          <div class="platform-grid">
+            <div class="platform-card">
+              <div class="platform-icon">🎬</div>
+              <div class="platform-name">Netflix</div>
+              <div class="platform-value" style="color:var(--red);">9.2M</div>
+              <div class="platform-bar"><div class="platform-fill" style="width:37%;background:var(--red);"></div></div>
+            </div>
+            <div class="platform-card">
+              <div class="platform-icon">🎬</div>
+              <div class="platform-name">Amazon</div>
+              <div class="platform-value" style="color:#f59e0b;">6.8M</div>
+              <div class="platform-bar"><div class="platform-fill" style="width:27%;background:#f59e0b;"></div></div>
+            </div>
+            <div class="platform-card">
+              <div class="platform-icon">🎬</div>
+              <div class="platform-name">Disney+</div>
+              <div class="platform-value" style="color:#3b82f6;">5.4M</div>
+              <div class="platform-bar"><div class="platform-fill" style="width:22%;background:#3b82f6;"></div></div>
+            </div>
+            <div class="platform-card">
+              <div class="platform-icon">🎬</div>
+              <div class="platform-name">Theaters</div>
+              <div class="platform-value" style="color:var(--purple);">3.4M</div>
+              <div class="platform-bar"><div class="platform-fill" style="width:14%;background:var(--purple);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demographics -->
+        <div class="demographics">
+          <div class="demo-box">
+            <div class="demo-title">👥 Age Distribution</div>
+            <div class="demo-row"><span class="demo-label">18-24</span><div class="demo-bar"><div class="demo-fill" style="width:28%;background:var(--accent);"></div></div><span class="demo-pct">28%</span></div>
+            <div class="demo-row"><span class="demo-label">25-34</span><div class="demo-bar"><div class="demo-fill" style="width:35%;background:var(--accent);"></div></div><span class="demo-pct">35%</span></div>
+            <div class="demo-row"><span class="demo-label">35-44</span><div class="demo-bar"><div class="demo-fill" style="width:22%;background:var(--accent);"></div></div><span class="demo-pct">22%</span></div>
+            <div class="demo-row"><span class="demo-label">45+</span><div class="demo-bar"><div class="demo-fill" style="width:15%;background:var(--accent);"></div></div><span class="demo-pct">15%</span></div>
+          </div>
+          <div class="demo-box">
+            <div class="demo-title">🌍 Top Regions</div>
+            <div class="demo-row"><span class="demo-label">USA</span><div class="demo-bar"><div class="demo-fill" style="width:42%;background:var(--blue);"></div></div><span class="demo-pct">42%</span></div>
+            <div class="demo-row"><span class="demo-label">UK</span><div class="demo-bar"><div class="demo-fill" style="width:18%;background:var(--blue);"></div></div><span class="demo-pct">18%</span></div>
+            <div class="demo-row"><span class="demo-label">Germany</span><div class="demo-bar"><div class="demo-fill" style="width:12%;background:var(--blue);"></div></div><span class="demo-pct">12%</span></div>
+            <div class="demo-row"><span class="demo-label">Other</span><div class="demo-bar"><div class="demo-fill" style="width:28%;background:var(--blue);"></div></div><span class="demo-pct">28%</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Advisor -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Content Advisor</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Viral Potential Detected</div>
+          <div class="insight-body">Scene at 1:24:30 (the "portal reveal") has 89% viral potential based on visual impact and emotional resonance. Recommend creating short-form clips for TikTok/YouTube Shorts.</div>
+          <div class="insight-action">→ Generate clip recommendations</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Sequel Opportunity</div>
+          <div class="insight-body">Audience demand for sequel is 340% above benchmark. Opening weekend projections for "The Last Horizon 2" estimate $85-110M domestic. Consider green-light announcement.</div>
+          <div class="insight-action">→ View financial projections</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Market Saturation Risk</div>
+          <div class="insight-body">3 similar sci-fi films releasing in Q1 2025. Recommend accelerating marketing campaign to avoid audience fatigue window in February.</div>
+          <div class="insight-action">→ Adjust marketing timeline</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Merchandise Opportunity</div>
+          <div class="insight-body">Search volume for "The Last Horizon merchandise" up 2,400%. High demand for: spaceship model kits, character figures, soundtrack vinyl. Potential $4.2M revenue.</div>
+          <div class="insight-action">→ View merch recommendations</div>
+        </div>
+
+        <!-- Trending Topics -->
+        <div class="insight-card">
+          <div class="kpi-label" style="font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:8px;">📈 Related Trending Topics</div>
+          <div class="trend-item"><span class="trend-name">#TheLastHorizon</span><span class="trend-growth trend-up">+420%</span></div>
+          <div class="trend-item"><span class="trend-name">#PortalReveal</span><span class="trend-growth trend-up">+180%</span></div>
+          <div class="trend-item"><span class="trend-name">#SciFiMovies2024</span><span class="trend-growth trend-up">+95%</span></div>
+          <div class="trend-item"><span class="trend-name">#SpaceOpera</span><span class="trend-growth trend-up">+67%</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Complete Media Intelligence Suite</h2>
+  <p class="sub">Built for content creators, studios, streaming platforms, and entertainment executives</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Cross-Platform Analytics</h3>
+      <p>Unified dashboard tracking performance across all major streaming platforms, theatrical, social media, and digital sales channels.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Audience Intelligence</h3>
+      <p>Deep audience segmentation, demographic analysis, viewer journey mapping, and predictive modeling for content preferences.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>Predictive Trending</h3>
+      <p>AI predicts viral moments, audience sentiment shifts, and content performance before it happens using social listening and historical patterns.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Revenue Optimization</h3>
+      <p>Dynamic pricing for theatrical, optimal release window recommendations, and AI-powered licensing deal valuations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎬</div>
+      <h3>Content Greenlight AI</h3>
+      <p>AI analysis of scripts, talent combinations, and market conditions to predict box office and streaming success before production.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Short-Form Intelligence</h3>
+      <p>AI identifies viral-worthy clips from long-form content, auto-generates short-form edits, and optimizes for TikTok, Reels, and Shorts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Analytics for Every Creator</h2>
+  <p class="sub">From independent creators to major studios</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Creator</div>
+      <div class="price-amount">$49<span>/mo</span></div>
+      <div class="price-desc">Individual creators and small channels</div>
+      <ul class="price-features">
+        <li>Up to 100 content items</li>
+        <li>Basic analytics</li>
+        <li>Audience demographics</li>
+        <li>Weekly reports</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Studio</div>
+      <div class="price-amount">$499<span>/mo</span></div>
+      <div class="price-desc">Production companies and streaming channels</div>
+      <ul class="price-features">
+        <li>Unlimited content</li>
+        <li>Full analytics suite</li>
+        <li>AI content advisor</li>
+        <li>Revenue optimization</li>
+        <li>Predictive trending</li>
+        <li>API access</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Major studios and streaming platforms</div>
+      <ul class="price-features">
+        <li>Everything in Studio</li>
+        <li>Greenlight AI</li>
+        <li>Custom integrations</li>
+        <li>Dedicated success team</li>
+        <li>White-label option</li>
+        <li>On-premise deployment</li>
+        <li>SLA 99.99% uptime</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🎬 MediaAI</div>
+  <p>AI-Powered Media & Entertainment Analytics Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 MediaAI Inc. · Privacy · Terms · Security</p>
+</footer>
+
+</body>
+</html>
