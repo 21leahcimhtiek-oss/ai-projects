@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeautyAI - Intelligent Beauty & Salon Management Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --gradient: linear-gradient(135deg, #f472b6, #ec4899);
+            --accent: #f472b6;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+        
+        nav { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,15,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-size: 1.5rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: var(--gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(244,114,182,0.3); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; background: radial-gradient(ellipse at top, rgba(244,114,182,0.1), transparent 60%); }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; }
+        
+        .features { padding: 6rem 2rem; background: var(--bg-secondary); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: var(--text-secondary); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: var(--bg-card); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .feature-icon { width: 50px; height: 50px; background: var(--gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.5rem; }
+        .feature-card h3 { margin-bottom: 0.5rem; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.95rem; }
+        
+        .demo { padding: 6rem 2rem; background: var(--bg-primary); }
+        .demo-container { max-width: 1400px; margin: 0 auto; background: var(--bg-card); border-radius: 24px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05); }
+        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .demo-header h3 { font-size: 1.25rem; }
+        .demo-tabs { display: flex; gap: 0.5rem; }
+        .demo-tab { padding: 0.5rem 1rem; background: var(--bg-secondary); border: none; border-radius: 6px; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; }
+        .demo-tab.active { background: var(--gradient); color: white; }
+        .demo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+        .demo-card { background: var(--bg-secondary); border-radius: 12px; padding: 1.5rem; }
+        .demo-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .demo-card-title { font-size: 0.875rem; color: var(--text-secondary); }
+        .kpi-value { font-size: 2rem; font-weight: 700; }
+        .kpi-change { font-size: 0.875rem; color: #10b981; }
+        
+        .chart-area { height: 200px; display: flex; align-items: flex-end; gap: 8px; padding-top: 1rem; }
+        .chart-bar { flex: 1; background: var(--gradient); border-radius: 4px 4px 0 0; transition: height 0.5s; }
+        
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .data-table th { color: var(--text-secondary); font-weight: 500; font-size: 0.875rem; }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+        .status-available { background: rgba(16,185,129,0.2); color: #10b981; }
+        .status-booked { background: rgba(244,114,182,0.2); color: #f472b6; }
+        
+        .ai-insights { background: linear-gradient(135deg, rgba(244,114,182,0.1), rgba(236,72,153,0.1)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+        .ai-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .ai-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .ai-insights ul { list-style: none; }
+        .ai-insights li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; color: var(--text-secondary); }
+        .ai-insights li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+        
+        .pricing { padding: 6rem 2rem; background: var(--bg-secondary); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: var(--bg-card); border-radius: 20px; padding: 2.5rem; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
+        .pricing-card.featured { border-color: var(--accent); transform: scale(1.05); }
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-tier { font-size: 0.875rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .pricing-price { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .pricing-price span { font-size: 1rem; color: var(--text-secondary); }
+        .pricing-desc { color: var(--text-secondary); margin-bottom: 2rem; }
+        .pricing-features { list-style: none; margin-bottom: 2rem; }
+        .pricing-features li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
+        .pricing-features li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); }
+        
+        .cta { padding: 6rem 2rem; text-align: center; background: radial-gradient(ellipse at center, rgba(244,114,182,0.1), transparent 70%); }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .cta p { color: var(--text-secondary); margin-bottom: 2rem; }
+        
+        footer { padding: 3rem 2rem; background: var(--bg-secondary); border-top: 1px solid rgba(255,255,255,0.05); text-align: center; color: var(--text-secondary); }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { background: var(--bg-card); border-radius: 20px; padding: 2.5rem; max-width: 400px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal h3 { margin-bottom: 1.5rem; font-size: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; background: var(--bg-secondary); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; }
+        .form-group input:focus { outline: none; border-color: var(--accent); }
+        .modal .btn { width: 100%; margin-top: 1rem; }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; }
+        .modal-switch { text-align: center; margin-top: 1rem; color: var(--text-secondary); }
+        .modal-switch a { color: var(--accent); cursor: pointer; }
+        
+        @media (max-width: 768px) {
+            .demo-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">BeautyAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-outline" onclick="showModal('login')">Login</button>
+            <button class="btn btn-primary" onclick="showModal('signup')">Get Started</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div>
+            <h1>Intelligent Beauty & Salon Management</h1>
+            <p>Transform your salon or beauty business with AI-powered appointment scheduling, client management, and revenue optimization tools.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="showModal('signup')">Start Free Trial</button>
+                <button class="btn btn-outline" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">View Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Complete Salon Solution</h2>
+            <p>Everything you need to run a successful beauty business</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💇</div>
+                <h3>Smart Booking</h3>
+                <p>AI-optimized appointment scheduling that minimizes gaps and maximizes stylist utilization.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👤</div>
+                <h3>Client Profiles</h3>
+                <p>Detailed client history, preferences, and treatment records for personalized service.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Revenue Analytics</h3>
+                <p>Track sales, tips, and product revenue with detailed financial insights and forecasting.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧴</div>
+                <h3>Inventory Tracking</h3>
+                <p>Automated product inventory management with low-stock alerts and reorder suggestions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Reviews & Loyalty</h3>
+                <p>Integrated review collection and loyalty program to boost client retention.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Staff Performance</h3>
+                <p>Track stylist performance, client satisfaction, and productivity metrics.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="section-title">
+            <h2>Salon Dashboard Demo</h2>
+            <p>Experience the power of intelligent salon management</p>
+        </div>
+        <div class="demo-container">
+            <div class="demo-header">
+                <h3>Beauty Salon Control Center</h3>
+                <div class="demo-tabs">
+                    <button class="demo-tab active">Overview</button>
+                    <button class="demo-tab">Appointments</button>
+                    <button class="demo-tab">Staff</button>
+                </div>
+            </div>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <div class="demo-card-header">
+                        <span class="demo-card-title">Today's Appointments</span>
+                    </div>
+                    <div class="kpi-value">32</div>
+                    <div class="kpi-change">↑ 15% from last week</div>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-card-header">
+                        <span class="demo-card-title">Chair Utilization</span>
+                    </div>
+                    <div class="kpi-value">87%</div>
+                    <div class="kpi-change">Optimal capacity</div>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-card-header">
+                        <span class="demo-card-title">Daily Revenue</span>
+                    </div>
+                    <div class="kpi-value">$2,847</div>
+                    <div class="kpi-change">↑ 22% vs target</div>
+                </div>
+                <div class="demo-card" style="grid-column: span 2;">
+                    <div class="demo-card-header">
+                        <span class="demo-card-title">Weekly Revenue Trend</span>
+                    </div>
+                    <div class="chart-area">
+                        <div class="chart-bar" style="height: 55%;"></div>
+                        <div class="chart-bar" style="height: 70%;"></div>
+                        <div class="chart-bar" style="height: 80%;"></div>
+                        <div class="chart-bar" style="height: 65%;"></div>
+                        <div class="chart-bar" style="height: 90%;"></div>
+                        <div class="chart-bar" style="height: 85%;"></div>
+                        <div class="chart-bar" style="height: 95%;"></div>
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-card-header">
+                        <span class="demo-card-title">Stylist Status</span>
+                    </div>
+                    <table class="data-table">
+                        <tr><td>Sarah</td><td><span class="status-badge status-booked">Busy</span></td></tr>
+                        <tr><td>Mike</td><td><span class="status-badge status-available">Available</span></td></tr>
+                        <tr><td>Emma</td><td><span class="status-badge status-booked">Busy</span></td></tr>
+                        <tr><td>James</td><td><span class="status-badge status-available">Available</span></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="ai-insights">
+                <div class="ai-header">
+                    <div class="ai-dot"></div>
+                    <span style="font-weight: 600;">AI Insights</span>
+                </div>
+                <ul>
+                    <li>Saturday afternoon is your busiest time - consider adding a stylist shift</li>
+                    <li>Color services trending up 28% - recommend restocking color products</li>
+                    <li>Client rebooking rate improved to 72% after implementing reminder system</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Simple Pricing</h2>
+            <p>Choose the plan that fits your salon</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-tier">Starter</div>
+                <div class="pricing-price">$49<span>/month</span></div>
+                <div class="pricing-desc">For solo stylists and small salons</div>
+                <ul class="pricing-features">
+                    <li>Up to 200 appointments/month</li>
+                    <li>Basic scheduling</li>
+                    <li>Client profiles</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-tier">Professional</div>
+                <div class="pricing-price">$99<span>/month</span></div>
+                <div class="pricing-desc">For growing salons</div>
+                <ul class="pricing-features">
+                    <li>Unlimited appointments</li>
+                    <li>AI scheduling optimization</li>
+                    <li>Inventory management</li>
+                    <li>Staff analytics</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%;">Get Started</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-tier">Enterprise</div>
+                <div class="pricing-price">Custom</div>
+                <div class="pricing-desc">For salon chains</div>
+                <ul class="pricing-features">
+                    <li>Multi-location support</li>
+                    <li>Custom integrations</li>
+                    <li>Dedicated manager</li>
+                    <li>Advanced analytics</li>
+                    <li>White-label app</li>
+                </ul>
+                <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Transform Your Salon?</h2>
+        <p>Join 1,000+ beauty businesses using BeautyAI to grow</p>
+        <button class="btn btn-primary" onclick="showModal('signup')">Start Your Free Trial</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 BeautyAI. All rights reserved.</p>
+    </footer>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal" style="position: relative;">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3 id="modalTitle">Create Account</h3>
+            <form id="authForm">
+                <div class="form-group" id="nameField" style="display: none;">
+                    <input type="text" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submitBtn">Create Account</button>
+            </form>
+            <div class="modal-switch">
+                <span id="switchText">Already have an account?</span>
+                <a id="switchLink" onclick="toggleAuthMode()">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLogin = false;
+        function showModal(type) {
+            isLogin = type === 'login';
+            document.getElementById('authModal').style.display = 'flex';
+            updateModalUI();
+        }
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+        function toggleAuthMode() {
+            isLogin = !isLogin;
+            updateModalUI();
+        }
+        function updateModalUI() {
+            document.getElementById('modalTitle').textContent = isLogin ? 'Welcome Back' : 'Create Account';
+            document.getElementById('nameField').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('submitBtn').textContent = isLogin ? 'Login' : 'Create Account';
+            document.getElementById('switchText').textContent = isLogin ? "Don't have an account?" : 'Already have an account?';
+            document.getElementById('switchLink').textContent = isLogin ? 'Sign Up' : 'Login';
+        }
+        document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert(isLogin ? 'Login successful!' : 'Account created successfully!');
+            closeModal();
+        });
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
