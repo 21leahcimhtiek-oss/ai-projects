@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitnessAI - Intelligent Personal Training Platform</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --gradient: linear-gradient(135deg, #f97316, #ea580c);
+            --accent: #f97316;
+            --accent-dark: #ea580c;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        
+        .cta-btn {
+            background: var(--gradient);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(249, 115, 22, 0.3); }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            background: radial-gradient(ellipse at top, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero-content { max-width: 1200px; text-align: center; }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; }
+        
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .secondary-btn:hover { background: rgba(249, 115, 22, 0.1); }
+        
+        .features { padding: 6rem 2rem; background: var(--bg-secondary); }
+        .section-title { text-align: center; margin-bottom: 4rem; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .section-title p { color: var(--text-secondary); }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .feature-card h3 { margin-bottom: 0.5rem; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        .demo { padding: 6rem 2rem; }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .demo-header h3 { display: flex; align-items: center; gap: 0.5rem; }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        
+        .demo-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+        .demo-card h4 { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .demo-card .value { font-size: 2rem; font-weight: 700; }
+        .demo-card .change { font-size: 0.85rem; margin-top: 0.5rem; }
+        .change.positive { color: #22c55e; }
+        .change.negative { color: #ef4444; }
+        
+        .chart-container {
+            grid-column: span 2;
+            height: 200px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            height: 100%;
+            gap: 8px;
+            padding-top: 1rem;
+        }
+        .chart-bar {
+            flex: 1;
+            background: var(--gradient);
+            border-radius: 4px 4px 0 0;
+            animation: growBar 1s ease-out forwards;
+        }
+        @keyframes growBar { from { height: 0; } }
+        
+        .table-container { grid-column: span 3; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: var(--text-secondary); font-weight: 500; font-size: 0.85rem; }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-badge.active { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .status-badge.personal { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+        .status-badge.group { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        
+        .pricing { padding: 6rem 2rem; background: var(--bg-secondary); }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        .pricing-card.featured { border-color: var(--accent); transform: scale(1.05); }
+        .pricing-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .pricing-card .price { font-size: 3rem; font-weight: 700; margin: 1rem 0; }
+        .pricing-card .price span { font-size: 1rem; color: var(--text-secondary); }
+        
+        .pricing-features { list-style: none; margin: 1.5rem 0; text-align: left; }
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-features li::before { content: "✓"; color: var(--accent); }
+        
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .modal h3 { margin-bottom: 1.5rem; text-align: center; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-tertiary);
+            color: white;
+        }
+        .modal-btn {
+            width: 100%;
+            background: var(--gradient);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">💪 FitnessAI</div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <button class="cta-btn" onclick="showModal()">Get Started</button>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Intelligent Personal Training Platform</h1>
+            <p>Transform your fitness journey with AI-powered workouts, personalized nutrition plans, and real-time form feedback. Achieve your goals faster with science-backed training.</p>
+            <div class="hero-buttons">
+                <button class="cta-btn" onclick="showModal()">Start Free Trial</button>
+                <button class="secondary-btn" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">View Demo</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Smart Fitness Features</h2>
+            <p>Everything you need for your fitness transformation</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>AI Workout Plans</h3>
+                <p>Personalized workout routines that adapt to your progress, goals, and available equipment.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍎</div>
+                <h3>Nutrition Tracking</h3>
+                <p>Smart meal planning with macro calculations and recipe suggestions based on your goals.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Form Analysis</h3>
+                <p>Real-time form feedback using your camera to prevent injury and maximize results.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Progress Tracking</h3>
+                <p>Visual progress charts, body composition tracking, and performance analytics.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Challenges & Rewards</h3>
+                <p>Join community challenges, earn badges, and compete with friends for motivation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⌚</div>
+                <h3>Wearable Integration</h3>
+                <p>Sync with Apple Watch, Fitbit, and other devices for comprehensive health data.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="demo" id="demo">
+        <div class="section-title">
+            <h2>Fitness Dashboard</h2>
+            <p>Track your progress in real-time</p>
+        </div>
+        <div class="demo-container">
+            <div class="demo-header">
+                <h3><span class="status-dot"></span> Fitness Command Center</h3>
+                <span style="color: var(--text-secondary)">Last updated: Just now</span>
+            </div>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h4>WORKOUTS THIS WEEK</h4>
+                    <div class="value">5</div>
+                    <div class="change positive">Goal: 5 achieved!</div>
+                </div>
+                <div class="demo-card">
+                    <h4>CALORIES BURNED</h4>
+                    <div class="value">3,247</div>
+                    <div class="change positive">↑ 12% vs last week</div>
+                </div>
+                <div class="demo-card">
+                    <h4>CURRENT STREAK</h4>
+                    <div class="value">23</div>
+                    <div class="change positive">Days strong!</div>
+                </div>
+                <div class="chart-container">
+                    <h4 style="color: var(--text-secondary); margin-bottom: 1rem;">Weekly Activity (Minutes)</h4>
+                    <div class="chart-bars">
+                        <div class="chart-bar" style="height: 75%"></div>
+                        <div class="chart-bar" style="height: 90%"></div>
+                        <div class="chart-bar" style="height: 60%"></div>
+                        <div class="chart-bar" style="height: 85%"></div>
+                        <div class="chart-bar" style="height: 70%"></div>
+                        <div class="chart-bar" style="height: 95%"></div>
+                        <div class="chart-bar" style="height: 50%"></div>
+                        <div class="chart-bar" style="height: 80%"></div>
+                        <div class="chart-bar" style="height: 65%"></div>
+                        <div class="chart-bar" style="height: 88%"></div>
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <h4>AI INSIGHTS</h4>
+                    <div style="margin-top: 1rem;">
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Increase protein by 20g for goals</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Rest day recommended tomorrow</p>
+                        <p style="font-size: 0.9rem;">• New PR on deadlift possible!</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Workout</th>
+                                <th>Type</th>
+                                <th>Duration</th>
+                                <th>Calories</th>
+                                <th>Intensity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Upper Body Power</td>
+                                <td>Strength</td>
+                                <td>52 min</td>
+                                <td>420</td>
+                                <td><span class="status-badge active">High</span></td>
+                            </tr>
+                            <tr>
+                                <td>HIIT Cardio</td>
+                                <td>Cardio</td>
+                                <td>30 min</td>
+                                <td>380</td>
+                                <td><span class="status-badge active">High</span></td>
+                            </tr>
+                            <tr>
+                                <td>Yoga Flow</td>
+                                <td>Recovery</td>
+                                <td>45 min</td>
+                                <td>180</td>
+                                <td><span class="status-badge personal">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td>Leg Day</td>
+                                <td>Strength</td>
+                                <td>60 min</td>
+                                <td>520</td>
+                                <td><span class="status-badge active">High</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Flexible Pricing Plans</h2>
+            <p>Choose the plan that fits your fitness goals</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <p style="color: var(--text-secondary)">Get started</p>
+                <div class="price">$0<span>/mo</span></div>
+                <ul class="pricing-features">
+                    <li>Basic workout plans</li>
+                    <li>Exercise library</li>
+                    <li>Progress tracking</li>
+                    <li>Community access</li>
+                    <li>Mobile app</li>
+                </ul>
+                <button class="cta-btn" onclick="showModal()">Get Started</button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Pro</h3>
+                <p style="color: var(--text-secondary)">For serious athletes</p>
+                <div class="price">$19<span>/mo</span></div>
+                <ul class="pricing-features">
+                    <li>AI personal trainer</li>
+                    <li>Custom meal plans</li>
+                    <li>Form analysis</li>
+                    <li>Wearable sync</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="cta-btn" onclick="showModal()">Get Started</button>
+            </div>
+            <div class="pricing-card">
+                <h3>Coach</h3>
+                <p style="color: var(--text-secondary)">For fitness professionals</p>
+                <div class="price">$49<span>/mo</span></div>
+                <ul class="pricing-features">
+                    <li>Client management</li>
+                    <li>Custom branding</li>
+                    <li>Analytics dashboard</li>
+                    <li>Video calls</li>
+                    <li>Unlimited clients</li>
+                </ul>
+                <button class="cta-btn" onclick="showModal()">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2024 FitnessAI. All rights reserved. | Your AI Fitness Companion</p>
+    </footer>
+    
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button class="modal-close" onclick="hideModal()">&times;</button>
+            <h3>Start Your Free Trial</h3>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="fitness@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label>Fitness Goal</label>
+                <input type="text" placeholder="e.g., Build muscle, Lose weight">
+            </div>
+            <button class="modal-btn">Create Account</button>
+            <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">Already have an account? <a href="#" style="color: var(--accent)">Sign in</a></p>
+        </div>
+    </div>
+    
+    <script>
+        function showModal() { document.getElementById('modal').classList.add('active'); }
+        function hideModal() { document.getElementById('modal').classList.remove('active'); }
+        document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) hideModal(); });
+    </script>
+</body>
+</html>
