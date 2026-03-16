@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LegalDocsAI - AI-Powered Legal Document Automation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#a855f7;--accent2:#c084fc;--accent3:#d8b4fe;
+  --text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(168,85,247,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:700px;}
+
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.doc-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.doc-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.doc-item:hover,.doc-item.active{background:var(--surface2);border-color:var(--border);}
+.doc-item.active{border-color:rgba(168,85,247,0.4);}
+.doc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.doc-name{font-size:0.82rem;font-weight:600;}
+.doc-type{font-size:0.68rem;padding:2px 7px;border-radius:4px;font-weight:600;}
+.type-contract{background:rgba(168,85,247,0.15);color:var(--accent);}
+.type-nda{background:rgba(59,130,246,0.15);color:var(--blue);}
+.type-will{background:rgba(16,185,129,0.15);color:var(--green);}
+.type-lease{background:rgba(245,158,11,0.15);color:var(--yellow);}
+.doc-meta{font-size:0.72rem;color:var(--muted);}
+.doc-status{font-size:0.7rem;margin-top:2px;}
+.status-draft{color:var(--yellow);}
+.status-review{color:var(--blue);}
+.status-signed{color:var(--green);}
+
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* DOCUMENT PREVIEW */
+.doc-preview{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.doc-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;}
+.doc-title{font-size:1rem;font-weight:700;margin-bottom:4px;}
+.doc-subtitle{font-size:0.8rem;color:var(--muted);}
+.doc-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:50px;}
+.doc-content{background:#fff;border-radius:8px;padding:1rem;font-size:0.75rem;color:#333;line-height:1.8;}
+.doc-content h4{font-size:0.85rem;margin-bottom:0.5rem;color:#000;}
+.doc-content p{margin-bottom:0.5rem;}
+.doc-content .highlight{background:rgba(168,85,247,0.2);padding:2px 4px;border-radius:2px;}
+
+/* CLAUSES */
+.clauses-list{display:flex;flex-direction:column;gap:0.5rem;}
+.clause-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem;display:flex;justify-content:space-between;align-items:center;}
+.clause-info{flex:1;}
+.clause-name{font-size:0.8rem;font-weight:600;}
+.clause-desc{font-size:0.72rem;color:var(--muted);}
+.clause-status{font-size:0.7rem;padding:3px 10px;border-radius:4px;font-weight:600;}
+.clause-ok{background:rgba(16,185,129,0.15);color:var(--green);}
+.clause-warn{background:rgba(245,158,11,0.15);color:var(--yellow);}
+.clause-risk{background:rgba(239,68,68,0.15);color:var(--red);}
+
+/* ACTIVITY */
+.activity-list{display:flex;flex-direction:column;gap:0.5rem;}
+.activity-item{display:flex;gap:0.75rem;align-items:start;}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
+.activity-content{flex:1;}
+.activity-text{font-size:0.78rem;}
+.activity-time{font-size:0.7rem;color:var(--muted);}
+
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.template-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid rgba(30,42,58,0.5);}
+.template-item:last-child{border-bottom:none;}
+.template-name{font-size:0.75rem;}
+.template-uses{font-size:0.72rem;color:var(--muted);}
+
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(168,85,247,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(192,132,252,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(168,85,247,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">⚖️</div>
+    <span>LegalDocsAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Documents</a>
+    <a href="#">Templates</a>
+    <a href="#">Analysis</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Sign In</button>
+    <button class="btn btn-primary">Start Free Trial</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">⚖️ AI-Powered Legal Document Automation</div>
+  <h1>Draft, Review & Analyze Legal Docs <span>10x Faster</span></h1>
+  <p>AI-powered contract drafting, intelligent clause analysis, risk detection, and automated legal workflows — save hours on every document while ensuring compliance.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Free Trial</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">View Demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">500K+</div><div class="lbl">Documents Processed</div></div>
+    <div class="hero-stat"><div class="val">92%</div><div class="lbl">Time Saved</div></div>
+    <div class="hero-stat"><div class="val">15,000+</div><div class="lbl">Law Firms</div></div>
+    <div class="hero-stat"><div class="val">4.9/5</div><div class="lbl">User Rating</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>⚖️ Document Intelligence Dashboard</h2>
+  <p class="sub">AI-powered contract analysis, risk detection, and automated drafting</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Document List -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Recent Documents</h3>
+        <input class="search-box" placeholder="🔍 Search documents..." value="">
+      </div>
+      <div class="doc-list">
+        <div class="doc-item active">
+          <div class="doc-top"><span class="doc-name">Employment Agreement</span><span class="doc-type type-contract">CONTRACT</span></div>
+          <div class="doc-meta">TechCorp Inc. · Senior Developer</div>
+          <div class="doc-status status-review">🔄 In Review</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-top"><span class="doc-name">NDA - Project Alpha</span><span class="doc-type type-nda">NDA</span></div>
+          <div class="doc-meta">Client: Acme Corp</div>
+          <div class="doc-status status-signed">✅ Signed</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-top"><span class="doc-name">Commercial Lease</span><span class="doc-type type-lease">LEASE</span></div>
+          <div class="doc-meta">123 Main St, Suite 400</div>
+          <div class="doc-status status-draft">📝 Draft</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-top"><span class="doc-name">Last Will & Testament</span><span class="doc-type type-will">WILL</span></div>
+          <div class="doc-meta">Client: John Smith</div>
+          <div class="doc-status status-signed">✅ Executed</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-top"><span class="doc-name">Service Agreement</span><span class="doc-type type-contract">CONTRACT</span></div>
+          <div class="doc-meta">Vendor: DataSync Pro</div>
+          <div class="doc-status status-review">🔄 In Review</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-top"><span class="doc-name">Partnership Agreement</span><span class="doc-type type-contract">CONTRACT</span></div>
+          <div class="doc-meta">Smith & Jones LLP</div>
+          <div class="doc-status status-draft">📝 Draft</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>📄 Employment Agreement — TechCorp Inc.</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Preview</div>
+          <div class="tab">Clauses</div>
+          <div class="tab">History</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Risk Score</div>
+            <div class="kpi-value" style="color:var(--yellow);">Medium</div>
+            <div class="kpi-change">3 clauses flagged</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Compliance</div>
+            <div class="kpi-value" style="color:var(--green);">94%</div>
+            <div class="kpi-change up">CA Labor Law ✓</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Clauses</div>
+            <div class="kpi-value">24</div>
+            <div class="kpi-change">12 standard · 12 custom</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Time Saved</div>
+            <div class="kpi-value" style="color:var(--accent);">3.2 hrs</div>
+            <div class="kpi-change up">vs. manual review</div>
+          </div>
+        </div>
+
+        <!-- Document Preview -->
+        <div class="doc-preview">
+          <div class="doc-header">
+            <div>
+              <div class="doc-title">Employment Agreement</div>
+              <div class="doc-subtitle">Between TechCorp Inc. and Sarah Johnson</div>
+            </div>
+            <span class="doc-badge">AI Analyzed</span>
+          </div>
+          <div class="doc-content">
+            <h4>ARTICLE 1 - POSITION AND DUTIES</h4>
+            <p>1.1 The Employer agrees to employ the Employee in the position of <span class="highlight">Senior Software Developer</span>, and the Employee agrees to perform such duties as are customarily associated with such position.</p>
+            <p>1.2 The Employee shall report to the Chief Technology Officer and shall perform all duties faithfully, industriously, and to the best of the Employee's ability.</p>
+            <h4>ARTICLE 2 - COMPENSATION</h4>
+            <p>2.1 The Employer shall pay the Employee a base salary of <span class="highlight">$185,000 per year</span>, payable in accordance with the Employer's standard payroll practices.</p>
+            <p>2.2 The Employee shall be eligible for an annual performance bonus of up to <span class="highlight">20% of base salary</span>, subject to the achievement of predetermined performance metrics.</p>
+          </div>
+        </div>
+
+        <!-- Clause Analysis -->
+        <div class="clauses-list">
+          <div class="clause-item">
+            <div class="clause-info">
+              <div class="clause-name">Non-Compete Clause (Section 7.1)</div>
+              <div class="clause-desc">12-month restriction period · 50-mile radius</div>
+            </div>
+            <span class="clause-status clause-warn">REVIEW</span>
+          </div>
+          <div class="clause-item">
+            <div class="clause-info">
+              <div class="clause-name">Intellectual Property Assignment</div>
+              <div class="clause-desc">Standard work-for-hire provisions</div>
+            </div>
+            <span class="clause-status clause-ok">OK</span>
+          </div>
+          <div class="clause-item">
+            <div class="clause-info">
+              <div class="clause-name">Termination for Convenience</div>
+              <div class="clause-desc">2-week notice period required</div>
+            </div>
+            <span class="clause-status clause-ok">OK</span>
+          </div>
+          <div class="clause-item">
+            <div class="clause-info">
+              <div class="clause-name">Severance Package</div>
+              <div class="clause-desc">3 months salary · Below market standard</div>
+            </div>
+            <span class="clause-status clause-risk">RISK</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Legal Advisor -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Legal Advisor</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Non-Compete May Be Unenforceable</div>
+          <div class="insight-body">12-month non-compete with 50-mile radius may be deemed excessive under CA Business and Professions Code § 16600. Recommend reducing to 6 months or removing geographic restriction.</div>
+          <div class="insight-action">→ Generate revised clause</div>
+        </div>
+
+        <div class="insight-card alert">
+          <div class="insight-title">🔴 Severance Below Market</div>
+          < class="insight-body">3-month severance is below market standard for senior developer roles in tech. Industry standard is 6-12 months. This may cause candidate pushback or early departure risk.</div>
+          <div class="insight-action">→ Propose 6-month severance</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 IP Clause Well-Drafted</div>
+          <div class="insight-body">Intellectual property assignment clause is comprehensive and includes proper work-for-hire language, carve-outs for prior IP, and clear assignment of improvements. No changes needed.</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Arbitration Clause Added</div>
+          <div class="insight-body">AI inserted mandatory arbitration clause per your firm's standard template. Includes class action waiver and specifies JAMS rules. Compliant with CA law.</div>
+        </div>
+
+        <!-- Templates -->
+        <div class="insight-card">
+          <div class="kpi-label" style="font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:8px;">📋 Suggested Templates</div>
+          <div class="template-item"><span class="template-name">Employee Handbook</span><span class="template-uses">2,340 uses</span></div>
+          <div class="template-item"><span class="template-name">Stock Option Agreement</span><span class="template-uses">1,890 uses</span></div>
+          <div class="template-item"><span class="template-name">Confidentiality Addendum</span><span class="template-uses">1,456 uses</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Complete Legal Document Suite</h2>
+  <p class="sub">Built for law firms, in-house counsel, and legal operations teams</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>AI Document Drafting</h3>
+      <p>Generate complete legal documents from simple prompts. AI learns your firm's style and preferences for consistent, high-quality drafts in minutes.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Intelligent Clause Analysis</h3>
+      <p>AI scans every clause for risks, enforceability issues, and missing provisions. Get instant recommendations backed by case law citations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚖️</div>
+      <h3>Compliance Checking</h3>
+      <p>Automatic compliance verification against federal and state laws, industry regulations, and your organization's playbook.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Contract Analytics</h3>
+      <p>Extract key terms, dates, and obligations across your entire document repository. Never miss a renewal deadline or obligation again.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✍️</div>
+      <h3>Smart Templates</h3>
+      <p>500+ attorney-crafted templates with dynamic clauses that adapt based on deal type, jurisdiction, and party preferences.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>Secure Collaboration</h3>
+      <p>End-to-end encryption, granular permissions, and audit trails. SOC 2 Type II certified and built for attorney-client privilege.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Plans for Every Practice</h2>
+  <p class="sub">From solo practitioners to enterprise legal departments</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Solo</div>
+      <div class="price-amount">$49<span>/mo</span></div>
+      <div class="price-desc">Individual attorneys and small practices</div>
+      <ul class="price-features">
+        <li>50 documents/month</li>
+        <li>AI drafting assistant</li>
+        <li>Basic clause analysis</li>
+        <li>50 templates</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Firm</div>
+      <div class="price-amount">$199<span>/mo</span></div>
+      <div class="price-desc">Law firms with multiple attorneys</div>
+      <ul class="price-features">
+        <li>Unlimited documents</li>
+        <li>Advanced AI analysis</li>
+        <li>Full template library</li>
+        <li>Team collaboration</li>
+        <li>Compliance checking</li>
+        <li>API access</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Corporate legal departments and large firms</div>
+      <ul class="price-features">
+        <li>Everything in Firm</li>
+        <li>Custom playbook rules</li>
+        <li>On-premise deployment</li>
+        <li>SAML SSO integration</li>
+        <li>Custom AI training</li>
+        <li>Dedicated success team</li>
+        <li>SLA 99.99% uptime</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">⚖️ LegalDocsAI</div>
+  <p>AI-Powered Legal Document Automation Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 LegalDocsAI Inc. · Privacy · Terms · SOC 2 Certified</p>
+</footer>
+
+</body>
+</html>
