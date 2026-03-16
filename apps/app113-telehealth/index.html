@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TelehealthAI - AI-Powered Virtual Care Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#1e2a3a;
+  --accent:#06b6d4;--accent2:#22d3ee;--accent3:#67e8f9;
+  --text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px;background:rgba(10,10,15,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:700;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.nav-links{display:flex;gap:2rem;font-size:0.9rem;color:var(--muted);}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{display:flex;gap:1rem;align-items:center;}
+.btn{padding:0.5rem 1.2rem;border-radius:8px;font-size:0.875rem;cursor:pointer;border:none;font-weight:600;transition:all 0.2s;}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(6,182,212,0.12) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite;pointer-events:none;}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.1);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);border-radius:50px;padding:0.4rem 1rem;font-size:0.8rem;color:var(--accent);margin-bottom:1.5rem;}
+.hero h1{font-size:3.2rem;font-weight:800;line-height:1.15;margin-bottom:1rem;max-width:750px;margin-left:auto;margin-right:auto;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:580px;margin:0 auto 2rem;line-height:1.7;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;flex-wrap:wrap;}
+.hero-stat .val{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat .lbl{font-size:0.8rem;color:var(--muted);margin-top:4px;}
+
+.demo-section{padding:2rem;max-width:1600px;margin:0 auto;}
+.demo-section h2{text-align:center;font-size:1.8rem;font-weight:700;margin-bottom:0.5rem;}
+.demo-section .sub{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.dashboard{display:grid;grid-template-columns:280px 1fr 300px;gap:1rem;height:700px;}
+
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.sidebar-header{padding:1rem;border-bottom:1px solid var(--border);}
+.sidebar-header h3{font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;}
+.search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;color:var(--text);font-size:0.8rem;}
+.patient-list{flex:1;overflow-y:auto;padding:0.5rem;}
+.patient-item{padding:0.75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:0.25rem;transition:all 0.15s;}
+.patient-item:hover,.patient-item.active{background:var(--surface2);border-color:var(--border);}
+.patient-item.active{border-color:rgba(6,182,212,0.4);}
+.patient-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.patient-name{font-size:0.82rem;font-weight:600;}
+.patient-badge{font-size:0.68rem;padding:2px 7px;border-radius:4px;font-weight:600;}
+.badge-urgent{background:rgba(239,68,68,0.15);color:#ef4444;}
+.badge-follow{background:rgba(245,158,11,0.15);color:#f59e0b;}
+.badge-routine{background:rgba(6,182,212,0.15);color:var(--accent);}
+.badge-new{background:rgba(16,185,129,0.15);color:#10b981;}
+.patient-meta{font-size:0.72rem;color:var(--muted);}
+.patient-time{font-size:0.7rem;color:var(--muted);margin-top:2px;}
+
+.main-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.panel-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-header h3{font-size:1rem;font-weight:700;}
+.panel-tabs{display:flex;gap:0.5rem;}
+.tab{padding:0.3rem 0.75rem;border-radius:6px;font-size:0.78rem;cursor:pointer;border:1px solid transparent;color:var(--muted);}
+.tab.active{background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.3);color:var(--accent);}
+.panel-body{flex:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;}
+.kpi-label{font-size:0.72rem;color:var(--muted);margin-bottom:4px;}
+.kpi-value{font-size:1.3rem;font-weight:700;}
+.kpi-change{font-size:0.72rem;margin-top:3px;}
+.kpi-change.up{color:var(--green);}
+.kpi-change.down{color:var(--red);}
+
+/* VIDEO CALL */
+.video-panel{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.video-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;}
+.video-title{font-size:0.85rem;font-weight:600;}
+.video-status{font-size:0.72rem;color:var(--green);display:flex;align-items:center;gap:4px;}
+.video-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.video-box{background:#0d1117;border-radius:8px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.video-placeholder{font-size:2rem;opacity:0.3;}
+.video-label{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:4px;font-size:0.72rem;}
+.video-controls{display:flex;justify-content:center;gap:0.75rem;margin-top:0.75rem;}
+.vid-btn{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.2s;}
+.vid-btn-end{background:#ef4444;color:#fff;}
+.vid-btn-mute{background:var(--surface);border:1px solid var(--border);color:var(--text);}
+.vid-btn-vid{background:var(--accent);color:#000;}
+
+/* VITALS */
+.vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.vital-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem;text-align:center;}
+.vital-icon{font-size:1.2rem;margin-bottom:4px;}
+.vital-value{font-size:1.1rem;font-weight:700;}
+.vital-label{font-size:0.7rem;color:var(--muted);}
+.vital-status{font-size:0.68rem;margin-top:2px;}
+.vital-normal{color:var(--green);}
+.vital-alert{color:var(--yellow);}
+
+/* NOTES */
+.notes-panel{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+.notes-title{font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;}
+.note-line{display:flex;gap:0.5rem;margin-bottom:0.5rem;}
+.note-time{font-size:0.75rem;color:var(--muted);min-width:50px;}
+.note-text{font-size:0.8rem;}
+
+.right-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;}
+.rp-header{padding:1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.rp-header h3{font-size:0.9rem;font-weight:700;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+.rp-body{flex:1;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.75rem;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.75rem;}
+.insight-card.alert{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+.insight-card.warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.insight-card.good{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+.insight-title{font-size:0.78rem;font-weight:700;margin-bottom:4px;}
+.insight-body{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+.insight-action{margin-top:6px;font-size:0.72rem;font-weight:600;color:var(--accent);}
+
+.rx-list{margin-top:0.25rem;}
+.rx-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid rgba(30,42,58,0.5);}
+.rx-item:last-child{border-bottom:none;}
+.rx-name{font-size:0.75rem;}
+.rx-dose{font-size:0.72rem;color:var(--muted);}
+
+.features{padding:4rem 2rem;max-width:1200px;margin:0 auto;}
+.features h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.features .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
+.feature-card:hover{border-color:rgba(6,182,212,0.3);transform:translateY(-4px);}
+.feature-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(34,211,238,0.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.feature-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+.pricing{padding:4rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pricing h2{text-align:center;font-size:2rem;font-weight:700;margin-bottom:0.5rem;}
+.pricing .sub{text-align:center;color:var(--muted);margin-bottom:3rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+.price-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;transition:all 0.3s;}
+.price-card.popular{border-color:var(--accent);background:linear-gradient(135deg,rgba(6,182,212,0.05),transparent);}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-size:0.75rem;font-weight:700;padding:4px 16px;border-radius:50px;}
+.price-tier{font-size:0.85rem;font-weight:600;color:var(--accent);margin-bottom:0.5rem;}
+.price-amount{font-size:2.5rem;font-weight:800;margin-bottom:0.25rem;}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--muted);}
+.price-desc{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem;}
+.price-features li{font-size:0.85rem;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;}
+footer{padding:3rem 2rem;text-align:center;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border);}
+footer .footer-logo{font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;}
+</style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🏥</div>
+    <span>TelehealthAI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Virtual Visits</a>
+    <a href="#">Patient Portal</a>
+    <a href="#">AI Diagnostics</a>
+    <a href="#">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-ghost">Patient Sign In</button>
+    <button class="btn btn-primary">Start Visit</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">🏥 AI-Powered Virtual Care Platform</div>
+  <h1>Quality Healthcare From <span>The Comfort of Home</span></h1>
+  <p>AI-assisted triage, video consultations, remote patient monitoring, and automated care plans — accessible healthcare when you need it, wherever you are.</p>
+  <div class="hero-btns">
+    <button class="btn btn-primary" style="padding:0.75rem 2rem;font-size:1rem;">Start Virtual Visit</button>
+    <button class="btn btn-ghost" style="padding:0.75rem 2rem;font-size:1rem;">See How It Works</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">2M+</div><div class="lbl">Patients Served</div></div>
+    <div class="hero-stat"><div class="val">15,000+</div><div class="lbl">Licensed Providers</div></div>
+    <div class="hero-stat"><div class="val">&lt;5 min</div><div class="lbl">Avg. Wait Time</div></div>
+    <div class="hero-stat"><div class="val">4.9/5</div><div class="lbl">Patient Rating</div></div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <h2>🏥 Provider Telehealth Dashboard</h2>
+  <p class="sub">AI-powered virtual care with real-time patient monitoring and clinical decision support</p>
+  <div class="dashboard">
+
+    <!-- SIDEBAR: Patient Queue -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Today's Patients</h3>
+        <input class="search-box" placeholder="🔍 Search patients..." value="">
+      </div>
+      <div class="patient-list">
+        <div class="patient-item active">
+          <div class="patient-top"><span class="patient-name">Sarah Mitchell</span><span class="patient-badge badge-urgent">URGENT</span></div>
+          <div class="patient-meta">Female, 45 · Chest pain, shortness of breath</div>
+          <div class="patient-time">🕐 In session · 12 min</div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-top"><span class="patient-name">James Wilson</span><span class="patient-badge badge-follow">FOLLOW-UP</span></div>
+          <div class="patient-meta">Male, 62 · Post-surgery check · Knee replacement</div>
+          <div class="patient-time">🕐 Waiting · 8 min</div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-top"><span class="patient-name">Emily Chen</span><span class="patient-badge badge-routine">ROUTINE</span></div>
+          <div class="patient-meta">Female, 28 · Anxiety, sleep issues</div>
+          <div class="patient-time">🕐 Scheduled 2:30 PM</div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-top"><span class="patient-name">Michael Brown</span><span class="patient-badge badge-new">NEW</span></div>
+          <div class="patient-meta">Male, 35 · Persistent headaches</div>
+          <div class="patient-time">🕐 Scheduled 3:00 PM</div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-top"><span class="patient-name">Lisa Rodriguez</span><span class="patient-badge badge-follow">FOLLOW-UP</span></div>
+          <div class="patient-meta">Female, 52 · Diabetes management</div>
+          <div class="patient-time">🕐 Scheduled 3:30 PM</div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-top"><span class="patient-name">David Kim</span><span class="patient-badge badge-routine">ROUTINE</span></div>
+          <div class="patient-meta">Male, 41 · Annual physical</div>
+          <div class="patient-time">🕐 Scheduled 4:00 PM</div>
+        </div>
+        <div class="patient-item">
+          <div class="patient-top"><span class="patient-name">Amanda Foster</span><span class="patient-badge badge-urgent">URGENT</span></div>
+          <div class="patient-meta">Female, 8 · High fever, rash</div>
+          <div class="patient-time">🕐 Priority queue</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h3>📹 Consultation: Sarah Mitchell</h3>
+        <div class="panel-tabs">
+          <div class="tab active">Video</div>
+          <div class="tab">Records</div>
+          <div class="tab">Prescribe</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Today's Visits</div>
+            <div class="kpi-value" style="color:var(--accent);">18</div>
+            <div class="kpi-change up">↑ 3 more scheduled</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg. Wait</div>
+            <div class="kpi-value">4.2 min</div>
+            <div class="kpi-change up">↓ -1.2 min vs avg</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Patient Satisfaction</div>
+            <div class="kpi-value" style="color:var(--green);">4.9</div>
+            <div class="kpi-change up">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">AI Triage Accuracy</div>
+            <div class="kpi-value" style="color:var(--green);">97.3%</div>
+            <div class="kpi-change up">↑ +0.4% this month</div>
+          </div>
+        </div>
+
+        <!-- Video Panel -->
+        <div class="video-panel">
+          <div class="video-header">
+            <span class="video-title">📹 Live Video Consultation</span>
+            <span class="video-status">● Recording (HIPAA compliant)</span>
+          </div>
+          <div class="video-grid">
+            <div class="video-box">
+              <div class="video-placeholder">👩</div>
+              <div class="video-label">Sarah Mitchell (Patient)</div>
+            </div>
+            <div class="video-box">
+              <div class="video-placeholder">👨‍⚕️</div>
+              <div class="video-label">Dr. Thompson (You)</div>
+            </div>
+          </div>
+          <div class="video-controls">
+            <button class="vid-btn vid-btn-mute">🎤</button>
+            <button class="vid-btn vid-btn-vid">📷</button>
+            <button class="vid-btn vid-btn-mute">🖥️</button>
+            <button class="vid-btn vid-btn-end">📞</button>
+          </div>
+        </div>
+
+        <!-- Patient Vitals -->
+        <div class="vitals-grid">
+          <div class="vital-card">
+            <div class="vital-icon">❤️</div>
+            <div class="vital-value">98 bpm</div>
+            <div class="vital-label">Heart Rate</div>
+            <div class="vital-status vital-normal">Normal</div>
+          </div>
+          <div class="vital-card">
+            <div class="vital-icon">🩸</div>
+            <div class="vital-value">142/88</div>
+            <div class="vital-label">Blood Pressure</div>
+            <div class="vital-status vital-alert">Elevated</div>
+          </div>
+          <div class="vital-card">
+            <div class="vital-icon">🌡️</div>
+            <div class="vital-value">98.4°F</div>
+            <div class="vital-label">Temperature</div>
+            <div class="vital-status vital-normal">Normal</div>
+          </div>
+          <div class="vital-card">
+            <div class="vital-icon">🫁</div>
+            <div class="vital-value">96%</div>
+            <div class="vital-label">SpO₂</div>
+            <div class="vital-status vital-normal">Normal</div>
+          </div>
+        </div>
+
+        <!-- Clinical Notes -->
+        <div class="notes-panel">
+          <div class="notes-title">📝 AI-Suggested Clinical Notes</div>
+          <div class="note-line"><span class="note-time">00:00</span><span class="note-text">Patient reports chest tightness and shortness of breath for 3 days, worsens with exertion.</span></div>
+          <div class="note-line"><span class="note-time">04:12</span><span class="note-text">Denies radiating pain, nausea, or diaphoresis. History of hypertension, on Lisinopril 10mg.</span></div>
+          <div class="note-line"><span class="note-time">08:30</span><span class="note-text">Vitals: HR 98, BP 142/88 (elevated), SpO₂ 96%. No acute distress visible on video exam.</span></div>
+          <div class="note-line"><span class="note-time">10:45</span><span class="note-text"><strong>Plan:</strong> Order ECG, Troponin, CBC, CMP. Refer to cardiology for stress test. Continue Lisinopril.</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Advisor -->
+    <div class="right-panel">
+      <div class="rp-header">
+        <div class="ai-dot"></div>
+        <h3>AI Clinical Assistant</h3>
+      </div>
+      <div class="rp-body">
+
+        <div class="insight-card alert">
+          <div class="insight-title">🔴 Cardiac Risk Alert</div>
+          <div class="insight-body">Patient has 3 cardiac risk factors: age 45+, hypertension history, elevated BP today. Symptoms (chest tightness, dyspnea) warrant cardiac workup. Recommend ECG and Troponin stat.</div>
+          <div class="insight-action">→ Order Cardiac Panel</div>
+        </div>
+
+        <div class="insight-card warn">
+          <div class="insight-title">🟡 Medication Review</div>
+          <div class="insight-body">Current Lisinopril 10mg may be suboptimal given BP 142/88. Consider titration to 20mg or add-on therapy (e.g., Amlodipine) after cardiac workup.</div>
+          <div class="insight-action">→ Review medication options</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Differential Diagnosis</div>
+          <div class="insight-body">Based on presentation: 1) Unstable angina (consider) 2) GERD (possible) 3) Anxiety (less likely). Low probability of MI given no radiation/nausea. ECG needed to rule out.</div>
+        </div>
+
+        <div class="insight-card good">
+          <div class="insight-title">🟢 Preventive Care Due</div>
+          <div class="insight-body">Patient due for: Mammogram (last 2 years ago), Colonoscopy (age 45+), Annual lipid panel. Schedule during follow-up visit.</div>
+          <div class="insight-action">→ Schedule screenings</div>
+        </div>
+
+        <!-- Current Medications -->
+        <div class="insight-card">
+          <div class="kpi-label" style="font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:8px;">💊 Current Medications</div>
+          <div class="rx-list">
+            <div class="rx-item"><span class="rx-name">Lisinopril</span><span class="rx-dose">10mg QD</span></div>
+            <div class="rx-item"><span class="rx-name">Vitamin D</span><span class="rx-dose">2000 IU QD</span></div>
+            <div class="rx-item"><span class="rx-name">Ibuprofen PRN</span><span class="rx-dose">400mg</span></div>
+            <div class="rx-item"><span class="rx-name">Omeprazole</span><span class="rx-dose">20mg QD</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Complete Virtual Care Solution</h2>
+  <p class="sub">Built for healthcare providers, hospitals, and health systems delivering remote care</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📹</div>
+      <h3>HD Video Consultations</h3>
+      <p>HIPAA-compliant video visits with screen sharing, document sharing, and multi-party calls for specialist collaboration and family involvement.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Triage & Intake</h3>
+      <p>AI-powered symptom assessment and patient intake that collects history, suggests urgency levels, and prepares providers before visits.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Remote Patient Monitoring</h3>
+      <p>Integration with wearables and RPM devices for continuous vitals monitoring, automated alerts, and chronic disease management.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📝</div>
+      <h3>AI Clinical Notes</h3>
+      <p>Automatic transcription and clinical note generation from video visits, coded in ICD-10/SNOMED, ready for EHR integration.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💊</div>
+      <h3>ePrescribing</h3>
+      <p>Integrated e-prescribing with pharmacy benefit checking, drug interaction alerts, and controlled substance prescribing (EPCS certified).</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>EHR Integration</h3>
+      <p>Seamless integration with Epic, Cerner, Allscripts, and other EHRs via HL7 FHIR for complete patient record access during visits.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Flexible Plans for Every Practice</h2>
+  <p class="sub">From solo practitioners to large health systems</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Provider</div>
+      <div class="price-amount">$79<span>/mo</span></div>
+      <div class="price-desc">Individual providers and small practices starting telehealth</div>
+      <ul class="price-features">
+        <li>Unlimited video visits</li>
+        <li>AI triage assistant</li>
+        <li>ePrescribing</li>
+        <li>Basic scheduling</li>
+        <li>Patient portal</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Get Started</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-tier">Practice</div>
+      <div class="price-amount">$299<span>/provider/mo</span></div>
+      <div class="price-desc">Multi-provider practices needing full telehealth suite</div>
+      <ul class="price-features">
+        <li>Everything in Provider</li>
+        <li>EHR integration</li>
+        <li>AI clinical notes</li>
+        <li>Remote monitoring</li>
+        <li>Team scheduling</li>
+        <li>Billing integration</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Enterprise</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-desc">Hospitals and health systems with custom requirements</div>
+      <ul class="price-features">
+        <li>Unlimited providers</li>
+        <li>Custom branding</li>
+        <li>On-premise deployment</li>
+        <li>API access</li>
+        <li>White-label option</li>
+        <li>Dedicated success team</li>
+        <li>SLA 99.99% uptime</li>
+      </ul>
+      <button class="btn btn-ghost" style="width:100%">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🏥 TelehealthAI</div>
+  <p>AI-Powered Virtual Care Platform</p>
+  <p style="margin-top:0.5rem;">© 2024 TelehealthAI Inc. · HIPAA Compliant · SOC 2 Certified</p>
+</footer>
+
+</body>
+</html>
