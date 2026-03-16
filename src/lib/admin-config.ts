@@ -1,7 +1,6 @@
 // Admin users who get free premium access
 export const ADMIN_USERS = [
-  // Add your email or user ID here
-  'keith@example.com', // Replace with your actual email
+  '21leahcimhtiek@gmail.com', // Keith - Admin
   // Add more admin emails/IDs as needed
 ];
 
