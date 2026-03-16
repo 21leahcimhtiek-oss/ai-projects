@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SUBSCRIPTION_PLANS, PlanType } from './stripe-config';
+import { getEffectiveTier, isAdmin } from './admin-config';
 
 interface SubscriptionContextType {
   tier: PlanType;
@@ -16,6 +17,7 @@ interface SubscriptionContextType {
   canLike: () => boolean;
   remainingLikes: number;
   usedLikesToday: number;
+  isAdminUser: boolean;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [usedLikesToday, setUsedLikesToday] = useState(0);
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   useEffect(() => {
     // Load subscription status from localStorage (in production, fetch from API)
@@ -39,8 +42,17 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     const storedSubscriptionId = localStorage.getItem('velvet_subscription_id');
     const storedLikesDate = localStorage.getItem('velvet_likes_date');
     const storedLikesCount = parseInt(localStorage.getItem('velvet_likes_count') || '0');
+    const userEmail = localStorage.getItem('velvet_user_email') || undefined;
 
-    if (storedTier && Object.keys(SUBSCRIPTION_PLANS).includes(storedTier)) {
+    // Check if admin
+    const admin = isAdmin(userEmail);
+    setIsAdminUser(admin);
+
+    // Admins get VIP, otherwise use stored tier
+    const effectiveTier = getEffectiveTier(userEmail, storedTier || 'free');
+    if (effectiveTier && Object.keys(SUBSCRIPTION_PLANS).includes(effectiveTier)) {
+      setTier(effectiveTier);
+    } else if (storedTier && Object.keys(SUBSCRIPTION_PLANS).includes(storedTier)) {
       setTier(storedTier);
     }
     if (storedCustomerId) setCustomerId(storedCustomerId);
@@ -147,6 +159,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         canLike,
         remainingLikes,
         usedLikesToday,
+        isAdminUser,
       }}
     >
       {children}

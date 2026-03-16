@@ -11,12 +11,13 @@ import { cn } from '@/lib/utils'
 import { useSubscription } from '@/lib/subscription-context'
 import PricingModal from './PricingModal'
 import PremiumBadge from './PremiumBadge'
+import { isAdmin } from '@/lib/admin-config'
 
 type SettingsSection = 'main' | 'account' | 'privacy' | 'notifications' | 'preferences' | 'verification' | 'subscription' | 'help'
 
 export default function SettingsView() {
   const { user, logout, setCurrentView } = useStore()
-  const { tier, upgradeToPlan, openBillingPortal, isLoading: subscriptionLoading } = useSubscription()
+  const { tier, upgradeToPlan, openBillingPortal, isLoading: subscriptionLoading, isAdminUser } = useSubscription()
   const [section, setSection] = useState<SettingsSection>('main')
   const [showPricingModal, setShowPricingModal] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<'premium' | 'vip'>('premium')
@@ -368,10 +369,11 @@ export default function SettingsView() {
             {tier !== 'free' && <PremiumBadge tier={tier} />}
             <div>
               <h3 className="text-white font-semibold">Current Plan: <span className="capitalize">{tier}</span></h3>
-              {tier === 'free' && <p className="text-gray-400 text-sm">Upgrade to unlock premium features</p>}
+              {isAdminUser && <p className="text-amber-400 text-sm font-medium">👑 Admin - Full VIP Access</p>}
+              {tier === 'free' && !isAdminUser && <p className="text-gray-400 text-sm">Upgrade to unlock premium features</p>}
             </div>
           </div>
-          {tier !== 'free' && (
+          {tier !== 'free' && !isAdminUser && (
             <button 
               onClick={handleManageSubscription}
               className="text-primary-400 hover:text-primary-300 text-sm font-medium"
