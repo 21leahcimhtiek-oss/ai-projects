@@ -1,6 +1,0 @@
-[main 324803e] Add InsuranceAI app #150 and BeautyAI app #151
- 2 files changed, 740 insertions(+)
- create mode 100644 apps/app150-insurance/index.html
- create mode 100644 apps/app151-beauty/index.html
-To https://github.com/21leahcimhtiek-oss/ai-projects.git
-   e00f6f6..324803e  main -> main
