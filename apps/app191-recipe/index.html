@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeAI - AI-Powered Recipe Discovery & Meal Planning</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --gradient: linear-gradient(135deg, #ef4444, #f97316);
+            --accent: #ef4444;
+            --accent-secondary: #f97316;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .btn { padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; }
+        .btn-primary { background: var(--gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+        
+        /* Hero */
+        .hero { padding: 150px 20px 100px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 50%, rgba(239, 68, 68, 0.15), transparent 50%), radial-gradient(circle at 70% 50%, rgba(249, 115, 22, 0.15), transparent 50%); animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; position: relative; }
+        .hero h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px; position: relative; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; position: relative; }
+        
+        /* Features */
+        .features { padding: 100px 20px; background: var(--bg-secondary); }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .section-title span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card { background: var(--bg-card); padding: 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .feature-icon { width: 60px; height: 60px; background: var(--gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 10px; }
+        .feature-card p { color: var(--text-secondary); }
+        
+        /* Demo */
+        .demo { padding: 100px 20px; }
+        .demo-container { background: var(--bg-card); border-radius: 24px; padding: 40px; border: 1px solid rgba(255,255,255,0.1); }
+        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .demo-tabs { display: flex; gap: 10px; }
+        .demo-tab { padding: 8px 16px; border-radius: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); cursor: pointer; transition: all 0.3s; }
+        .demo-tab.active { background: var(--gradient); color: white; border-color: transparent; }
+        
+        /* Recipe Dashboard */
+        .recipe-dashboard { display: grid; grid-template-columns: 280px 1fr 280px; gap: 20px; }
+        .ingredient-panel { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .ingredient-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .ingredient-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .ingredient-tag { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.3); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+        .ingredient-tag .remove { cursor: pointer; opacity: 0.7; }
+        .ingredient-tag .remove:hover { opacity: 1; }
+        .add-ingredient { display: flex; gap: 10px; margin-top: 15px; }
+        .add-ingredient input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-card); color: var(--text-primary); }
+        .add-ingredient input:focus { outline: none; border-color: var(--accent); }
+        
+        .recipe-results { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .recipe-list { display: flex; flex-direction: column; gap: 12px; }
+        .recipe-card { display: flex; gap: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; transition: all 0.3s; }
+        .recipe-card:hover { background: rgba(239, 68, 68, 0.2); }
+        .recipe-card.active { background: var(--gradient); }
+        .recipe-image { width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .recipe-info { flex: 1; }
+        .recipe-info h4 { margin-bottom: 5px; }
+        .recipe-meta { display: flex; gap: 15px; font-size: 0.85rem; color: var(--text-secondary); }
+        .recipe-card.active .recipe-meta { color: rgba(255,255,255,0.8); }
+        .recipe-match { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        
+        .nutrition-panel { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .nutrition-header { margin-bottom: 15px; }
+        .nutrition-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nutrition-item:last-child { border-bottom: none; }
+        .nutrition-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+        .nutrition-bar-fill { height: 100%; background: var(--gradient); border-radius: 3px; }
+        
+        .ai-chef { background: var(--bg-secondary); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .ai-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .ai-suggestions { display: flex; flex-direction: column; gap: 8px; }
+        .ai-suggestion { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
+        .ai-suggestion:hover { background: rgba(239, 68, 68, 0.2); }
+        
+        /* Pricing */
+        .pricing { padding: 100px 20px; background: var(--bg-secondary); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center; transition: all 0.3s; }
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-card.featured { border-color: var(--accent); position: relative; }
+        .pricing-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gradient); padding: 4px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .pricing-card .price { font-size: 3rem; font-weight: 700; margin: 20px 0; }
+        .pricing-card .price span { font-size: 1rem; color: var(--text-secondary); }
+        .pricing-features { list-style: none; margin: 30px 0; text-align: left; }
+        .pricing-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .pricing-features li::before { content: '✓'; color: var(--accent); }
+        
+        /* CTA */
+        .cta { padding: 100px 20px; text-align: center; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .cta p { color: var(--text-secondary); margin-bottom: 30px; }
+        
+        /* Footer */
+        footer { background: var(--bg-secondary); padding: 60px 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .footer-section h4 { margin-bottom: 20px; }
+        .footer-section ul { list-style: none; }
+        .footer-section li { margin-bottom: 10px; }
+        .footer-section a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--text-primary); }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-card); padding: 40px; border-radius: 20px; max-width: 400px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--accent); }
+        .divider { text-align: center; margin: 20px 0; color: var(--text-secondary); position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(255,255,255,0.1); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .social-btn { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: var(--text-primary); cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.1); }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">RecipeAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Discover Recipes with <span>AI Magic</span></h1>
+        <p>Transform your cooking with AI-powered recipe discovery based on ingredients you have. Get personalized meal plans, nutritional insights, and cooking guidance.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Cooking Free</button>
+            <button class="btn btn-outline" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">View Demo</button>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful <span>Features</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🥘</div>
+                    <h3>Smart Recipe Discovery</h3>
+                    <p>Enter ingredients you have and discover thousands of recipes you can make right now.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Meal Planning</h3>
+                    <p>AI-generated weekly meal plans based on your preferences, diet, and goals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛒</div>
+                    <h3>Smart Shopping</h3>
+                    <p>Auto-generated shopping lists that optimize for your meal plans and reduce waste.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Nutrition Tracking</h3>
+                    <p>Detailed nutritional analysis for every recipe with macro and micronutrient breakdown.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🍳</div>
+                    <h3>Cooking Guidance</h3>
+                    <p>Step-by-step instructions with AI tips and video tutorials for perfect results.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Diet Preferences</h3>
+                    <p>Support for all diets: keto, vegan, gluten-free, paleo, and more.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="container">
+            <h2 class="section-title">Interactive <span>Demo</span></h2>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h3>Recipe Finder</h3>
+                    <div class="demo-tabs">
+                        <button class="demo-tab active">By Ingredients</button>
+                        <button class="demo-tab">By Cuisine</button>
+                        <button class="demo-tab">By Diet</button>
+                    </div>
+                </div>
+                <div class="recipe-dashboard">
+                    <div class="ingredient-panel">
+                        <div class="ingredient-header">
+                            <h4>Your Ingredients</h4>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">5 items</span>
+                        </div>
+                        <div class="ingredient-list">
+                            <div class="ingredient-tag">🍗 Chicken <span class="remove">×</span></div>
+                            <div class="ingredient-tag">🧄 Garlic <span class="remove">×</span></div>
+                            <div class="ingredient-tag">🍋 Lemon <span class="remove">×</span></div>
+                            <div class="ingredient-tag">🌿 Thyme <span class="remove">×</span></div>
+                            <div class="ingredient-tag">🥔 Potato <span class="remove">×</span></div>
+                        </div>
+                        <div class="add-ingredient">
+                            <input type="text" placeholder="Add ingredient...">
+                            <button class="btn btn-primary" style="padding: 10px 16px;">+</button>
+                        </div>
+                    </div>
+                    <div class="recipe-results">
+                        <div class="recipe-list">
+                            <div class="recipe-card active">
+                                <div class="recipe-image">🍗</div>
+                                <div class="recipe-info">
+                                    <h4>Lemon Garlic Chicken</h4>
+                                    <div class="recipe-meta">
+                                        <span>⏱ 35 min</span>
+                                        <span>🔥 420 cal</span>
+                                        <span>⭐ 4.8</span>
+                                    </div>
+                                </div>
+                                <span class="recipe-match">100% Match</span>
+                            </div>
+                            <div class="recipe-card">
+                                <div class="recipe-image">🥘</div>
+                                <div class="recipe-info">
+                                    <h4>Herb Roasted Chicken</h4>
+                                    <div class="recipe-meta">
+                                        <span>⏱ 50 min</span>
+                                        <span>🔥 380 cal</span>
+                                        <span>⭐ 4.6</span>
+                                    </div>
+                                </div>
+                                <span class="recipe-match">85% Match</span>
+                            </div>
+                            <div class="recipe-card">
+                                <div class="recipe-image">🍽️</div>
+                                <div class="recipe-info">
+                                    <h4>Chicken & Potato Bake</h4>
+                                    <div class="recipe-meta">
+                                        <span>⏱ 45 min</span>
+                                        <span>🔥 520 cal</span>
+                                        <span>⭐ 4.5</span>
+                                    </div>
+                                </div>
+                                <span class="recipe-match">80% Match</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nutrition-panel">
+                        <div class="nutrition-header">
+                            <h4>Nutrition (per serving)</h4>
+                        </div>
+                        <div class="nutrition-item">
+                            <span>Calories</span>
+                            <span style="color: var(--accent);">420 kcal</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <div>
+                                <span>Protein</span>
+                                <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 85%;"></div></div>
+                            </div>
+                            <span>38g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <div>
+                                <span>Carbs</span>
+                                <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 45%;"></div></div>
+                            </div>
+                            <span>24g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <div>
+                                <span>Fat</span>
+                                <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 60%;"></div></div>
+                            </div>
+                            <span>18g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <div>
+                                <span>Fiber</span>
+                                <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 30%;"></div></div>
+                            </div>
+                            <span>4g</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-chef">
+                    <div class="ai-header">
+                        <div class="ai-dot"></div>
+                        <span>AI Chef Assistant</span>
+                    </div>
+                    <div class="ai-suggestions">
+                        <div class="ai-suggestion">💡 Add white wine for a richer sauce</div>
+                        <div class="ai-suggestion">🥗 Serve with roasted asparagus for a complete meal</div>
+                        <div class="ai-suggestion">⏰ Marinate chicken for 30 min for more flavor</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple <span>Pricing</span></h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Home Cook</h3>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>10 recipe searches/day</li>
+                        <li>Basic meal planning</li>
+                        <li>Shopping list generator</li>
+                        <li>Community recipes</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Foodie</h3>
+                    <div class="price">$6.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited searches</li>
+                        <li>AI meal planning</li>
+                        <li>Nutrition tracking</li>
+                        <li>Custom diets</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Chef</h3>
+                    <div class="price">$12.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Everything in Foodie</li>
+                        <li>Family meal plans</li>
+                        <li>Budget optimizer</li>
+                        <li>Recipe scaling</li>
+                        <li>Printable recipes</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Start Cooking Smarter Today</h2>
+            <p>Join millions of home cooks discovering amazing recipes with AI.</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Get Started Free</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>RecipeAI</h4>
+                <p style="color: var(--text-secondary);">AI-powered cooking for everyone.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Recipe Library</a></li>
+                    <li><a href="#">Cooking Tips</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 RecipeAI. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Sign Up</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameField">
+                    <input type="text" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">Create Account</button>
+            </form>
+            <div class="divider">or</div>
+            <button class="social-btn">🔐 Continue with Google</button>
+            <button class="social-btn">📘 Continue with Facebook</button>
+            <p style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.9rem;" id="switchText">
+                Already have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(type) {
+            document.getElementById('authModal').classList.add('active');
+            if (type === 'login') {
+                document.getElementById('modalTitle').textContent = 'Login';
+                document.getElementById('nameField').style.display = 'none';
+                document.getElementById('submitBtn').textContent = 'Sign In';
+                document.getElementById('switchText').innerHTML = 'Don\'t have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Sign Up</a>';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        function switchModal() {
+            const title = document.getElementById('modalTitle');
+            const nameField = document.getElementById('nameField');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            
+            if (title.textContent === 'Sign Up') {
+                title.textContent = 'login';
+                nameField.style.display = 'none';
+                submitBtn.textContent = 'Sign In';
+                switchText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Sign Up</a>';
+            } else {
+                title.textContent = 'Sign Up';
+                nameField.style.display = 'block';
+                submitBtn.textContent = 'Create Account';
+                switchText.innerHTML = 'Already have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Login</a>';
+            }
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Recipe selection
+        document.querySelectorAll('.recipe-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.recipe-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
