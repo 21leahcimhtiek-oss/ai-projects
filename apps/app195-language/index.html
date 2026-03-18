@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanguageAI - AI-Powered Language Learning</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --gradient: linear-gradient(135deg, #f472b6, #ec4899);
+            --accent: #f472b6;
+            --accent-secondary: #ec4899;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .btn { padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; }
+        .btn-primary { background: var(--gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(244, 114, 182, 0.3); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+        
+        /* Hero */
+        .hero { padding: 150px 20px 100px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 50%, rgba(244, 114, 182, 0.15), transparent 50%), radial-gradient(circle at 70% 50%, rgba(236, 72, 153, 0.15), transparent 50%); animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; position: relative; }
+        .hero h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px; position: relative; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; position: relative; }
+        
+        /* Features */
+        .features { padding: 100px 20px; background: var(--bg-secondary); }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .section-title span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card { background: var(--bg-card); padding: 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .feature-icon { width: 60px; height: 60px; background: var(--gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 10px; }
+        .feature-card p { color: var(--text-secondary); }
+        
+        /* Demo */
+        .demo { padding: 100px 20px; }
+        .demo-container { background: var(--bg-card); border-radius: 24px; padding: 40px; border: 1px solid rgba(255,255,255,0.1); }
+        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .demo-tabs { display: flex; gap: 10px; }
+        .demo-tab { padding: 8px 16px; border-radius: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); cursor: pointer; transition: all 0.3s; }
+        .demo-tab.active { background: var(--gradient); color: white; border-color: transparent; }
+        
+        /* Language Dashboard */
+        .language-dashboard { display: grid; grid-template-columns: 280px 1fr 280px; gap: 20px; }
+        .language-list { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .language-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; }
+        .language-item:hover { background: rgba(244, 114, 182, 0.2); }
+        .language-item.active { background: var(--gradient); }
+        .language-flag { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .language-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+        .language-info p { font-size: 0.8rem; color: var(--text-secondary); }
+        .language-item.active .language-info p { color: rgba(255,255,255,0.8); }
+        .language-level { font-size: 0.75rem; font-weight: 600; }
+        
+        .lesson-area { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .lesson-header { margin-bottom: 20px; }
+        .progress-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--gradient); border-radius: 4px; width: 65%; }
+        
+        .exercise-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .exercise-question { font-size: 1.1rem; margin-bottom: 15px; }
+        .exercise-options { display: flex; flex-direction: column; gap: 10px; }
+        .exercise-option { padding: 12px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .exercise-option:hover { background: rgba(244, 114, 182, 0.2); border-color: var(--accent); }
+        .exercise-option.correct { background: rgba(34, 197, 94, 0.2); border-color: #22c55e; }
+        .exercise-option.wrong { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
+        
+        .stats-panel { display: flex; flex-direction: column; gap: 20px; }
+        .stat-card { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .stat-card h4 { margin-bottom: 15px; font-size: 1rem; }
+        .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .stat-row:last-child { border-bottom: none; }
+        
+        .ai-tutor { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .ai-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .tip-item { background: rgba(244, 114, 182, 0.1); border: 1px solid rgba(244, 114, 182, 0.3); padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; }
+        .tip-item:hover { background: rgba(244, 114, 182, 0.2); }
+        
+        /* Pricing */
+        .pricing { padding: 100px 20px; background: var(--bg-secondary); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center; transition: all 0.3s; }
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-card.featured { border-color: var(--accent); position: relative; }
+        .pricing-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gradient); padding: 4px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .pricing-card .price { font-size: 3rem; font-weight: 700; margin: 20px 0; }
+        .pricing-card .price span { font-size: 1rem; color: var(--text-secondary); }
+        .pricing-features { list-style: none; margin: 30px 0; text-align: left; }
+        .pricing-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .pricing-features li::before { content: '✓'; color: var(--accent); }
+        
+        /* CTA */
+        .cta { padding: 100px 20px; text-align: center; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .cta p { color: var(--text-secondary); margin-bottom: 30px; }
+        
+        /* Footer */
+        footer { background: var(--bg-secondary); padding: 60px 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .footer-section h4 { margin-bottom: 20px; }
+        .footer-section ul { list-style: none; }
+        .footer-section li { margin-bottom: 10px; }
+        .footer-section a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--text-primary); }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-card); padding: 40px; border-radius: 20px; max-width: 400px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--accent); }
+        .divider { text-align: center; margin: 20px 0; color: var(--text-secondary); position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(255,255,255,0.1); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .social-btn { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: var(--text-primary); cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.1); }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">LanguageAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Master Any Language with <span>AI Intelligence</span></h1>
+        <p>Personalized language learning powered by AI that adapts to your level, interests, and learning style. Speak confidently in 30+ languages.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Learning Free</button>
+            <button class="btn btn-outline" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">View Demo</button>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful <span>Features</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>AI Personalization</h3>
+                    <p>Lessons adapt in real-time based on your progress and learning patterns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗣️</div>
+                    <h3>Speech Recognition</h3>
+                    <p>AI-powered pronunciation coaching with instant feedback and improvement tips.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Smart Content</h3>
+                    <p>AI-curated lessons based on your interests, from news to pop culture.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Conversation Practice</h3>
+                    <p>Practice with AI conversation partners that simulate real-world scenarios.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Memory Boost</h3>
+                    <p>Spaced repetition algorithms optimized by AI for maximum retention.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>30+ Languages</h3>
+                    <p>Learn from Spanish to Japanese with native-quality AI voices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="container">
+            <h2 class="section-title">Interactive <span>Demo</span></h2>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h3>Learning Dashboard</h3>
+                    <div class="demo-tabs">
+                        <button class="demo-tab active">Lessons</button>
+                        <button class="demo-tab">Practice</button>
+                        <button class="demo-tab">Review</button>
+                    </div>
+                </div>
+                <div class="language-dashboard">
+                    <div class="language-list">
+                        <h4 style="margin-bottom: 15px; color: var(--text-secondary);">My Languages</h4>
+                        <div class="language-item active">
+                            <div class="language-flag">🇪🇸</div>
+                            <div class="language-info">
+                                <h4>Spanish</h4>
+                                <p>Intermediate</p>
+                            </div>
+                            <span class="language-level">B2</span>
+                        </div>
+                        <div class="language-item">
+                            <div class="language-flag">🇫🇷</div>
+                            <div class="language-info">
+                                <h4>French</h4>
+                                <p>Beginner</p>
+                            </div>
+                            <span class="language-level">A1</span>
+                        </div>
+                        <div class="language-item">
+                            <div class="language-flag">🇯🇵</div>
+                            <div class="language-info">
+                                <h4>Japanese</h4>
+                                <p>Novice</p>
+                            </div>
+                            <span class="language-level">A0</span>
+                        </div>
+                    </div>
+                    <div class="lesson-area">
+                        <div class="lesson-header">
+                            <h4>📖 Spanish • Daily Life</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">Lesson 5 of 8 • At the Restaurant</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 62%;"></div>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="exercise-question">Complete the sentence: "Yo ___ una mesa para dos personas."</div>
+                            <div class="exercise-options">
+                                <div class="exercise-option">a) necesito</div>
+                                <div class="exercise-option correct">b) necesitar</div>
+                                <div class="exercise-option">c) necesitando</div>
+                                <div class="exercise-option">d) necesitamos</div>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="exercise-question">Translate: "I would like to order, please."</div>
+                            <div class="exercise-options">
+                                <div class="exercise-option correct">a) Me gustaría pedir, por favor.</div>
+                                <div class="exercise-option">b) Quiero comer, por favor.</div>
+                                <div class="exercise-option">c) Tengo hambre, por favor.</div>
+                                <div class="exercise-option">d) Yo pido, por favor.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-panel">
+                        <div class="stat-card">
+                            <h4>📊 Today's Progress</h4>
+                            <div class="stat-row">
+                                <span>XP Earned</span>
+                                <span style="color: var(--accent);">+150</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Lessons Done</span>
+                                <span>3</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Streak</span>
+                                <span style="color: var(--accent);">12 days</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Words Learned</span>
+                                <span>45</span>
+                            </div>
+                        </div>
+                        <div class="ai-tutor">
+                            <div class="ai-header">
+                                <div class="ai-dot"></div>
+                                <span>AI Tutor</span>
+                            </div>
+                            <div class="tip-item">💡 Focus on "necesitar" - it's high frequency in daily conversations</div>
+                            <div class="tip-item">🎯 Practice the polite form "Me gustaría" for restaurant scenarios</div>
+                            <div class="tip-item">⏰ Your best learning time is 9-11 AM - schedule more lessons then</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple <span>Pricing</span></h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>1 language</li>
+                        <li>5 lessons/day</li>
+                        <li>Basic exercises</li>
+                        <li>Community support</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">$11.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited languages</li>
+                        <li>Unlimited lessons</li>
+                        <li>AI speech coaching</li>
+                        <li>Offline mode</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Pro</h3>
+                    <div class="price">$19.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Everything in Premium</li>
+                        <li>1-on-1 AI tutoring</li>
+                        <li>Advanced certificates</li>
+                        <li>Family sharing</li>
+                        <li>API access</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Start Speaking a New Language Today</h2>
+            <p>Join millions mastering languages with AI-powered personalized learning.</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Learning Free</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>LanguageAI</h4>
+                <p style="color: var(--text-secondary);">AI-powered language learning.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Language Guide</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 LanguageAI. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Sign Up</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameField">
+                    <input type="text" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">Create Account</button>
+            </form>
+            <div class="divider">or</div>
+            <button class="social-btn">🍎 Continue with Apple</button>
+            <button class="social-btn">🔐 Continue with Google</button>
+            <p style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.9rem;" id="switchText">
+                Already have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(type) {
+            document.getElementById('authModal').classList.add('active');
+            if (type === 'login') {
+                document.getElementById('modalTitle').textContent = 'Login';
+                document.getElementById('nameField').style.display = 'none';
+                document.getElementById('submitBtn').textContent = 'Sign In';
+                document.getElementById('switchText').innerHTML = 'Don\'t have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Sign Up</a>';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        function switchModal() {
+            const title = document.getElementById('modalTitle');
+            const nameField = document.getElementById('nameField');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            
+            if (title.textContent === 'Sign Up') {
+                title.textContent = 'Login';
+                nameField.style.display = 'none';
+                submitBtn.textContent = 'Sign In';
+                switchText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Sign Up</a>';
+            } else {
+                title.textContent = 'Sign Up';
+                nameField.style.display = 'block';
+                submitBtn.textContent = 'Create Account';
+                switchText.innerHTML = 'Already have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Login</a>';
+            }
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Language selection
+        document.querySelectorAll('.language-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.language-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Exercise option selection
+        document.querySelectorAll('.exercise-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const siblings = this.parentElement.querySelectorAll('.exercise-option');
+                siblings.forEach(s => s.classList.remove('correct', 'wrong'));
+                if (this.textContent.includes('a) necesito') || this.textContent.includes('a) Me gustaría')) {
+                    this.classList.add('correct');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
