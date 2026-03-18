@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripAI - AI-Powered Travel Planning & Itinerary</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --gradient: linear-gradient(135deg, #06b6d4, #0ea5e9);
+            --accent: #06b6d4;
+            --accent-secondary: #0ea5e9;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 1.5rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .btn { padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; }
+        .btn-primary { background: var(--gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+        
+        /* Hero */
+        .hero { padding: 150px 20px 100px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 50%, rgba(6, 182, 212, 0.15), transparent 50%), radial-gradient(circle at 70% 50%, rgba(14, 165, 233, 0.15), transparent 50%); animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; position: relative; }
+        .hero h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px; position: relative; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; position: relative; }
+        
+        /* Features */
+        .features { padding: 100px 20px; background: var(--bg-secondary); }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .section-title span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card { background: var(--bg-card); padding: 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .feature-icon { width: 60px; height: 60px; background: var(--gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 10px; }
+        .feature-card p { color: var(--text-secondary); }
+        
+        /* Demo */
+        .demo { padding: 100px 20px; }
+        .demo-container { background: var(--bg-card); border-radius: 24px; padding: 40px; border: 1px solid rgba(255,255,255,0.1); }
+        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .demo-tabs { display: flex; gap: 10px; }
+        .demo-tab { padding: 8px 16px; border-radius: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); cursor: pointer; transition: all 0.3s; }
+        .demo-tab.active { background: var(--gradient); color: white; border-color: transparent; }
+        
+        /* Trip Dashboard */
+        .trip-dashboard { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        .destinations-panel { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .destination-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; }
+        .destination-item:hover { background: rgba(6, 182, 212, 0.2); }
+        .destination-item.active { background: var(--gradient); }
+        .destination-flag { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .destination-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+        .destination-info p { font-size: 0.8rem; color: var(--text-secondary); }
+        .destination-item.active .destination-info p { color: rgba(255,255,255,0.8); }
+        .destination-days { font-size: 0.75rem; font-weight: 600; }
+        
+        .itinerary-area { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .itinerary-header { margin-bottom: 20px; }
+        .day-timeline { display: flex; flex-direction: column; gap: 15px; }
+        .day-block { border-left: 3px solid var(--accent); padding-left: 20px; padding-top: 5px; }
+        .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .day-number { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+        .activity-item { display: flex; align-items: start; gap: 12px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; }
+        .activity-item:hover { background: rgba(6, 182, 212, 0.2); }
+        .activity-time { font-size: 0.85rem; font-weight: 600; color: var(--accent); min-width: 50px; }
+        .activity-info h5 { font-size: 0.95rem; margin-bottom: 2px; }
+        .activity-info p { font-size: 0.8rem; color: var(--text-secondary); }
+        
+        .trip-stats { display: flex; flex-direction: column; gap: 20px; }
+        .stat-card { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .stat-card h4 { margin-bottom: 15px; font-size: 1rem; }
+        .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .stat-row:last-child { border-bottom: none; }
+        
+        .ai-guide { background: var(--bg-secondary); border-radius: 12px; padding: 20px; }
+        .ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .ai-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .guide-tip { background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; }
+        .guide-tip:hover { background: rgba(6, 182, 212, 0.2); }
+        
+        /* Pricing */
+        .pricing { padding: 100px 20px; background: var(--bg-secondary); }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: var(--bg-card); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center; transition: all 0.3s; }
+        .pricing-card:hover { transform: translateY(-5px); }
+        .pricing-card.featured { border-color: var(--accent); position: relative; }
+        .pricing-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gradient); padding: 4px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .pricing-card .price { font-size: 3rem; font-weight: 700; margin: 20px 0; }
+        .pricing-card .price span { font-size: 1rem; color: var(--text-secondary); }
+        .pricing-features { list-style: none; margin: 30px 0; text-align: left; }
+        .pricing-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .pricing-features li::before { content: '✓'; color: var(--accent); }
+        
+        /* CTA */
+        .cta { padding: 100px 20px; text-align: center; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .cta p { color: var(--text-secondary); margin-bottom: 30px; }
+        
+        /* Footer */
+        footer { background: var(--bg-secondary); padding: 60px 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .footer-section h4 { margin-bottom: 20px; }
+        .footer-section ul { list-style: none; }
+        .footer-section li { margin-bottom: 10px; }
+        .footer-section a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--text-primary); }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-card); padding: 40px; border-radius: 20px; max-width: 400px; width: 90%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .modal-close { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: var(--accent); }
+        .divider { text-align: center; margin: 20px 0; color: var(--text-secondary); position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(255,255,255,0.1); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .social-btn { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: var(--text-primary); cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.1); }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <div class="logo">TripAI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Plan Your Perfect Trip with <span>AI Intelligence</span></h1>
+        <p>AI-powered travel planning that creates personalized itineraries, finds hidden gems, and optimizes your journey for unforgettable experiences.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Planning Free</button>
+            <button class="btn btn-outline" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">View Demo</button>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful <span>Features</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Smart Itinerary</h3>
+                    <p>AI-generated daily plans optimized for your interests, schedule, and budget.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Personalized Recommendations</h3>
+                    <p>Discover hidden gems and local experiences tailored to your preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Budget Optimization</h3>
+                    <p>Find the best deals and optimize your spending without compromising quality.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Real-time Updates</h3>
+                    <p>Get instant alerts for weather, delays, and itinerary adjustments.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Group Planning</h3>
+                    <p>Collaborative planning with friends and family with AI coordination.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Offline Access</h3>
+                    <p>Download your itinerary and maps for offline use during travel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="container">
+            <h2 class="section-title">Interactive <span>Demo</span></h2>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <h3>Trip Itinerary</h3>
+                    <div class="demo-tabs">
+                        <button class="demo-tab active">Timeline</button>
+                        <button class="demo-tab">Map</button>
+                        <button class="demo-tab">Budget</button>
+                    </div>
+                </div>
+                <div class="trip-dashboard">
+                    <div class="destinations-panel">
+                        <h4 style="margin-bottom: 15px; color: var(--text-secondary);">Destinations</h4>
+                        <div class="destination-item active">
+                            <div class="destination-flag">🇯🇵</div>
+                            <div class="destination-info">
+                                <h4>Tokyo</h4>
+                                <p>Japan</p>
+                            </div>
+                            <span class="destination-days">5 days</span>
+                        </div>
+                        <div class="destination-item">
+                            <div class="destination-flag">🇰🇷</div>
+                            <div class="destination-info">
+                                <h4>Seoul</h4>
+                                <p>South Korea</p>
+                            </div>
+                            <span class="destination-days">4 days</span>
+                        </div>
+                        <div class="destination-item">
+                            <div class="destination-flag">🇭🇰</div>
+                            <div class="destination-info">
+                                <h4>Hong Kong</h4>
+                                <p>China</p>
+                            </div>
+                            <span class="destination-days">3 days</span>
+                        </div>
+                    </div>
+                    <div class="itinerary-area">
+                        <div class="itinerary-header">
+                            <h4>🗓️ Tokyo, Japan • Day 1</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px;">March 15, 2024 • 6 activities planned</p>
+                        </div>
+                        <div class="day-timeline">
+                            <div class="day-block">
+                                <div class="day-header">
+                                    <span class="day-number">Morning</span>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem;">3 activities</span>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">8:00</div>
+                                    <div class="activity-info">
+                                        <h5>🌅 Breakfast at Tsukiji Market</h5>
+                                        <p>Fresh sushi and local street food</p>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">9:30</div>
+                                    <div class="activity-info">
+                                        <h5>⛩️ Visit Senso-ji Temple</h5>
+                                        <p>Historic Buddhist temple in Asakusa</p>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">11:00</div>
+                                    <div class="activity-info">
+                                        <h5>🛍️ Nakamise Shopping Street</h5>
+                                        <p>Traditional souvenirs and snacks</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="day-block">
+                                <div class="day-header">
+                                    <span class="day-number">Afternoon</span>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem;">2 activities</span>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">12:30</div>
+                                    <div class="activity-info">
+                                        <h5>🍜 Lunch in Ueno Park</h5>
+                                        <p>Ramen with park views</p>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-time">14:00</div>
+                                    <div class="activity-info">
+                                        <h5>🏛️ Tokyo National Museum</h5>
+                                        <p>Japanese art and history</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple <span>Pricing</span></h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Explorer</h3>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>1 trip/month</li>
+                        <li>Basic itinerary</li>
+                        <li>5 recommendations/day</li>
+                        <li>Community tips</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Adventurer</h3>
+                    <div class="price">$7.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited trips</li>
+                        <li>AI optimization</li>
+                        <li>Budget tracking</li>
+                        <li>Group collaboration</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Wanderlust</h3>
+                    <div class="price">$14.99<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Everything in Adventurer</li>
+                        <li>Flight + hotel deals</li>
+                        <li>Local guides</li>
+                        <li>API access</li>
+                        <li>VIP support</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Start Planning Your Dream Trip</h2>
+            <p>Join millions of travelers discovering the world with AI-powered planning.</p>
+            <button class="btn btn-primary" onclick="openModal('signup')">Start Planning Free</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>TripAI</h4>
+                <p style="color: var(--text-secondary);">AI-powered travel planning.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Travel Guide</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 TripAI. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Sign Up</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="authForm">
+                <div class="form-group" id="nameField">
+                    <input type="text" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="submitBtn">Create Account</button>
+            </form>
+            <div class="divider">or</div>
+            <button class="social-btn">🍎 Continue with Apple</button>
+            <button class="social-btn">🔐 Continue with Google</button>
+            <p style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.9rem;" id="switchText">
+                Already have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(type) {
+            document.getElementById('authModal').classList.add('active');
+            if (type === 'login') {
+                document.getElementById('modalTitle').textContent = 'Login';
+                document.getElementById('nameField').style.display = 'none';
+                document.getElementById('submitBtn').textContent = 'Sign In';
+                document.getElementById('switchText').innerHTML = 'Don\'t have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Sign Up</a>';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        function switchModal() {
+            const title = document.getElementById('modalTitle');
+            const nameField = document.getElementById('nameField');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            
+            if (title.textContent === 'Sign Up') {
+                title.textContent = 'Login';
+                nameField.style.display = 'none';
+                submitBtn.textContent = 'Sign In';
+                switchText.innerHTML = 'Don\'t have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Sign Up</a>';
+            } else {
+                title.textContent = 'Sign Up';
+                nameField.style.display = 'block';
+                submitBtn.textContent = 'Create Account';
+                switchText.innerHTML = 'Already have an account? <a href="#" onclick="switchModal()" style="color: var(--accent);">Login</a>';
+            }
+        }
+        
+        // Tab switching
+        document.querySelectorAll('.demo-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Destination selection
+        document.querySelectorAll('.destination-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.destination-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
