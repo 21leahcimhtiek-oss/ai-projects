@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoppingAI - AI-Powered Shopping Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #f59e0b;
+            --secondary: #ef4444;
+            --accent: #fbbf24;
+            --bg: #0a0a0f;
+            --surface: #1a1a2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+            --gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 80px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .demo-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .shopping-dashboard {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .price-tracker {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .price-card {
+            background: rgba(245, 158, 11, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .price-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .wishlist-items {
+            margin-top: 20px;
+        }
+
+        .wishlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .item-info h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .item-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .item-price {
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .ai-insights {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ai-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--gradient);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .insight-card {
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insight-card h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .insight-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .pricing-section {
+            margin-bottom: 80px;
+        }
+
+        .pricing-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 50px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid rgba(245, 158, 11, 0.2);
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
+        }
+
+        .pricing-tier {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            .price-tracker {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">🛒 ShoppingAI</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Start Saving</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>AI-Powered <span>Shopping Assistant</span><br>Smart Deals, Smart Savings</h1>
+            <p>Track prices, find the best deals, and get AI-powered shopping recommendations. Never overpay again with intelligent price monitoring and alerts.</p>
+            <button class="btn btn-primary" style="font-size: 18px; padding: 16px 40px;">Start Saving Free</button>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Price Tracking</h3>
+                <p>Monitor prices across multiple stores with real-time tracking and historical price analysis.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Deal Finder</h3>
+                <p>AI-powered deal discovery that finds discounts, coupons, and special offers automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3>Smart Recommendations</h3>
+                <p>Personalized product suggestions based on your preferences, budget, and shopping history.</p>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <div class="demo-header">
+                <div class="demo-title">Live Demo</div>
+            </div>
+            <div class="demo-grid">
+                <div class="shopping-dashboard">
+                    <div class="price-tracker">
+                        <div class="price-card">
+                            <div class="price-value">$847</div>
+                            <div class="price-label">Saved This Month</div>
+                        </div>
+                        <div class="price-card">
+                            <div class="price-value">23</div>
+                            <div class="price-label">Price Drops Found</div>
+                        </div>
+                    </div>
+                    <div class="wishlist-items">
+                        <h4 style="margin-bottom: 15px;">Price Drop Alerts</h4>
+                        <div class="wishlist-item">
+                            <div class="item-info">
+                                <h4>Sony WH-1000XM5 Headphones</h4>
+                                <p>Amazon • Was $348, Now $278</p>
+                            </div>
+                            <div class="item-price">-20% OFF</div>
+                        </div>
+                        <div class="wishlist-item">
+                            <div class="item-info">
+                                <h4>Nintendo Switch OLED</h4>
+                                <p>Best Buy • Was $349, Now $299</p>
+                            </div>
+                            <div class="item-price">-14% OFF</div>
+                        </div>
+                        <div class="wishlist-item">
+                            <div class="item-info">
+                                <h4>Instant Pot Duo Plus</h4>
+                                <p>Target • Was $99, Now $79</p>
+                            </div>
+                            <div class="item-price">-20% OFF</div>
+                        </div>
+                        <div class="wishlist-item">
+                            <div class="item-info">
+                                <h4>Dyson V15 Detect Vacuum</h4>
+                                <p>Walmart • Was $749, Now $599</p>
+                            </div>
+                            <div class="item-price">-20% OFF</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <div class="insights-header">
+                        <div class="ai-dot"></div>
+                        <h3>AI Shopping Insights</h3>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🎯 Best Time to Buy</h4>
+                        <p>Electronics typically drop 15% more in January. Consider waiting for post-holiday sales for big-ticket items.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>💰 Budget Optimization</h4>
+                        <p>Your shopping habits show you can save $120/month by buying generic brands for household items without quality loss.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>📦 Deal Alert</h4>
+                        <p>The Sony headphones in your wishlist are at their lowest price in 6 months. Recommend buying now before Black Friday.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🏪 Store Comparison</h4>
+                        <p>Amazon offers best prices for electronics, but Target beats them on home goods by 8% on average.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🔔 Shopping Pattern</h4>
+                        <p>You shop most on weekends. Enable weekend deal alerts for maximum savings on impulse purchases.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-section">
+            <div class="pricing-title">Simple, Transparent Pricing</div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Shopper Free</div>
+                    <div class="pricing-price">$0</div>
+                    <ul class="pricing-features">
+                        <li>10 price alerts</li>
+                        <li>Basic deal tracking</li>
+                        <li>5 product comparisons</li>
+                        <li>Weekly savings report</li>
+                        <li>Community deals</li>
+                    </ul>
+                    <button class="btn btn-secondary">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-tier">Smart Saver</div>
+                    <div class="pricing-price">$4.99<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited price alerts</li>
+                        <li>Advanced deal finding</li>
+                        <li>Unlimited comparisons</li>
+                        <li>Real-time notifications</li>
+                        <li>Personalized recommendations</li>
+                        <li>Price history charts</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-tier">Deal Hunter Elite</div>
+                    <div class="pricing-price">$9.99<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Family sharing (5 users)</li>
+                        <li>Cashback integration</li>
+                        <li>Early access to deals</li>
+                        <li>Browser extension</li>
+                        <li>Advanced analytics</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="btn btn-secondary">Contact Sales</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2024 ShoppingAI. Smart shopping with AI-powered savings.</p>
+        </footer>
+    </div>
+
+    <script>
+        function openModal(type) {
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} modal would open here`);
+        }
+    </script>
+</body>
+</html>
