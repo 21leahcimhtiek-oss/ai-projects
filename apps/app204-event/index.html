@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventAI - AI-Powered Event Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #06b6d4;
+            --secondary: #0ea5e9;
+            --accent: #22d3ee;
+            --bg: #0a0a0f;
+            --surface: #1a1a2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+            --gradient: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 80px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .demo-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .event-dashboard {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .event-header {
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .event-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .event-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .task-list {
+            margin-top: 20px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .task-info h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .task-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .task-status {
+            background: rgba(6, 182, 212, 0.2);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 12px;
+        }
+
+        .ai-insights {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ai-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--gradient);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .insight-card {
+            background: rgba(6, 182, 212, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insight-card h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .insight-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .pricing-section {
+            margin-bottom: 80px;
+        }
+
+        .pricing-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 50px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.3);
+        }
+
+        .pricing-tier {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">🎉 EventAI</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Plan Event</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>AI-Powered <span>Event Planning</span><br>Stress-Free Celebrations</h1>
+            <p>Plan memorable events with AI-powered scheduling, vendor coordination, guest management, and smart budgeting. From birthdays to corporate events.</p>
+            <button class="btn btn-primary" style="font-size: 18px; padding: 16px 40px;">Start Planning Free</button>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>Smart Scheduling</h3>
+                <p>AI-optimized event timelines with automated task scheduling and deadline management.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Vendor Coordination</h3>
+                <p>Find, compare, and manage vendors with AI-powered recommendations and communication tools.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Guest Management</h3>
+                <p>Smart guest list management with RSVP tracking, dietary requirements, and seating optimization.</p>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <div class="demo-header">
+                <div class="demo-title">Live Demo</div>
+            </div>
+            <div class="demo-grid">
+                <div class="event-dashboard">
+                    <div class="event-header">
+                        <div class="event-info">
+                            <h3>Tech Company Annual Party</h3>
+                            <p>December 20, 2024 • 6:00 PM - 11:00 PM</p>
+                            <p>Grand Hotel • 150 Guests • Budget: $25,000</p>
+                        </div>
+                    </div>
+                    <div class="task-list">
+                        <h4 style="margin-bottom: 15px;">Event Tasks</h4>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <h4>Finalize Venue Contract</h4>
+                                <p>Due: Dec 5 • Vendor: Grand Hotel</p>
+                            </div>
+                            <div class="task-status">Completed</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <h4>Catering Menu Selection</h4>
+                                <p>Due: Dec 10 • Vendor: Gourmet Eats</p>
+                            </div>
+                            <div class="task-status">In Progress</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <h4>Send Invitations</h4>
+                                <p>Due: Dec 12 • 120 sent / 150 total</p>
+                            </div>
+                            <div class="task-status">Pending</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <h4>Entertainment Booking</h4>
+                                <p>Due: Dec 15 • Vendor: DJ Mix</p>
+                            </div>
+                            <div class="task-status">Pending</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <h4>Decor Setup</h4>
+                                <p>Due: Dec 18 • Vendor: Event Decor Pro</p>
+                            </div>
+                            <div class="task-status">Pending</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <div class="insights-header">
+                        <div class="ai-dot"></div>
+                        <h3>AI Event Insights</h3>
+                    </div>
+                    <div class="insight-card">
+                        <h4>📊 Budget Status</h4>
+                        <p>Currently at $18,500 (74% of budget). Remaining $6,500 for final vendor payments and contingency. On track!</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>⏰ Critical Deadlines</h4>
+                        <p>Catering selection due in 5 days. AI recommends finalizing menu to avoid rush fees. 3 vendors available.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>👥 RSVP Tracking</h4>
+                        <p>78 RSVPs received (65% response rate). Expected attendance: 130 guests. Update final count by Dec 15 for catering.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🎵 Vendor Optimization</h4>
+                        <p>Current DJ quote: $1,500. Similar DJ with better ratings available at $1,200. Potential savings: $300.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🌤️ Weather Backup</h4>
+                        <p>Outdoor cocktail planned. December 20 has 20% rain probability. Recommend indoor tent rental for peace of mind.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-section">
+            <div class="pricing-title">Simple, Transparent Pricing</div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Planner Free</div>
+                    <div class="pricing-price">$0</div>
+                    <ul class="pricing-features">
+                        <li>1 active event</li>
+                        <li>50 guests max</li>
+                        <li>Basic task management</li>
+                        <li>5 vendor contacts</li>
+                        <li>Event templates</li>
+                    </ul>
+                    <button class="btn btn-secondary">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-tier">Event Pro</div>
+                    <div class="pricing-price">$14.99<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited events</li>
+                        <li>Unlimited guests</li>
+                        <li>Advanced timeline AI</li>
+                        <li>Unlimited vendors</li>
+                        <li>Budget tracking</li>
+                        <li>Guest communication</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-tier">Corporate Elite</div>
+                    <div class="pricing-price">$29.99<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Team collaboration</li>
+                        <li>Multi-event management</li>
+                        <li>Professional reporting</li>
+                        <li>Custom branding</li>
+                        <li>API integration</li>
+                        <li>Dedicated support</li>
+                    </ul>
+                    <button class="btn btn-secondary">Contact Sales</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2024 EventAI. Perfect events with AI-powered planning.</p>
+        </footer>
+    </div>
+
+    <script>
+        function openModal(type) {
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} modal would open here`);
+        }
+    </script>
+</body>
+</html>
