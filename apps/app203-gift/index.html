@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiftAI - AI-Powered Gift Recommendations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #ec4899;
+            --secondary: #f472b6;
+            --accent: #fbcfe8;
+            --bg: #0a0a0f;
+            --surface: #1a1a2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+            --gradient: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 80px;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .demo-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .gift-dashboard {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .recipient-profile {
+            background: rgba(236, 72, 153, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .profile-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .interest-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(236, 72, 153, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--primary);
+        }
+
+        .gift-recommendations {
+            margin-top: 20px;
+        }
+
+        .gift-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .gift-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .gift-details h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .gift-details p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .gift-match {
+            background: rgba(236, 72, 153, 0.2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .ai-insights {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ai-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--gradient);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .insight-card {
+            background: rgba(236, 72, 153, 0.05);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insight-card h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .insight-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .pricing-section {
+            margin-bottom: 80px;
+        }
+
+        .pricing-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 50px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid rgba(236, 72, 153, 0.2);
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.3);
+        }
+
+        .pricing-tier {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(236, 72, 153, 0.1);
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">🎁 GiftAI</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="openModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup')">Find Gifts</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>AI-Powered <span>Gift Recommendations</span><br>Perfect Gifts Every Time</h1>
+            <p>Never struggle with gift ideas again. Our AI analyzes interests, preferences, and occasions to suggest personalized gifts they'll love.</p>
+            <button class="btn btn-primary" style="font-size: 18px; padding: 16px 40px;">Find Perfect Gifts Free</button>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Matching</h3>
+                <p>AI-powered gift matching based on recipient interests, age, relationship, and occasion for perfect suggestions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Interest Analysis</h3>
+                <p>Deep analysis of social media, preferences, and past gifts to understand what they truly love.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Budget Friendly</h3>
+                <p>Gift suggestions for any budget with price tracking and deal alerts to get the best value.</p>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <div class="demo-header">
+                <div class="demo-title">Live Demo</div>
+            </div>
+            <div class="demo-grid">
+                <div class="gift-dashboard">
+                    <div class="recipient-profile">
+                        <div class="profile-header">
+                            <div class="profile-avatar">👩</div>
+                            <div class="profile-info">
+                                <h3>Sarah's Birthday</h3>
+                                <p>Sister • Age 28 • Budget: $100</p>
+                            </div>
+                        </div>
+                        <div class="interest-tags">
+                            <span class="tag">Photography</span>
+                            <span class="tag">Travel</span>
+                            <span class="tag">Cooking</span>
+                            <span class="tag">Fitness</span>
+                            <span class="tag">Books</span>
+                        </div>
+                    </div>
+                    <div class="gift-recommendations">
+                        <h4 style="margin-bottom: 15px;">AI Gift Recommendations</h4>
+                        <div class="gift-item">
+                            <div class="gift-icon">📷</div>
+                            <div class="gift-details">
+                                <h4>Instant Camera Bundle</h4>
+                                <p>Polaroid + Film • $89</p>
+                            </div>
+                            <div class="gift-match">98% Match</div>
+                        </div>
+                        <div class="gift-item">
+                            <div class="gift-icon">✈️</div>
+                            <div class="gift-details">
+                                <h4>Travel Journal Kit</h4>
+                                <p>Premium Leather • $45</p>
+                            </div>
+                            <div class="gift-match">94% Match</div>
+                        </div>
+                        <div class="gift-item">
+                            <div class="gift-icon">🍳</div>
+                            <div class="gift-details">
+                                <h4>Gourmet Cooking Class</h4>
+                                <p>Virtual Experience • $75</p>
+                            </div>
+                            <div class="gift-match">91% Match</div>
+                        </div>
+                        <div class="gift-item">
+                            <div class="gift-icon">📚</div>
+                            <div class="gift-details">
+                                <h4>Bestseller Book Set</h4>
+                                <p>3 Novels • $35</p>
+                            </div>
+                            <div class="gift-match">89% Match</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <div class="insights-header">
+                        <div class="ai-dot"></div>
+                        <h3>AI Gift Insights</h3>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🎯 Perfect Match Found</h4>
+                        <p>The instant camera is ideal for Sarah. She loves photography mentioned in 3 social posts last month. Perfect for capturing travel memories.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>💡 Creative Alternative</h4>
+                        <p>Consider the cooking class instead. She's recently posted about trying new recipes. Creates a shared experience she'll remember.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🎁 Gift Timing</h4>
+                        <p>Order now for guaranteed delivery by birthday (Dec 15). Shipping takes 3-5 days for all recommended gifts.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>💰 Budget Tip</h4>
+                        <p>The travel journal + book combo ($80) stays within budget and hits two interests. Leaves $20 for a nice card and wrapping.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>📈 Popularity Alert</h4>
+                        <p>Instant cameras are trending +45% this month. Stock running low. Recommend purchasing within 48 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-section">
+            <div class="pricing-title">Simple, Transparent Pricing</div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Gifter Free</div>
+                    <div class="pricing-price">$0</div>
+                    <ul class="pricing-features">
+                        <li>5 gift suggestions</li>
+                        <li>Basic matching</li>
+                        <li>3 recipient profiles</li>
+                        <li>Monthly inspiration</li>
+                        <li>Community ideas</li>
+                    </ul>
+                    <button class="btn btn-secondary">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-tier">Gift Expert</div>
+                    <div class="pricing-price">$4.99<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited suggestions</li>
+                        <li>Advanced AI matching</li>
+                        <li>Unlimited profiles</li>
+                        <li>Social media analysis</li>
+                        <li>Deal tracking</li>
+                        <li>Gift reminders</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-tier">Gift Master Elite</div>
+                    <div class="pricing-price">$9.99<span style="font-size: 18px;">/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Family sharing</li>
+                        <li>Group gift coordination</li>
+                        <li>Personal shopper access</li>
+                        <li>Gift wrapping service</li>
+                        <li>Corporate gifts</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="btn btn-secondary">Contact Sales</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2024 GiftAI. Perfect gifting with AI-powered recommendations.</p>
+        </footer>
+    </div>
+
+    <script>
+        function openModal(type) {
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} modal would open here`);
+        }
+    </script>
+</body>
+</html>
