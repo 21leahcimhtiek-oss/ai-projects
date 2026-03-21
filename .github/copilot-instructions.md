@@ -34,7 +34,7 @@ ai-projects/
 ├── ollama-assistant/ (docs/QUICK_START.md, README.md)
 ├── tools/
 │   ├── android/android-debloat-helper.py
-│   └── python/{client.py, server.py, obfuscated.py, original.py}
+│   └── python/ (Python utilities; see tools/python/ README or docs)
 ├── resources/ (ai-models/, audio/, images/)
 ├── docs/ (general notes)
 ├── requirements.txt
