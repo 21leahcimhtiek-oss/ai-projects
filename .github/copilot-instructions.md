@@ -14,7 +14,7 @@ Monorepo of AI-focused apps and utilities:
 - Express 4 + tRPC 11 + Drizzle ORM + MySQL/TiDB; Stripe + S3 (StoryForge docs).
 - React Native (Expo), TypeScript, AsyncStorage, OpenRouter API, Tor proxy (AI Assistant Pro).
 - Node.js/Ollama + MCP tooling (Ollama Assistant docs).
-- Python 3 (Flask, Gunicorn in `requirements.txt`; Tkinter GUI tools).
+- Python 3 ecosystem (see `requirements.txt` for the web stack; includes Tkinter-based GUI tools).
 
 ## Project Structure (key paths)
 ```
