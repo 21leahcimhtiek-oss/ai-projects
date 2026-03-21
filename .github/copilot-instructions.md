@@ -61,7 +61,7 @@ ai-projects/
 - StoryForge: React 19, Tailwind CSS 4, Express 4, tRPC 11, Drizzle ORM, MySQL/TiDB, Stripe SDK, S3 client, Manus OAuth (per README).
 - AI Assistant Pro: React Native (Expo), TypeScript, AsyncStorage, OpenRouter API, Tor/proxy libraries.
 - Ollama Assistant: Node.js with Ollama runtime + MCP toolchain (models pulled via `ollama`).
-- Python: `flask==3.0.0`, `gunicorn==21.2.0` (root `requirements.txt`); Tkinter for GUI tools.
+- Python: Flask, Gunicorn (see root `requirements.txt`); Tkinter for GUI tools.
 
 ## Development Guidelines
 - Keep env secrets out of the repo; use `.env` (OpenRouter keys, Manus/Stripe, DB URLs, S3 keys).
