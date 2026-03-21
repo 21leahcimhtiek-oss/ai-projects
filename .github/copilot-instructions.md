@@ -1,309 +1,83 @@
-# 🤖 Copilot Instructions for AI Projects Repository
+# 🤖 Copilot Instructions — AI Projects (concise, high-signal summary)
 
-This document provides context and guidelines for AI assistants (GitHub Copilot, SuperNinja, etc.) working with this repository.
+## Project Overview
+Monorepo of AI-focused apps and utilities:
+- **storyforge-kids**: AI-generated children’s books with illustrations and payments.
+- **ai-assistant-pro**: React Native (Expo) Android assistant with OpenRouter, Tor, scraping, and permissions control.
+- **mindspace**: Mental health app (design/docs only).
+- **ollama-assistant**: Local Ollama + MCP-based assistant.
+- **tools**: Android debloat helper (Tkinter) and Python utilities.
+- **resources/docs**: Reference guides, media assets, and general notes.
 
----
+## Tech Stack
+- TypeScript/React 19, Tailwind CSS, Vite-style app structure (StoryForge docs).
+- Express 4 + tRPC 11 + Drizzle ORM + MySQL/TiDB; Stripe + S3 (StoryForge docs).
+- React Native (Expo), TypeScript, AsyncStorage, OpenRouter API, Tor proxy (AI Assistant Pro).
+- Node.js/Ollama + MCP tooling (Ollama Assistant docs).
+- Python 3 ecosystem (see `requirements.txt` for the web stack; includes Tkinter-based GUI tools).
 
-## 📚 Repository Overview
-
-This is a **monorepo** containing multiple AI-powered projects organized by domain:
-
-| Project | Purpose | Tech Stack |
-|---------|---------|------------|
-| `storyforge-kids/` | AI-powered children's book creation platform | React 19, Tailwind CSS 4, Express, tRPC, MySQL, Stripe |
-| `ai-assistant-pro/` | Android AI assistant with privacy tools | React Native (Expo), TypeScript, OpenRouter API |
-| `mindspace/` | AI mental health & wellness app | React Native, AI/LLM integration |
-| `ollama-assistant/` | Local Ollama AI assistant | Ollama, Node.js |
-| `tools/` | Utility scripts & tools | Python, Tkinter |
-| `resources/` | Shared resources (AI models, audio, images) | Various |
-
----
-
-## 🏗️ Project Structure
-
+## Project Structure (key paths)
 ```
 ai-projects/
-├── storyforge-kids/          # Children's book platform
-│   ├── src/                  # Source code
-│   │   ├── App.tsx           # Main app component
-│   │   ├── storage.ts        # Data persistence
-│   │   ├── components/       # Reusable components
-│   │   ├── screens/          # Page components
-│   │   └── config/           # Configuration files
-│   ├── payments/             # Stripe integration
-│   │   ├── stripe-products.ts
-│   │   └── stripe-webhook.ts
-│   ├── marketing/            # Marketing materials
-│   │   └── tiktok-ads/       # TikTok ad campaigns
-│   └── docs/                 # Documentation
-│       ├── BUILD_INSTRUCTIONS.md
-│       ├── roadmap.pdf
-│       └── todo.md
-│
-├── ai-assistant-pro/         # Android AI assistant
+├── storyforge-kids/
+│   ├── src/ (App.tsx, storage.ts, config/README.md)
+│   ├── payments/ (stripe-products.ts, stripe-webhook.ts)
+│   ├── marketing/
+│   └── docs/
+├── ai-assistant-pro/
 │   ├── src/
-│   │   ├── services/         # Core service classes
-│   │   │   ├── tor-service.ts        # Tor network management
-│   │   │   ├── web-scraper.ts        # HTTP/proxy scraping
-│   │   │   ├── openrouter.ts         # OpenRouter API client
-│   │   │   ├── chat-storage.ts       # Chat persistence
-│   │   │   └── permissions.ts        # Permission management
-│   │   ├── screens/          # UI screens
-│   │   │   ├── index.tsx             # Main chat screen
-│   │   │   ├── settings.tsx          # Settings screen
-│   │   │   ├── permissions.tsx       # Permissions screen
-│   │   │   ├── web-tools.tsx         # Web tools screen
-│   │   │   ├── _layout.tsx           # Tab layout
-│   │   │   └── icon-symbol.tsx       # Icon component
-│   │   └── config/           # App configuration
-│   │       ├── app.config.ts         # Expo config
-│   │       └── theme.config.js       # Theme colors
-│   └── docs/                 # Documentation
-│       ├── design.md
-│       ├── PROJECT_SUMMARY.md
-│       └── QUICK_START.md
-│
-├── mindspace/                # Mental health app
-│   └── docs/
-│       ├── mindspace-design.md
-│       └── MindSpace_-_TODO.md
-│
-├── ollama-assistant/         # Local Ollama assistant
-│   └── docs/
-│       └── QUICK_START.md
-│
-├── tools/                    # Utility tools
-│   ├── android/
-│   │   ├── android-debloat-helper.py
-│   │   └── README.md
-│   └── python/
-│       ├── client.py
-│       ├── server.py
-│       ├── obfuscated.py
-│       ├── original.py
-│       └── python-obfuscation-guide.pdf
-│
-├── resources/                # Shared resources
-│   ├── ai-models/            # AI model guides
-│   ├── audio/                # Generated audio
-│   └── images/               # Generated images
-│
-├── assets/                   # Shared UI assets
-│   └── icons/                # SVG icons
-│
-└── docs/                     # General documentation
-    ├── a1-revolution-todo.md
-    ├── app-structure-notes.md
-    ├── automated-book-creation-notes.md
-    └── ... (various project notes)
+│   │   ├── services/ (tor-service.ts, web-scraper.ts, openrouter.ts, chat-storage.ts, permissions.ts)
+│   │   ├── screens/ (_layout.tsx, index.tsx, settings.tsx, permissions.tsx, web-tools.tsx, icon-symbol.tsx)
+│   │   └── config/ (app.config.ts, theme.config.js)
+│   └── docs/ (design.md, PROJECT_SUMMARY.md, QUICK_START.md)
+├── mindspace/ (docs/)
+├── ollama-assistant/ (docs/QUICK_START.md, README.md)
+├── tools/
+│   ├── android/android-debloat-helper.py
+│   └── python/ (Python utilities; see tools/python/ README or docs)
+├── resources/ (ai-models/, audio/, images/)
+├── docs/ (general notes)
+├── requirements.txt
+└── .github/ (workflows/, copilot-instructions.md)
 ```
 
----
+## Commands (from project docs)
+- **StoryForge Kids** (`storyforge-kids/`):
+  - Install: `pnpm install`
+  - Dev: `pnpm dev`
+  - Build/serve: `pnpm build` / `pnpm start`
+  - DB: `pnpm db:push`
+  - Quality: `pnpm test` (Vitest), `pnpm check`, `pnpm format`
+- **AI Assistant Pro** (`ai-assistant-pro/`):
+  - Install: `npm install`
+  - Dev: `npx expo start` (OpenRouter key set via Settings screen)
+- **Ollama Assistant** (`ollama-assistant/`):
+  - Install & run: `npm install && npm start` (requires `ollama pull <model>`)
+- **Python tools** (`tools/android`, `tools/python`):
+  - GUI debloat helper: `python tools/android/android-debloat-helper.py`
+  - Utilities: `python tools/python/client.py`, `python tools/python/server.py`
 
-## 💻 Coding Standards
+## Dependencies (high-level)
+- StoryForge: React 19, Tailwind CSS 4, Express 4, tRPC 11, Drizzle ORM, MySQL/TiDB, Stripe SDK, S3 client, Manus OAuth (per README).
+- AI Assistant Pro: React Native (Expo), TypeScript, AsyncStorage, OpenRouter API, Tor/proxy libraries.
+- Ollama Assistant: Node.js with Ollama runtime + MCP toolchain (models pulled via `ollama`).
+- Python: Flask, Gunicorn (see root `requirements.txt`); Tkinter for GUI tools.
 
-### TypeScript/React Native (ai-assistant-pro)
+## Development Guidelines
+- Keep env secrets out of the repo; use `.env` (OpenRouter keys, Manus/Stripe, DB URLs, S3 keys).
+- Follow service-first design in `ai-assistant-pro/src/services` and functional screens in `src/screens`.
+- For StoryForge, align with tRPC + Drizzle patterns described in its README (schemas in `drizzle/schema.ts` per docs) and run `pnpm db:push` after schema edits.
+- Prefer type safety (TypeScript) and reusable UI components; keep stateful logic in hooks or services.
+- For Python scripts, keep CLI/GUI entrypoints thin and isolate logic into functions; avoid blocking I/O in GUIs.
 
-```typescript
-// Service classes should be organized with clear method separation
-class ExampleService {
-  private apiKey: string;
-  
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
-  }
-  
-  // Public methods for external use
-  public async fetchData(): Promise<Data> {
-    // Implementation
-  }
-  
-  // Private helper methods
-  private async makeRequest(url: string): Promise<Response> {
-    // Implementation
-  }
-}
-```
+## Code Style
+- TypeScript/React & React Native: functional components, camelCase for variables/functions, PascalCase for components; run `pnpm format` / Prettier; `pnpm check` for types.
+- Testing (where available): Vitest (`*.test.ts`/`*.test.tsx`).
+- Python: PEP 8, docstrings for public functions, avoid global state; lint manually if adding logic.
 
-### React Components
-
-```tsx
-// Use functional components with hooks
-import React, { useState, useEffect } from 'react';
-
-export const ExampleScreen: React.FC = () => {
-  const [data, setData] = useState<string>('');
-  
-  useEffect(() => {
-    // Effect logic
-  }, []);
-  
-  return (
-    <View>
-      <Text>{data}</Text>
-    </View>
-  );
-};
-```
-
-### Python Tools
-
-```python
-# Use clear function names and docstrings
-def process_data(input_data: dict) -> dict:
-    """
-    Process input data and return formatted output.
-    
-    Args:
-        input_data: Dictionary containing raw data
-        
-    Returns:
-        Dictionary containing processed data
-    """
-    # Implementation
-    pass
-```
-
----
-
-## 🔑 Key Patterns & Conventions
-
-### 1. Service Layer Pattern (ai-assistant-pro)
-
-All business logic is encapsulated in service classes:
-- `TorService` - Manages Tor network connections
-- `WebScraperService` - Handles HTTP requests with proxy support
-- `OpenRouterService` - OpenRouter API integration
-- `ChatStorageService` - AsyncStorage wrapper for chat persistence
-- `PermissionService` - Device permission management
-
-### 2. Screen Organization (ai-assistant-pro)
-
-Each screen is a separate file in `src/screens/`:
-- Exported as named components
-- Use React Native components
-- Include haptic feedback for interactions
-- Follow consistent styling patterns
-
-### 3. Configuration Management
-
-- `app.config.ts` - Expo app configuration
-- `theme.config.js` - Theme color definitions (light/dark modes)
-- Environment variables should be stored in `.env` files (not committed)
-
-### 4. Documentation Standards
-
-- Each project has its own `README.md`
-- Technical docs go in `docs/` subdirectories
-- Use Markdown for documentation
-- Include code examples where helpful
-
----
-
-## 🚀 Common Tasks
-
-### Adding a New Service (ai-assistant-pro)
-
-1. Create service file in `src/services/`
-2. Export a class with clear method names
-3. Use TypeScript interfaces for type safety
-4. Include error handling
-5. Update relevant screens to use the service
-
-### Adding a New Screen (ai-assistant-pro)
-
-1. Create screen file in `src/screens/`
-2. Export as named component
-3. Use React Native components
-4. Add to tab layout in `_layout.tsx`
-5. Include icon in `icon-symbol.tsx` mapping
-
-### Adding Documentation
-
-1. Place docs in appropriate `docs/` folder
-2. Use clear, descriptive filenames
-3. Include table of contents for longer docs
-4. Update project README if needed
-
----
-
-## 📦 Dependencies
-
-### storyforge-kids
-- React 19
-- Tailwind CSS 4
-- Express 4
-- tRPC 11
-- Drizzle ORM
-- Stripe SDK
-
-### ai-assistant-pro
-- React Native (Expo)
-- TypeScript
-- AsyncStorage
-- OpenRouter API
-
-### tools/python
-- Python 3.x
-- Tkinter (for GUI tools)
-- requests (for HTTP)
-
----
-
-## 🔐 Security Notes
-
-- **Never commit** API keys, tokens, or sensitive credentials
-- Use `.env` files for environment variables
-- `.gitignore` is configured to exclude sensitive files
-- Stripe backup codes should never be committed
-- Chrome cookie files should never be committed
-
----
-
-## 🎯 When Working on This Repository
-
-1. **Identify the project** you're working with (storyforge-kids, ai-assistant-pro, etc.)
-2. **Read the project README** for context
-3. **Follow existing patterns** in that project
-4. **Check related documentation** in the `docs/` folder
-5. **Maintain consistency** with existing code style
-6. **Update documentation** if you make significant changes
-
----
-
-## 📝 Example Prompts
-
-### For Code Generation
-> "Create a new service class for managing user authentication in ai-assistant-pro/src/services/. Use AsyncStorage for persistence and include methods for login, logout, and checking auth status."
-
-### For Bug Fixes
-> "Review the tor-service.ts file and identify potential issues with the Tor connection management. Suggest fixes for connection stability."
-
-### For Documentation
-> "Create a README.md for the tools/python directory explaining each script and how to use them."
-
-### For Feature Addition
-> "Add a new screen to ai-assistant-pro/src/screens/ for managing API keys. Include input fields, save functionality using AsyncStorage, and validation."
-
----
-
-## 🔄 Git Workflow
-
-1. Create a new branch for changes: `git checkout -b feature/your-feature-name`
-2. Make changes following the coding standards
-3. Commit with descriptive messages
-4. Push to remote: `git push https://x-access-token:$GITHUB_TOKEN@github.com/21leahcimhtiek-oss/ai-projects.git your-branch-name`
-5. Create a pull request if needed
-
----
-
-## 📞 Getting Help
-
-- Check project-specific README files
-- Review documentation in `docs/` folders
-- Examine existing similar code for patterns
-- Refer to tech stack documentation
-
----
-
-*Last updated: 2025-02-28*
+## Notes for Copilot
+- Pick the correct project scope before suggesting changes; many files at repo root are exports/previews of app code—edit inside project folders when possible.
+- Do not surface or reuse any API keys found in docs; treat them as placeholders and keep them out of commits.
+- When adding features, mirror existing patterns: service classes in `ai-assistant-pro`, config-driven setup in StoryForge, and documented flows in each project README.
+- Reference project-specific docs (`storyforge-kids/README.md`, `ai-assistant-pro/docs/*`, `mindspace/docs/*`, `ollama-assistant/docs/QUICK_START.md`) for behavior and commands.
+- Favor small, isolated changes and keep documentation updates concise and action-oriented.
