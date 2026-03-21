@@ -1,4 +1,4 @@
-# 🤖 Copilot Instructions — AI Projects (My Projects OSS style)
+# 🤖 Copilot Instructions — AI Projects (concise, high-signal summary)
 
 ## Project Overview
 Monorepo of AI-focused apps and utilities:
