@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "AI Health Coach",
+    "slug": "ai-health-coach",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "aihealthcoach",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A84FF"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.auroraraye.aihealthcoach",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "We need access to your health data to provide personalized coaching.",
+        "NSHealthUpdateUsageDescription": "We need to update your health data for tracking.",
+        "NSCameraUsageDescription": "Used for body scan and progress photos.",
+        "NSPhotoLibraryUsageDescription": "Used to save and load progress photos."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A84FF"
+      },
+      "package": "com.auroraraye.aihealthcoach",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACTIVITY_RECOGNITION"
+      ],
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#0A84FF"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ai-health-coach-aurora"
+      }
+    }
+  }
+}
