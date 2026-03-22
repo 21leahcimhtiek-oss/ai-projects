@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "AI Financial Advisor",
+    "slug": "ai-financial-advisor",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "aifinancialadvisor",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#00C851"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.auroraraye.aifinancialadvisor",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#00C851"
+      },
+      "package": "com.auroraraye.aifinancialadvisor",
+      "versionCode": 1,
+      "permissions": ["INTERNET", "VIBRATE", "RECEIVE_BOOT_COMPLETED"]
+    },
+    "web": { "favicon": "./assets/favicon.png" },
+    "plugins": ["expo-router", "expo-secure-store"],
+    "experiments": { "typedRoutes": true },
+    "extra": { "eas": { "projectId": "ai-financial-advisor-aurora" } }
+  }
+}
