@@ -21,6 +21,7 @@ on:
 
 # Environment variables available to all jobs and steps in this workflow
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   APP_LOCATION: "/" # location of your client code
   API_LOCATION: "api" # location of your api source code - optional
   APP_ARTIFACT_LOCATION: "build" # location of client code build output
@@ -38,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.0
         with:
           submodules: true
       - name: Build And Deploy
